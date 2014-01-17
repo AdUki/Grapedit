@@ -15,6 +15,21 @@ build/
 [Bb]in/
 [Oo]bj/
 
+# Using CMake and Qt
+
+CMakeFiles/
+Grapedit.dir/
+Win32/
+
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*automoc.cpp
+moc_*.cpp
+ui_*.h
+CMakeCache.txt
+cmake_install.cmake
+
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
 !packages/*/build/
 
@@ -149,3 +164,5 @@ $RECYCLE.BIN/
 
 # Mac crap
 .DS_Store
+
+
