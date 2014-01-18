@@ -11,10 +11,14 @@ set(PC_HEADER "pch")
 
 set (PROJECT "Grapedit")
 
-# Search for sources in src dir
-AUX_SOURCE_DIRECTORY(src SOURCE_FILES)
 set(SOURCE_FILES
-	${SOURCE_FILES}
+	src/main.cpp
+	src/mainwindow.h
+	src/mainwindow.cpp
+	src/Console.h
+	src/Console.cpp
+	src/LuaBindings/CoreBindings.cpp
+	src/LuaBindings/CoreBindings.h
 	${PC_HEADER}.h
 	${PC_HEADER}.cpp
  )

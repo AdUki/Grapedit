@@ -1,22 +1,20 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
+#include "pch.h"
 
 #include <QMainWindow>
 
-namespace Ui {
-class MainWindow;
-}
+DECLARE_NS_CLASS_PTR(Ui, MainWindow)
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
-    
+	Q_OBJECT
+	
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-    
+	explicit MainWindow(QWidget *parent = 0);
+	~MainWindow();
+	
 private:
-    Ui::MainWindow *ui;
+	Ui::MainWindowPtr UI;
+
 };
 
-#endif // MAINWINDOW_H

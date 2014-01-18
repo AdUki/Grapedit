@@ -4,13 +4,12 @@
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+	QMainWindow(parent)
 {
-    ui->setupUi(this);
+	UI = std::make_shared<Ui::MainWindow>();
+	UI->setupUi(this);
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
 }
