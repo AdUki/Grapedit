@@ -1,15 +1,32 @@
-#include "pch.h"
+#include "./mainwindow.h"
+#include "./ui_mainwindow.h"
 
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "Data/GraphicText.h"
+#include "Data/GraphicElement.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-	QMainWindow(parent)
+//////////////////////////////////////////////////////////////////////////////////////////////////
+MainWindow::MainWindow() : QMainWindow()
 {
 	UI = std::make_shared<Ui::MainWindow>();
 	UI->setupUi(this);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
 MainWindow::~MainWindow()
 {
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void MainWindow::setGraphicText(const GraphicTextPtr& graphicText)
+{
+	_currentGraphicText = graphicText;
+	UI->graphicsView->setScene(graphicText->getScene().get());
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void MainWindow::testCanvas()
+{
+	GraphicTextPtr graphicText = std::make_shared<GraphicText>("default");
+	setGraphicText(graphicText);
+	graphicText->testScene();
 }

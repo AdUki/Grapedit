@@ -1,4 +1,9 @@
-#pragma once
+////
+/// Precompiled header
+///
+
+/// Nazov identifikatora ktory drzi this pointer na LuaState, cez tento pointer vieme najst v statickych bindovanych funkciach triedu, ktora k tomu volaniu patri
+#define LUA_STATE_THIS_PTR_NAME "cpp_LuaState_this_ptr"
 
 #ifdef __cplusplus
 
@@ -23,6 +28,7 @@
 #   include <unordered_set>
 #   include <sstream>
 #   include <string>
+#   include <limits>
 
 #   include <boost/any.hpp>
 #   include <boost/bind.hpp>
@@ -53,6 +59,7 @@
 	}
 
 #   ifdef _WIN32
+#       define NOMINMAX 
 #       include <windows.h>
 #   endif
 

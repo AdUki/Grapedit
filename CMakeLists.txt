@@ -17,8 +17,27 @@ set(SOURCE_FILES
 	src/mainwindow.cpp
 	src/Console.h
 	src/Console.cpp
-	src/LuaBindings/CoreBindings.cpp
+	
+	src/Data/GraphicText.h
+	src/Data/GraphicText.cpp
+	src/Data/GraphicElement.h
+	src/Data/GraphicElement.cpp
+	src/Data/GraphicTextState.h
+	src/Data/GraphicTextState.cpp
+
+	src/Ui/BaseElement.h
+	src/Ui/BaseElement.cpp
+	src/Ui/BaseItem.h
+	src/Ui/BaseItem.cpp
+	src/Ui/TextItem.h
+	src/Ui/TextItem.cpp
+	src/Ui/BaseGrid.h
+	src/Ui/BaseGrid.cpp
+	src/Ui/LinearGrid.h
+	src/Ui/LinearGrid.cpp
+
 	src/LuaBindings/CoreBindings.h
+	src/LuaBindings/CoreBindings.cpp
 	${PC_HEADER}.h
 	${PC_HEADER}.cpp
  )

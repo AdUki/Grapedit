@@ -5,16 +5,30 @@
 
 DECLARE_NS_CLASS_PTR(Ui, MainWindow)
 
+DECLARE_CLASS_PTR(GraphicText)
+DECLARE_CLASS_PTR(MainWindow)
+
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
 	
 public:
-	explicit MainWindow(QWidget *parent = 0);
+	MainWindow();
 	~MainWindow();
+
+public slots:
+	
+	/// Funkcia zobrazi dany text v hlavnom okne
+	///
+	/// @param textovy objekt s grafickymi elementami
+	void setGraphicText(const GraphicTextPtr& graphicText);
 	
 private:
+	
 	Ui::MainWindowPtr UI;
 
+	GraphicTextPtr _currentGraphicText;
+
+	void testCanvas();
 };
 
