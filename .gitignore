@@ -20,6 +20,7 @@ build/
 CMakeFiles/
 Grapedit.dir/
 Win32/
+doc/
 
 *.sln
 *.vcxproj
