@@ -13,11 +13,11 @@ class LinearGrid :
 	public QGraphicsLinearLayout
 {
 public:
-	LinearGrid();
 	LinearGrid(Qt::Orientation orientation);
-	~LinearGrid();
+	virtual ~LinearGrid();
 
-	void insertElement(const GraphicElement& element, size_t index) override;
+	void insertElement(const GraphicElement& element) override;
+	void removeElement(const GraphicElement& element) override;
 
 private:
 

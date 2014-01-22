@@ -38,6 +38,9 @@ set(SOURCE_FILES
 
 	src/LuaBindings/CoreBindings.h
 	src/LuaBindings/CoreBindings.cpp
+	src/LuaBindings/ElementBindings.h
+	src/LuaBindings/ElementBindings.cpp
+
 	${PC_HEADER}.h
 	${PC_HEADER}.cpp
  )

@@ -5,45 +5,49 @@
 DECLARE_CLASS_PTR(BaseItem)
 DECLARE_CLASS_PTR(BaseGrid)
 DECLARE_CLASS_PTR(BaseElement)
+
 DECLARE_CLASS_PTR(GraphicElement)
+typedef std::list<GraphicElement*> GraphicElementsList;
 
 /// Je to minimalisticka trieda, ktora vznikne ako prva pri pridavani prvkov do grafickej sceny. Po vytvoreni sa pointer na this vratime naspat do Lua, aby sme pri update a delete vedeli najst tieto prvky.
 class GraphicElement
 {
 public:
-	~GraphicElement();
 
 	enum class Type { Item, Grid };
 
 	/// Vytvori GraphicElement pre Item (je to list v abstraktnom syntaktickom strome), ktory obsahuje iba text a nie dalsie vnorene graficke elementy.
 	///
-	/// @param typ, ktory hovori o type textu, napr. C++, Lua, Java, txt...
-	/// @param typ, ktory hovori o grafickom obsahu elementu
-	/// @param index v rodicovskej hierarchii
-	/// @param obsahujuci text
-	/// @param rodic, ak je NULL tak je to root
+	/// @param textType typ, ktory hovori o type textu, napr. C++, Lua, Java, txt...
+	/// @param graphicType typ, ktory hovori o grafickom obsahu elementu
+	/// @param index index v rodicovskej hierarchii
+	/// @param text obsahujuci text
+	/// @param parentPointer rodic, ak je NULL tak je to root
 	///
 	/// @returns vytvoreny GraphicElement
-	static GraphicElementPtr createItemElement(
+	GraphicElement(
 		const std::string& textType, 
 		const std::string& graphicType, 
 		size_t index, 
-		const std::string& 
-		text, GraphicElement* parentPointer);
+		const std::string& text, 
+		GraphicElement* parentPointer);
 
 	/// Vytvori GraphicElement pre Grid (je to uzol v abstraktnom syntaktickom strome), ktory NEobsahuje text ALE dalsie vnorene graficke elementy.
 	///
-	/// @param typ, ktory hovori o type textu, napr. C++, Lua, Java, txt...
-	/// @param typ, ktory hovori o grafickom obsahu elementu
-	/// @param index v rodicovskej hierarchii
-	/// @param rodic, ak je NULL tak je to root
+	/// @param textType typ, ktory hovori o type textu, napr. C++, Lua, Java, txt...
+	/// @param graphicType typ, ktory hovori o grafickom obsahu elementu
+	/// @param index index v rodicovskej hierarchii
+	/// @param parentPointer rodic, ak je NULL tak je to root
 	///
 	/// @returns vytvoreny GraphicElement
-	static GraphicElementPtr createGridElement(
+	GraphicElement(
 		const std::string& textType, 
 		const std::string& graphicType, 
 		size_t index, 
 		GraphicElement* parentPointer);
+
+	
+	~GraphicElement();
 
 	/// @returns index v rodicovskej hierarchii
 	size_t getIndex() const { return _index; }
@@ -56,10 +60,7 @@ public:
 	/// @returns typ, ktory hovori o grafickom obsahu elementu
 	const std::string& getGraphicType() const { return _graphicType; }
 
-	bool isInitialized() const { return _graphicalElement != nullptr; }
-
-	/// Tato funkcia vytvori prislusny Qt-ckovsky graficky prvok
-	void initGraphicalElement();
+	BaseElementPtr getElement() const { return _graphicalElement; }
 
 	/// Vrati graficky grid, tato trieda musi byt typu Grid.
 	///
@@ -70,6 +71,13 @@ public:
 	///
 	/// @attention nemozme volat ak sme este neinicializovali graficky element, teda nezavolali funkciu initGraphicalElement
 	BaseItemPtr getItem() const;
+
+	bool isInitialized() const { return _graphicalElement != nullptr; }
+
+	void setNewText(const std::string& text) { _text = text; }
+
+	/// Tato funkcia vytvori prislusny Qt-ckovsky graficky prvok
+	void initGraphicalElement();
 
 private:
 
@@ -92,4 +100,3 @@ private:
 
 	BaseElementPtr _graphicalElement;
 };
-

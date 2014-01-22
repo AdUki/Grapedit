@@ -15,11 +15,12 @@ class BaseGrid :
 {
 public:
 	BaseGrid();
-	~BaseGrid();
+	virtual ~BaseGrid();
 
 	QGraphicsLayout* getLayout();
 
-	virtual void insertElement(const GraphicElement& element, size_t index) = 0;
+	virtual void insertElement(const GraphicElement& element) = 0;
+	virtual void removeElement(const GraphicElement& element) = 0;
 
 protected:
 

@@ -2,9 +2,6 @@
 /// Precompiled header
 ///
 
-/// Nazov identifikatora ktory drzi this pointer na LuaState, cez tento pointer vieme najst v statickych bindovanych funkciach triedu, ktora k tomu volaniu patri
-#define LUA_STATE_THIS_PTR_NAME "cpp_LuaState_this_ptr"
-
 #ifdef __cplusplus
 
 #   include <cstring>
@@ -36,6 +33,8 @@
 #   include <boost/lexical_cast.hpp>
 #   include <boost/noncopyable.hpp>
 #   include <boost/optional.hpp>
+#   include <boost/algorithm/string/predicate.hpp>
+
 
 #   include <QApplication>
 #   include <QWidget>

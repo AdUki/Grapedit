@@ -23,7 +23,7 @@ static int lua_iowrite_output(lua_State* L)
 			case LUA_TNUMBER: { // numbers
 				LUA_NUMBER number = lua_tonumber(L, i);
 				LUA_NUMBER integralPart;
-				if (std::modf(number, &integralPart) == 0)
+				if (std::modf(number, &integralPart) < DBL_EPSILON)
 					// integer
 					printf("%d", static_cast<int>(integralPart));
 				else

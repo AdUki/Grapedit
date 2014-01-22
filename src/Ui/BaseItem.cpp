@@ -65,7 +65,7 @@ void BaseItem::setGeometry(const QRectF &rect)
 
 		switch (_hAlignment) {
 
-		case HorizontalAlignment::Center:
+		case HorizontalAlignment::Center: //-V556
 			position.setX((rect.width() - size.width()) / 2 + rect.x());
 			break;
 

@@ -1,0 +1,231 @@
+<?xml version="1.0" standalone="yes"?>
+<NewDataSet>
+  <xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+      <xs:complexType>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="Solution_Path">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="SolutionPath" type="xs:string" minOccurs="0" />
+                <xs:element name="SolutionVersion" type="xs:string" minOccurs="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="PVS-Studio_Analysis_Log">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="FavIcon" type="xs:boolean" minOccurs="0" />
+                <xs:element name="Level" type="xs:unsignedInt" minOccurs="0" />
+                <xs:element name="DefaultOrder" type="xs:int" minOccurs="0" />
+                <xs:element name="ErrorCode" type="xs:string" minOccurs="0" />
+                <xs:element name="Message" type="xs:string" />
+                <xs:element name="Project" type="xs:string" minOccurs="0" />
+                <xs:element name="ShortFile" type="xs:string" minOccurs="0" />
+                <xs:element name="Line" type="xs:int" />
+                <xs:element name="FalseAlarm" type="xs:boolean" minOccurs="0" />
+                <xs:element name="File" type="xs:string" />
+                <xs:element name="CodePrev" type="xs:unsignedInt" minOccurs="0" />
+                <xs:element name="CodeCurrent" type="xs:unsignedInt" minOccurs="0" />
+                <xs:element name="CodeNext" type="xs:unsignedInt" minOccurs="0" />
+                <xs:element name="TrialMessage" type="xs:boolean" minOccurs="0" />
+                <xs:element name="Analyzer" type="xs:int" minOccurs="0" />
+                <xs:element name="LineExtension" type="xs:string" minOccurs="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+      <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+        <xs:selector xpath=".//PVS-Studio_Analysis_Log" />
+        <xs:field xpath="Line" />
+        <xs:field xpath="Message" />
+        <xs:field xpath="File" />
+      </xs:unique>
+    </xs:element>
+  </xs:schema>
+  <Solution_Path>
+    <SolutionPath>D:\workspace\Grapedit\Grapedit.sln</SolutionPath>
+    <SolutionVersion>11.0</SolutionVersion>
+  </Solution_Path>
+  <PVS-Studio_Analysis_Log>
+    <FavIcon>false</FavIcon>
+    <Level>3</Level>
+    <DefaultOrder>1</DefaultOrder>
+    <ErrorCode>V122</ErrorCode>
+    <Message>Memsize type is used in the struct/class.</Message>
+    <Project>Grapedit</Project>
+    <ShortFile>lua.h</ShortFile>
+    <Line>353</Line>
+    <FalseAlarm>false</FalseAlarm>
+    <File>d:\luajit\2.0.2\include\lua.h</File>
+    <CodePrev>19075</CodePrev>
+    <CodeCurrent>142997807</CodeCurrent>
+    <CodeNext>4027652888</CodeNext>
+    <TrialMessage>false</TrialMessage>
+    <Analyzer>1</Analyzer>
+    <LineExtension />
+  </PVS-Studio_Analysis_Log>
+  <PVS-Studio_Analysis_Log>
+    <FavIcon>false</FavIcon>
+    <Level>3</Level>
+    <DefaultOrder>2</DefaultOrder>
+    <ErrorCode>V122</ErrorCode>
+    <Message>Memsize type is used in the struct/class.</Message>
+    <Project>Grapedit</Project>
+    <ShortFile>lua.h</ShortFile>
+    <Line>354</Line>
+    <FalseAlarm>false</FalseAlarm>
+    <File>d:\luajit\2.0.2\include\lua.h</File>
+    <CodePrev>142997807</CodePrev>
+    <CodeCurrent>4027652888</CodeCurrent>
+    <CodeNext>2337424569</CodeNext>
+    <TrialMessage>false</TrialMessage>
+    <Analyzer>1</Analyzer>
+    <LineExtension />
+  </PVS-Studio_Analysis_Log>
+  <PVS-Studio_Analysis_Log>
+    <FavIcon>false</FavIcon>
+    <Level>3</Level>
+    <DefaultOrder>3</DefaultOrder>
+    <ErrorCode>V122</ErrorCode>
+    <Message>Memsize type is used in the struct/class.</Message>
+    <Project>Grapedit</Project>
+    <ShortFile>lua.h</ShortFile>
+    <Line>355</Line>
+    <FalseAlarm>false</FalseAlarm>
+    <File>d:\luajit\2.0.2\include\lua.h</File>
+    <CodePrev>4027652888</CodePrev>
+    <CodeCurrent>2337424569</CodeCurrent>
+    <CodeNext>571785415</CodeNext>
+    <TrialMessage>false</TrialMessage>
+    <Analyzer>1</Analyzer>
+    <LineExtension />
+  </PVS-Studio_Analysis_Log>
+  <PVS-Studio_Analysis_Log>
+    <FavIcon>false</FavIcon>
+    <Level>3</Level>
+    <DefaultOrder>4</DefaultOrder>
+    <ErrorCode>V122</ErrorCode>
+    <Message>Memsize type is used in the struct/class.</Message>
+    <Project>Grapedit</Project>
+    <ShortFile>lua.h</ShortFile>
+    <Line>356</Line>
+    <FalseAlarm>false</FalseAlarm>
+    <File>d:\luajit\2.0.2\include\lua.h</File>
+    <CodePrev>2337424569</CodePrev>
+    <CodeCurrent>571785415</CodeCurrent>
+    <CodeNext>157069119</CodeNext>
+    <TrialMessage>false</TrialMessage>
+    <Analyzer>1</Analyzer>
+    <LineExtension />
+  </PVS-Studio_Analysis_Log>
+  <PVS-Studio_Analysis_Log>
+    <FavIcon>false</FavIcon>
+    <Level>3</Level>
+    <DefaultOrder>5</DefaultOrder>
+    <ErrorCode>V122</ErrorCode>
+    <Message>Memsize type is used in the struct/class.</Message>
+    <Project>Grapedit</Project>
+    <ShortFile>lauxlib.h</ShortFile>
+    <Line>25</Line>
+    <FalseAlarm>false</FalseAlarm>
+    <File>d:\luajit\2.0.2\include\lauxlib.h</File>
+    <CodePrev>193850625</CodePrev>
+    <CodeCurrent>1117165</CodeCurrent>
+    <CodeNext>8700941</CodeNext>
+    <TrialMessage>false</TrialMessage>
+    <Analyzer>1</Analyzer>
+    <LineExtension />
+  </PVS-Studio_Analysis_Log>
+  <PVS-Studio_Analysis_Log>
+    <FavIcon>false</FavIcon>
+    <Level>3</Level>
+    <DefaultOrder>6</DefaultOrder>
+    <ErrorCode>V122</ErrorCode>
+    <Message>Memsize type is used in the struct/class.</Message>
+    <Project>Grapedit</Project>
+    <ShortFile>lauxlib.h</ShortFile>
+    <Line>26</Line>
+    <FalseAlarm>false</FalseAlarm>
+    <File>d:\luajit\2.0.2\include\lauxlib.h</File>
+    <CodePrev>1117165</CodePrev>
+    <CodeCurrent>8700941</CodeCurrent>
+    <CodeNext>47937</CodeNext>
+    <TrialMessage>false</TrialMessage>
+    <Analyzer>1</Analyzer>
+    <LineExtension />
+  </PVS-Studio_Analysis_Log>
+  <PVS-Studio_Analysis_Log>
+    <FavIcon>false</FavIcon>
+    <Level>3</Level>
+    <DefaultOrder>7</DefaultOrder>
+    <ErrorCode>V122</ErrorCode>
+    <Message>Memsize type is used in the struct/class.</Message>
+    <Project>Grapedit</Project>
+    <ShortFile>lauxlib.h</ShortFile>
+    <Line>125</Line>
+    <FalseAlarm>false</FalseAlarm>
+    <File>d:\luajit\2.0.2\include\lauxlib.h</File>
+    <CodePrev>1550807035</CodePrev>
+    <CodeCurrent>1058441466</CodeCurrent>
+    <CodeNext>3628275329</CodeNext>
+    <TrialMessage>false</TrialMessage>
+    <Analyzer>1</Analyzer>
+    <LineExtension />
+  </PVS-Studio_Analysis_Log>
+  <PVS-Studio_Analysis_Log>
+    <FavIcon>false</FavIcon>
+    <Level>3</Level>
+    <DefaultOrder>8</DefaultOrder>
+    <ErrorCode>V122</ErrorCode>
+    <Message>Memsize type is used in the struct/class.</Message>
+    <Project>Grapedit</Project>
+    <ShortFile>lauxlib.h</ShortFile>
+    <Line>127</Line>
+    <FalseAlarm>false</FalseAlarm>
+    <File>d:\luajit\2.0.2\include\lauxlib.h</File>
+    <CodePrev>3628275329</CodePrev>
+    <CodeCurrent>136643</CodeCurrent>
+    <CodeNext>751764919</CodeNext>
+    <TrialMessage>false</TrialMessage>
+    <Analyzer>1</Analyzer>
+    <LineExtension />
+  </PVS-Studio_Analysis_Log>
+  <PVS-Studio_Analysis_Log>
+    <FavIcon>false</FavIcon>
+    <Level>2</Level>
+    <DefaultOrder>9</DefaultOrder>
+    <ErrorCode>V556</ErrorCode>
+    <Message>The values of different enum types are compared: switch(ENUM_TYPE_A) { case ENUM_TYPE_B: ... }.</Message>
+    <Project>Grapedit</Project>
+    <ShortFile>baseitem.cpp</ShortFile>
+    <Line>68</Line>
+    <FalseAlarm>true</FalseAlarm>
+    <File>d:\workspace\grapedit\src\ui\baseitem.cpp</File>
+    <CodePrev>0</CodePrev>
+    <CodeCurrent>4086806271</CodeCurrent>
+    <CodeNext>3721499619</CodeNext>
+    <TrialMessage>false</TrialMessage>
+    <Analyzer>4</Analyzer>
+    <LineExtension />
+  </PVS-Studio_Analysis_Log>
+  <PVS-Studio_Analysis_Log>
+    <FavIcon>false</FavIcon>
+    <Level>0</Level>
+    <DefaultOrder>10</DefaultOrder>
+    <ErrorCode>V004</ErrorCode>
+    <Message>Diagnostics from the 64-bit rule set are not entirely accurate without the appropriate 64-bit compiler. Consider utilizing 64-bit compiler if possible.</Message>
+    <Project>Grapedit</Project>
+    <ShortFile xml:space="preserve"> </ShortFile>
+    <Line>1</Line>
+    <FalseAlarm>false</FalseAlarm>
+    <File xml:space="preserve"> </File>
+    <CodePrev>0</CodePrev>
+    <CodeCurrent>0</CodeCurrent>
+    <CodeNext>0</CodeNext>
+    <TrialMessage>false</TrialMessage>
+    <Analyzer>1</Analyzer>
+    <LineExtension />
+  </PVS-Studio_Analysis_Log>
+</NewDataSet>

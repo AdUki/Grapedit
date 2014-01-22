@@ -2,15 +2,17 @@
 
 #include "pch.h"
 
-DECLARE_CLASS_PTR(QGraphicsScene)
+#include "GraphicElement.h"
 
-DECLARE_CLASS_PTR(GraphicElement)
+DECLARE_CLASS_PTR(QGraphicsScene)
+DECLARE_CLASS_PTR(QGraphicsLinearLayout)
+
 DECLARE_CLASS_PTR(GraphicTextState)
 DECLARE_CLASS_PTR(GraphicText)
 
 class GraphicText : public QObject
 {
-	Q_OBJECT
+	Q_OBJECT //-V524
 
 public:
 	GraphicText(const std::string& textType);
@@ -21,6 +23,13 @@ public:
 	QGraphicsScenePtr getScene() { return _scene; }
 
 	void testScene();
+
+public slots:
+
+	/// Funkcia na nastavenie nového obsahu textu s grafickými prvkami. Po nastavení sa zavolá LPeg parser a následne vytvoria grafické elementy
+	///
+	/// @param text Nový text
+	void setText(const std::string& text);
 	
 private:
 
@@ -28,10 +37,16 @@ private:
 
 	GraphicElements _displayedElements;
 	
-	std::string _textType;
 	std::string _text;
 
 	GraphicTextStatePtr _state;
-
 	QGraphicsScenePtr _scene;
+
+	QGraphicsLinearLayoutPtr _root;
+
+private slots:
+
+	void addElements(const GraphicElementsList& elements);
+	void updateElements(const GraphicElementsList& elements);
+	void removeElements(const GraphicElementsList& elements);
 };

@@ -5,10 +5,11 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 BaseElement::BaseElement()
 {
+	qDebug() << "NEW" << this;
 
 #ifndef NDEBUG	
 	static int cycle = 0;
-	const static QColor colors[7] = {
+	const static QColor colors[] = {
 		(QColor(255,200,200)),
 		(QColor(200,255,200)),
 		(QColor(200,200,255)),
@@ -18,7 +19,7 @@ BaseElement::BaseElement()
 		(QColor(210,210,210)),
 	};
 	_borderColor = colors[cycle];
-	cycle = (cycle + 1) % sizeof(colors);
+	cycle = (cycle + 1) % (sizeof(colors) / sizeof(QColor));
 #endif
 
 }
@@ -26,6 +27,7 @@ BaseElement::BaseElement()
 //////////////////////////////////////////////////////////////////////////////////////////////////
 BaseElement::~BaseElement()
 {
+	qDebug() << "DELETE" << this;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////

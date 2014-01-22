@@ -11,7 +11,7 @@ class TextItem : public BaseItem
 {
 public:
 	TextItem();
-	~TextItem();
+	virtual ~TextItem();
 	
 	void setFont(const QFontPtr& font);
 

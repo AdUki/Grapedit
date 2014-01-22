@@ -10,7 +10,7 @@ DECLARE_CLASS_PTR(MainWindow)
 
 class MainWindow : public QMainWindow
 {
-	Q_OBJECT
+	Q_OBJECT //-V524
 	
 public:
 	MainWindow();
@@ -20,7 +20,7 @@ public slots:
 	
 	/// Funkcia zobrazi dany text v hlavnom okne
 	///
-	/// @param textovy objekt s grafickymi elementami
+	/// @param graphicText textovy objekt s grafickymi elementami
 	void setGraphicText(const GraphicTextPtr& graphicText);
 	
 private:

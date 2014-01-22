@@ -13,8 +13,11 @@ class BaseItem :
 	public QGraphicsLayoutItem
 {
 public:
+	enum class VerticalAlignment { Center, Top, Bottom};
+	enum class HorizontalAlignment { Center, Left, Right};
+
 	BaseItem();
-	~BaseItem();
+	virtual ~BaseItem();
 
 	const std::string& getText() const { return _text; }
 	void setText(const std::string& text);

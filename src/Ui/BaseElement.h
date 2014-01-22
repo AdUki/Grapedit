@@ -7,11 +7,9 @@
 class BaseElement : public QGraphicsItem
 {
 public:
-	enum class VerticalAlignment { Center, Top, Bottom};
-	enum class HorizontalAlignment { Center, Left, Right};
 
 	BaseElement();
-	~BaseElement();
+	virtual ~BaseElement();
 
 protected:
 

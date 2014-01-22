@@ -8,6 +8,29 @@
 GraphicElement::ReusableInstancesMap GraphicElement::_reusableInstances;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
+GraphicElement::GraphicElement(const std::string& textType, const std::string& graphicType, size_t index, GraphicElement* parentPointer) 
+	: _graphicType (graphicType)
+	, _index(index)
+	, _parentPointer(parentPointer)
+	, _type(Type::Grid)
+{
+	qDebug() << "NEW GraphicElement" << (_type == Type::Grid ? "Grid" : "Item") 
+		<< this << _graphicType.c_str() << _index << _parentPointer;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+GraphicElement::GraphicElement(const std::string& textType, const std::string& graphicType, size_t index, const std::string& text, GraphicElement* parentPointer)
+	: _graphicType (graphicType)
+	, _index(index)
+	, _parentPointer(parentPointer)
+	, _type(Type::Item)
+	, _text(text)
+{
+	qDebug() << "NEW GraphicElement" << (_type == Type::Grid ? "Grid" : "Item") 
+		<< this << _graphicType.c_str() << _index << _parentPointer;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 GraphicElement::~GraphicElement()
 {
 	// Reusneme element pred tym ako sa znici objekt
@@ -23,33 +46,9 @@ GraphicElement::~GraphicElement()
 			_reusableInstances[key] = newList;
 		}
 	}
-}
 
-//////////////////////////////////////////////////////////////////////////////////////////////////
-GraphicElementPtr GraphicElement::createGridElement(const std::string& textType, const std::string& graphicType, size_t index, GraphicElement* parentPointer)
-{
-	GraphicElementPtr element = std::make_shared<GraphicElement>();
-
-	element->_graphicType = graphicType;
-	element->_index = index;
-	element->_parentPointer = parentPointer;
-	element->_type = Type::Grid;
-
-	return element;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-GraphicElementPtr GraphicElement::createItemElement(const std::string& textType, const std::string& graphicType, size_t index, const std::string& text, GraphicElement* parentPointer)
-{
-	GraphicElementPtr element = std::make_shared<GraphicElement>();
-
-	element->_graphicType = graphicType;
-	element->_index = index;
-	element->_parentPointer = parentPointer;
-	element->_type = Type::Item;
-	element->_text = text;
-
-	return element;
+	qDebug() << "DELETE GraphicElement" << (_type == Type::Grid ? "Grid" : "Item") 
+		<< this << _graphicType.c_str() << _index << _parentPointer;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,24 +72,26 @@ BaseItemPtr GraphicElement::getItem() const
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void GraphicElement::initGraphicalElement()
 {
-	// TODO: pre testovacie ucely sa vytvori iba text item a horizontalny layout
+	// TODO: ziskat graficke info zo stavu Lua
+	if (!isInitialized()) {
+		// Pozrieme ci nemozme reusenut objekt
+		_graphicalElement = dequeueReusableElement(_textType + _graphicType);
+		if (_graphicalElement == nullptr) {
+			// TODO: pre testovacie ucely sa vytvori iba text item a horizontalny layout
+			switch (_type) 
+			{
+			case GraphicElement::Type::Item:
+				_graphicalElement = std::make_shared<TextItem>();
+				break;
 
-	// Pozrieme ci nemozme reusenut objekt
-	_graphicalElement = dequeueReusableElement(_textType + _graphicType);
-	if (_graphicalElement == nullptr) {
-		switch (_type) 
-		{
-		case GraphicElement::Type::Item:
-			_graphicalElement = std::make_shared<TextItem>();
-			break;
+			case GraphicElement::Type::Grid:
+				_graphicalElement = std::make_shared<LinearGrid>(Qt::Orientation::Horizontal);
+				break;
 
-		case GraphicElement::Type::Grid:
-			_graphicalElement = std::make_shared<LinearGrid>(Qt::Orientation::Horizontal);
-			break;
-
-		default:
-			Q_ASSERT(false);
-			break;
+			default:
+				Q_ASSERT(false);
+				break;
+			}
 		}
 	}
 
@@ -108,17 +109,6 @@ void GraphicElement::initGraphicalElement()
 	default:
 		Q_ASSERT(false);
 		break;
-	}
-
-	if (_parentPointer != nullptr) {
-		GraphicElement* element = dynamic_cast<GraphicElement*>(_parentPointer);
-		
-		// Kriticka cast kodu, rodic musi splnat vsetky tieto podmienky ak je dany
-		Q_ASSERT(element != nullptr);
-		Q_ASSERT(element->getType() == GraphicElement::Type::Grid);
-		Q_ASSERT(element->isInitialized());
-
-		element->getGrid()->insertElement(*this, _index);
 	}
 }
 
