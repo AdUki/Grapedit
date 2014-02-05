@@ -52,6 +52,11 @@ set(UI_FILES
 # Set project name
 project(${PROJECT})
 
+ADD_DEFINITIONS(
+    -std=c++11 # Or -std=c++0x
+    # Other flags
+)
+
 # Qt Stuff
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
@@ -72,6 +77,7 @@ include_directories(${LUA_INCLUDE_DIR})
 
 # Find Qt modules, every module separately
 find_package(Qt5Widgets REQUIRED)
+include_directories(${Qt5Widgets_INCLUDE_DIRS})
 
 # Create nice groups in IDEs
 source_group("UI Files" FILES ${UI_FILES})
