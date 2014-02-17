@@ -1,69 +1,75 @@
--- Add lib file and other libraries to path
-package.path = './libs/?.lua;' .. package.path
-package.path = './libs/?/init.lua;' .. package.path
+dofile 'init.lua'
 
-require 'pl'
+local parser = require 'parser'
+local compare = require 'compare'
+local utils = require 'utils'
 
-local lpeg = require 'lpeglj'
-V = lpeg.V
-S = lpeg.S
-P = lpeg.P
-R = lpeg.R
-
---- Function writting outputs that repeats on multiple lines and parts are offseted to some amount
--- For example offsetPrint(8, 'aaa', 'bbb') prints: "aaa........bbb"
--- You can use function like this offsetPrint('DEBUG: ', 10, 'output is' .. tostring(number), 'for variable' .. tostring(var) )
--- Output: "DEBUG: output is 123002..............for variable testVar"
-function offsetPrint(...)
-	local parts = {...}
-	local lastOffset = 0
-	for i, v in ipairs(parts) do
-
-	    if type(v) == 'number' then
-	    	lastOffset = v
-	    else
-	    	local text = tostring(v)
-		    io.write(text .. string.rep('.', lastOffset - #text))
-		    lastOffset = 0
-		end
-	end
-	print ''
+--- Load grammar and style
+-- Must be called to initialize lua state
+-- @param name
+function loadGrammarAndStyle(name)
+	local grammar = require(string.format("grammars.%s.grammar", name))
+	currentActiveStyle = require(string.format("grammars.%s.style", name))
+	currentActiveParser = parser.create(grammar, currentActiveStyle)
 end
 
+--- Parse new text
+-- You can call it to initialize AST also to parse new text
+-- @param newText
+-- TODO:
+-- @returns Last parsed character
+function parseText(newText)
 
---- Function applies style to grammar and creates parser
--- @param grammar Table with LPeg rules defined, must have initial rule at index 1
--- @param style Table with names of key values of rules in grammar. From them function will create coresponding caputres.
--- @return LPeg parser
-function createParser(grammar, style)
-	
-	for i, v in pairs(grammar) do	
-		if style[i] then
+    print ('\nParsing text...')
+    print "==============================================="
+	local newTree = compare.parse(currentActiveParser, newText, currentActiveAST,
+		
+		-- Add element 
+		function(element, parent, index)
+		    utils.offsetPrint(
+		    	50, 'ADD: ' .. element.type .. ' "' .. tostring(element.value) .. '" ', 
+		    	18, ' at index ' .. tostring(index) .. ' ',
+		    	' to parent ' .. tostring(parent.type) .. ' "' .. tostring(parent.value) .. '"')
 
-			 -- Pre gridy potrebujeme table capture
-			if style[i].grid then
-				grammar[i] = lpeg.Ct(
-			        lpeg.Cg(lpeg.Cp(), 'startIndex') *
-					lpeg.Cg(lpeg.Cc(i), 'type') * 
-					lpeg.Cg(lpeg.Ct(v), 'value') *
-			        lpeg.Cg(lpeg.Cp(), 'endIndex')
-			    )
+			if type(element.value) == 'table' then
+		        element.instance = QT_addGrid(parent.instance, element.index)
+		    else
+		        element.instance = QT_addItem(parent.instance, element.index , element.value)
+		    end
+		end,
 
-			-- Pre itemy nam staci obycajna capture
-			elseif style[i].item then
-				grammar[i] = lpeg.Ct(
-			        lpeg.Cg(lpeg.Cp(), 'startIndex') *
-					lpeg.Cg(lpeg.Cc(i), 'type') * 
-					lpeg.Cg(lpeg.C(v), 'value') *
-			        lpeg.Cg(lpeg.Cp(), 'endIndex')
-		        )
-			else
-				error("Style member '" .. i .. "' must be either grid or item")
-			end
+		-- Update element
+		function(newElement, oldElement)
+			utils.offsetPrint(
+				50, 'UPDATE: ' .. tostring(oldElement.type) .. ' "' .. tostring(oldElement.value) .. '" ',
+				' to "' .. tostring(newElement.value) .. '"')
+
+		    QT_updateItem(newElement.instance, newElement.value)
+		end,
+
+		-- Remove element
+		function(element, parent, index)
+		    utils.offsetPrint(
+		    	50, 'REMOVE: ' .. element.type .. ' "' .. tostring(element.value) .. '" ',
+		    	18, ' at index ' .. tostring(index) .. ' ',
+		    	' from parent ' .. tostring(parent and parent.type) .. ' "' .. tostring(parent and parent.value) .. '"')
+
+	        QT_removeElement(element.instance)
 		end
-	end
+		)
 
-	return lpeg.Ct(grammar)
+	-- pretty.dump(newTree)
+	currentActiveAST = newTree
+end
+
+--- Get element style
+-- @param type Element type defined in style file
+-- @returns string(required), type(grid, item)
+-- @returns string(required), object to be created
+-- @returns string(optional), CSS style for Qt object
+function getStyle(type)
+	local style = currentActiveStyle[type]
+	return style.type, style.object, style.style
 end
 
 --[[

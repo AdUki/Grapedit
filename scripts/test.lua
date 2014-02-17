@@ -1,47 +1,16 @@
-dofile 'core.lua'
+dofile 'init.lua'
 
+local utils = require 'utils'
 local compare = require 'compare'
+local parserx = require 'parser'
 
 local grammar = require 'grammars.test.grammar'
 local style = require 'grammars.test.style'
-local info = require 'grammars.test.info'
 
 -- compile parser
-local parser = createParser(grammar, style)
+local parser = parserx.create(grammar, style)
 
 -- test it
-
---- Compares two AST
--- Deep compare of ASTs, is comparing only value and type
-function areTreesSame(t1,t2)
-	
-	if t1 == nil or t2 == nil then return false end
-
-	local ty1 = type(t1)
-	local ty2 = type(t2)
-	if ty1 ~= ty2 then return false end
-	
-	-- non-table types can be directly compared
-	if ty1 ~= 'table' and ty2 ~= 'table' then return t1 == t2 end
-
-	for k1,v1 in pairs(t1) do
-		if k1 == 'value' or k1 == 'type' then 
-			local v2 = t2[k1]
-			if v2 == nil or not areTreesSame(v1,v2) then return false end
-		end
-	end
-	
-	for k2,v2 in pairs(t2) do
-		if k2 == 'value' or k2 == 'type' then 
-			local v1 = t1[k2]
-			if v1 == nil or not areTreesSame(v1,v2) then return false end
-		end
-	end
-
-	return true
-end
-
-
 local function parseText(text)
 
     print ('\nParsing text: ' .. tostring(text))
@@ -54,11 +23,10 @@ local function parseText(text)
 		
 		-- Add element 
 		function(element, parent, index, oldParent)		    
-
-		    offsetPrint(
+		    utils.offsetPrint(
 		    	50, 'ADD: ' .. element.type .. ' "' .. tostring(element.value) .. '" ', 
 		    	18, ' at index ' .. tostring(index) .. ' ',
-		    	' to parent ' .. tostring(parent and parent.type) .. ' "' .. tostring(parent and parent.value) .. '"')
+		    	' to parent ' .. tostring(parent.type) .. ' "' .. tostring(parent.value) .. '"')
 
 			if tree ~= nil then
 				if oldParent ~= nil and type(oldParent.value) == 'table' then
@@ -69,7 +37,7 @@ local function parseText(text)
 
 		-- Update element
 		function(newElement, oldElement)
-			offsetPrint(
+			utils.offsetPrint(
 				50, 'UPDATE: ' .. tostring(oldElement.type) .. ' "' .. tostring(oldElement.value) .. '" ',
 				' to "' .. tostring(newElement.value) .. '"')
 
@@ -80,7 +48,7 @@ local function parseText(text)
 
 		-- Remove element
 		function(element, parent, index)
-		    offsetPrint(
+		    utils.offsetPrint(
 		    	50, 'REMOVE: ' .. element.type .. ' "' .. tostring(element.value) .. '" ',
 		    	18, ' at index ' .. tostring(index) .. ' ',
 		    	' from parent ' .. tostring(parent and parent.type) .. ' "' .. tostring(parent and parent.value) .. '"')
@@ -115,7 +83,7 @@ local function parseText(text)
 		end, newItems)
 
 	-- compare new tree with old tree
-	if tree and newTree and areTreesSame(newTree, tree) == false then
+	if tree and newTree and utils.areTreesSame(newTree, tree) == false then
 		print ""
 		print "==============================================="
 		print "OLD TREE"

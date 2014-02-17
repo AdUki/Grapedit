@@ -10,6 +10,7 @@
 *.layout
 *.zip
 *.gch
+*.sublime*
 Makefile
 
 # Build results

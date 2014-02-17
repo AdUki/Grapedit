@@ -20,7 +20,7 @@ function parseAST(parser, text, tree, addFnc, updateFnc, removeFnc)
     local oldTree = tree or {}
     local newTree = parser:match(text)
 
-    if newTree == nil or (#newTree > 0 and #text + 1 ~= newTree[#newTree].endIndex) then
+    if newTree == nil or (#newTree > 0 and #text + 1 ~= newTree[#newTree].positionEnd) then
 
         -- if grammar failed to parse whole tree, return error
         print 'Reparsing done with error!\n'
@@ -133,9 +133,7 @@ function compareTrees(old, new, oldIndex, newIndex, oldParent, newParent)
 
     if new then
         new.index = newIndex
-        if newParent and newParent.type ~= 'root' then
-            new.parent = newParent
-        end
+        new.parent = newParent
     end
 
     -- Compare nodes
