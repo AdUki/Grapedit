@@ -32,6 +32,9 @@ end
 
 
 --- Function applies style to grammar and creates parser
+-- @param grammar Table with LPeg rules defined, must have initial rule at index 1
+-- @param style Table with names of key values of rules in grammar. From them function will create coresponding caputres.
+-- @return LPeg parser
 function createParser(grammar, style)
 	
 	for i, v in pairs(grammar) do	

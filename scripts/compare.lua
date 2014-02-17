@@ -29,8 +29,8 @@ function parseAST(parser, text, tree, addFnc, updateFnc, removeFnc)
     else
 
         -- when successful compare trees and set new tree
-        local rootOld = { table = { type='root' }, value = oldTree }
-        local rootNew = { table = { type='root' }, value = newTree }
+        local rootOld = { type = 'root' , value = oldTree }
+        local rootNew = { type = 'root' , value = newTree }
         compareTrees(rootOld, rootNew, 1, nil)
 
         print "Reparsing file done!\n"
@@ -113,8 +113,9 @@ function compareTables(oldTable, newTable, oldParent, newParent)
     end
 end
 
---- Functions compare trees represented by their root nodes
+--- Functions compare trees by their root nodes
 -- This function compare nodes, if they are different, node is deleted, if values are different node is updated. If node is table, function compareTables is called. If nodes are same (also when node is updated), values from old node is copied to new one.
+-- Also this function adds additional information to nodes, and that are parent and parent index
 -- Functions for creating, updating and deleting elements are createElement, updateElement and deleteElement
 -- @param old Node of old tree
 -- @param new Node of new tree
@@ -129,6 +130,13 @@ function compareTrees(old, new, oldIndex, newIndex, oldParent, newParent)
         return
     end
     -- print "Accepting"
+
+    if new then
+        new.index = newIndex
+        if newParent and newParent.type ~= 'root' then
+            new.parent = newParent
+        end
+    end
 
     -- Compare nodes
     local nodesAreSame = compareNodes(old, new)

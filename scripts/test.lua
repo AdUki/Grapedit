@@ -12,7 +12,7 @@ local parser = createParser(grammar, style)
 -- test it
 
 --- Compares two AST
--- Deep compare of ASTs, is ignoring startIndex and endIndex 
+-- Deep compare of ASTs, is comparing only value and type
 function areTreesSame(t1,t2)
 	
 	if t1 == nil or t2 == nil then return false end
@@ -25,14 +25,14 @@ function areTreesSame(t1,t2)
 	if ty1 ~= 'table' and ty2 ~= 'table' then return t1 == t2 end
 
 	for k1,v1 in pairs(t1) do
-		if k1 ~= 'startIndex' and k1 ~= 'endIndex' then 
+		if k1 == 'value' or k1 == 'type' then 
 			local v2 = t2[k1]
 			if v2 == nil or not areTreesSame(v1,v2) then return false end
 		end
 	end
 	
 	for k2,v2 in pairs(t2) do
-		if k2 ~= 'startIndex' and k2 ~= 'endIndex' then 
+		if k2 == 'value' or k2 == 'type' then 
 			local v1 = t1[k2]
 			if v1 == nil or not areTreesSame(v1,v2) then return false end
 		end
@@ -130,7 +130,7 @@ local function parseText(text)
 		print "==============================================="
 		error 'Compare algorithm is invalid, AST are not same!'
 	end
-	-- pretty.dump(tree)
+	pretty.dump(newTree)
 	tree = newTree
 end
 
