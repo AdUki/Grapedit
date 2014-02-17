@@ -6,7 +6,7 @@
 
 DECLARE_CLASS_PTR(GraphicTextState)
 
-/// Kadı textovı súbor má vlastnı interpreter jazyka Lua. Táto trieda obsluhuje tento interpreter a poskytuje základné API.
+/// KaÅ¾dÃ½ textovÃ½ sÃºbor mÃ¡ vlastnÃ½ interpreter jazyka Lua. TÃ¡to trieda obsluhuje tento interpreter a poskytuje zÃ¡kladnÃ© API.
 class GraphicTextState : public QObject
 {
 	Q_OBJECT //-V524
@@ -19,9 +19,9 @@ public:
 	GraphicTextState();
 	~GraphicTextState();
 
-	/// Funkcia na získanie typu textu.
+	/// Funkcia na zÃ­skanie typu textu.
 	///
-	/// @returns Funkcia vráti typ textu, ktorı udáva, èo je jeho obsahom, napr. XML, C, Java, Lua súbor
+	/// @returns Funkcia vrÃ¡ti typ textu, ktorÃ½ udÃ¡va, Äo je jeho obsahom, napr. XML, C, Java, Lua sÃºbor
 	std::string getTextType() const { return _textType; }
 
 	/// Funkcia na reparsovanie noveho textu, volanie sa spusta na novom threade a nasledne su volane callbacky
@@ -29,9 +29,9 @@ public:
 	/// @param text Text na parsovanie
 	void reparseText(const std::string& text);
 
-	/// Funkcia nám naèíta súbor s gramatikov. Tento súbor musí by uloenı na preddefinovanom mieste.
+	/// Funkcia nÃ¡m naÄÃ­ta sÃºbor s gramatikov. Tento sÃºbor musÃ­ byÅ¥ uloÅ¾enÃ½ na preddefinovanom mieste.
 	///
-	/// @param filename Udáva názov súboru, ktorı sa ma naèíta. Konèí príponov .lua, ale túto príponu nezadávame
+	/// @param filename UdÃ¡va nÃ¡zov sÃºboru, ktorÃ½ sa ma naÄÃ­taÅ¥. KonÄÃ­ prÃ­ponov .lua, ale tÃºto prÃ­ponu nezadÃ¡vame
 	void loadGrammarFile(const std::string& filename);
 
 	void addNewElement(GraphicElement* element);

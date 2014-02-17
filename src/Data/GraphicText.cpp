@@ -12,14 +12,15 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 GraphicText::GraphicText(const std::string& textType)
 {
-	_scene = std::make_shared<QGraphicsScene>();
-	_root = std::make_shared<QGraphicsLinearLayout>(Qt::Orientation::Vertical);
+	_scene = boost::make_shared<QGraphicsScene>();
+	_root = boost::make_shared<QGraphicsLinearLayout>(Qt::Orientation::Vertical);
 
+    // Vytvorime root element
 	QGraphicsWidget* container = new QGraphicsWidget();
 	container->setLayout(_root.get());
 	_scene->addItem(container);
 
-	_state = std::make_shared<GraphicTextState>();
+	_state = boost::make_shared<GraphicTextState>();
 	setTextType(textType);
 
 	qDebug() << "NEW" << this << "textType = " << textType.c_str();
@@ -46,7 +47,7 @@ void GraphicText::setTextType(const std::string& textType)
 	_displayedElements.clear();
 
 	// Nastartujeme novy state, ak mame stary automaticky sa znici
-	_state = std::make_shared<GraphicTextState>();
+	_state = boost::make_shared<GraphicTextState>();
 	_state->loadGrammarFile(filename);
 
 	connect(_state.get(), &GraphicTextState::addElementsToScene, this, &GraphicText::addElements);
@@ -107,10 +108,10 @@ void GraphicText::addElements(const GraphicElementsList& elements)
 			default:
 				Q_ASSERT(false);
 				break;
-			} 
+			}
 		}
 		else {
-		
+
 			// Kriticka cast kodu, rodic musi splnat vsetky tieto podmienky ak je dany
 			Q_ASSERT(element->getParent()->getType() == GraphicElement::Type::Grid);
 			Q_ASSERT(element->getParent()->isInitialized());
@@ -132,9 +133,9 @@ void GraphicText::updateElements(const GraphicElementsList& elements)
 void GraphicText::removeElements(const GraphicElementsList& elements)
 {
 	for (GraphicElement* element : elements) {
-		
+
 		_scene->removeItem(element->getElement().get());
-		
+
 		if (element->getParent() == nullptr) {
 			switch (element->getType())
 			{

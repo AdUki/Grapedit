@@ -53,13 +53,14 @@ set(UI_FILES
 project(${PROJECT})
 
 ADD_DEFINITIONS(
-    -std=c++11 # Or -std=c++0x
-    # Other flags
+    -std=c++11
+    -DUSING_PCH
 )
 
 # Qt Stuff
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
+set(QT_PRECOMPILED_HEADER "pch.h")
 
 # Boost stuff
 #set(Boost_USE_STATIC_LIBS OFF)

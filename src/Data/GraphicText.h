@@ -17,7 +17,7 @@ class GraphicText : public QObject
 public:
 	GraphicText(const std::string& textType);
 	~GraphicText();
-	
+
 	void setTextType(const std::string& textType);
 
 	QGraphicsScenePtr getScene() { return _scene; }
@@ -26,17 +26,17 @@ public:
 
 public slots:
 
-	/// Funkcia na nastavenie nového obsahu textu s grafickými prvkami. Po nastavení sa zavolá LPeg parser a následne vytvoria grafické elementy
+	/// Funkcia na nastavenie novÃ©ho obsahu textu s grafickÃ½mi prvkami. Po nastavenÃ­ sa zavolÃ¡ LPeg parser a nÃ¡sledne vytvoria grafickÃ© elementy
 	///
-	/// @param text Nový text
+	/// @param text NovÃ½ text
 	void setText(const std::string& text);
-	
+
 private:
 
 	typedef std::unordered_map<size_t, GraphicElementPtr> GraphicElements;
 
 	GraphicElements _displayedElements;
-	
+
 	std::string _text;
 
 	GraphicTextStatePtr _state;

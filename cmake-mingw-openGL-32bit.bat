@@ -14,8 +14,10 @@ set BOOST_LIBRARYDIR=C:\boost_1_55_0\bin.v2\libs
 set PATH=C:\Qt\Qt5.2.0\5.2.0\mingw48_32\bin;%PATH%
 set QTDIR=C:\Qt\Qt5.2.0\5.2.0\mingw48_32
 
-:: Run CMake Mingw codeblocks generator
-cmake -G "CodeBlocks - MinGW Makefiles"
+:: Run CMake Mingw generator
+mkdir build
+cd build
+cmake .. -G "Sublime Text 2 - MinGW Makefiles"
 
 :: After cmd is available, type Grapedit.sln to open Visual Studio with set up environment
 cmd

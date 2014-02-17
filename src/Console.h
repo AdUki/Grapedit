@@ -5,7 +5,7 @@
 DECLARE_CLASS_PTR(QThread)
 DECLARE_CLASS_PTR(Console)
 
-class Console : 
+class Console :
 	public QObject
 {
 	Q_OBJECT //-V524

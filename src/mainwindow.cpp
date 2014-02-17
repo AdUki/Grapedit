@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 MainWindow::MainWindow() : QMainWindow()
 {
-	UI = std::make_shared<Ui::MainWindow>();
+	UI = boost::make_shared<Ui::MainWindow>();
 	UI->setupUi(this);
 
 	// TODO: testovaci kod
@@ -32,7 +32,13 @@ void MainWindow::setGraphicText(const GraphicTextPtr& graphicText)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::testCanvas()
 {
-	GraphicTextPtr graphicText = std::make_shared<GraphicText>("default");
+	GraphicTextPtr graphicText = boost::make_shared<GraphicText>("default");
 	setGraphicText(graphicText);
 	graphicText->testScene();
+
+	//connect(UI->plainTextField, SIGNAL(textChanged()), graphicText.get(), SLOT(setText()));
+
+	connect(UI->plainTextEdit, &QPlainTextEdit::textChanged, [=](){
+                graphicText->setText(UI->plainTextEdit->toPlainText().toStdString());
+            });
 }

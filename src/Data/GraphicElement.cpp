@@ -57,7 +57,7 @@ BaseGridPtr GraphicElement::getGrid() const
 	Q_ASSERT(_type == Type::Grid);
 	Q_ASSERT(_graphicalElement != nullptr);
 
-	return std::static_pointer_cast<BaseGrid>(_graphicalElement);
+	return boost::static_pointer_cast<BaseGrid>(_graphicalElement);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,7 +66,7 @@ BaseItemPtr GraphicElement::getItem() const
 	Q_ASSERT(_type == Type::Item);
 	Q_ASSERT(_graphicalElement != nullptr);
 
-	return std::static_pointer_cast<BaseItem>(_graphicalElement);
+	return boost::static_pointer_cast<BaseItem>(_graphicalElement);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,11 +81,11 @@ void GraphicElement::initGraphicalElement()
 			switch (_type) 
 			{
 			case GraphicElement::Type::Item:
-				_graphicalElement = std::make_shared<TextItem>();
+				_graphicalElement = boost::make_shared<TextItem>();
 				break;
 
 			case GraphicElement::Type::Grid:
-				_graphicalElement = std::make_shared<LinearGrid>(Qt::Orientation::Horizontal);
+				_graphicalElement = boost::make_shared<LinearGrid>(Qt::Orientation::Horizontal);
 				break;
 
 			default:
@@ -99,7 +99,7 @@ void GraphicElement::initGraphicalElement()
 	switch (_type)
 	{
 	case GraphicElement::Type::Item:
-		std::static_pointer_cast<BaseItem>(_graphicalElement)->setText(_text);
+		boost::static_pointer_cast<BaseItem>(_graphicalElement)->setText(_text);
 		_text.clear();
 		break;
 

@@ -5,7 +5,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 Console::Console()
 {
-	_commandReader = std::make_shared<QThread>();
+	_commandReader = boost::make_shared<QThread>();
 
 	moveToThread(_commandReader.get());
     
@@ -23,7 +23,7 @@ Console::~Console()
 //////////////////////////////////////////////////////////////////////////////////////////////////
 ConsolePtr Console::getInstance()
 {
-	static ConsolePtr instance = std::make_shared<Console>();
+	static ConsolePtr instance = boost::make_shared<Console>();
 
 	return instance;
 }

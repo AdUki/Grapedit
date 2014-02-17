@@ -5,7 +5,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 TextItem::TextItem()
 {
-	_font = std::make_shared<QFont>();
+	_font = boost::make_shared<QFont>();
 	_font->setPointSize(11);
 	_font->setBold(false);
 }
