@@ -6,7 +6,7 @@
 
 #include "BaseElement.h"
 
-DECLARE_CLASS_PTR(BaseItem)
+DECLARE_CLASS_PTR(BaseItem);
 
 class BaseItem : 
 	public BaseElement,

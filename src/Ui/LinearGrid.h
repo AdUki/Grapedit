@@ -6,7 +6,7 @@
 
 #include "BaseGrid.h"
 
-DECLARE_CLASS_PTR(LinearGrid)
+DECLARE_CLASS_PTR(LinearGrid);
 
 class LinearGrid : 
 	public BaseGrid,

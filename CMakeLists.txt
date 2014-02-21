@@ -41,6 +41,11 @@ set(SOURCE_FILES
 	src/LuaBindings/ElementBindings.h
 	src/LuaBindings/ElementBindings.cpp
 
+	src/LuaUtils/Argument.h
+	src/LuaUtils/Argument.cpp
+	src/LuaUtils/LuaWorker.h
+	src/LuaUtils/LuaWorker.cpp
+
 	${PC_HEADER}.h
 	${PC_HEADER}.cpp
  )

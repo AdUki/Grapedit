@@ -5,7 +5,8 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 static int lua_iowrite_output(lua_State* L) 
 {
-	Console::setTextColor(Console::TextColor::Blue);
+	// TODO: farebne odlisit, nefunguje pre MSYS konzolu
+	// Console::setTextColor(Console::TextColor::Blue);
 	
 	int top = lua_gettop(L);
 	for (int i = 1; i <= top; i++) {  /* repeat for each level */
@@ -37,14 +38,16 @@ static int lua_iowrite_output(lua_State* L)
 		}
 	}
 
-	Console::resetTextColor();
+	// Console::resetTextColor();
 	return 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 static int lua_print_output(lua_State* L) 
 {
-	Console::setTextColor(Console::TextColor::Blue);
+	// TODO: farebne odlisit, nefunguje pre MSYS konzolu
+	// Console::setTextColor(Console::TextColor::Blue);
+	printf(" >>> ");
 
 	int top = lua_gettop(L);
 	for (int i = 1; i <= top; i++) {  /* repeat for each level */
@@ -81,14 +84,14 @@ static int lua_print_output(lua_State* L)
 
 	printf("\n");
 
-	Console::resetTextColor();
+	// Console::resetTextColor();
 	return 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void setupCoreBindings(lua_State* L)
 {
-	// set up print function
+	//set up print function
 	lua_pushcfunction(L, lua_print_output);
 	lua_setglobal(L, "print");
 

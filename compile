@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd build
-mingw32-make -j4 2>&1 | grep -B0 -A2 "error:"
+cd build-debug
+mingw32-make -j4 #2>&1 | grep -B0 -A2 "error:"
 cd ..
-echo "DONE"
+# echo "DONE"

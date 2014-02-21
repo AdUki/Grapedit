@@ -10,6 +10,7 @@ local removeElement
 -- @param updateFnc Callback when item is updated
 -- @param removeFnc Callback when item is deleted
 -- @return New reparsed tree (table) if succeeded, nil if not.
+-- @return Number of parsed characters from beginning.
 function parseAST(parser, text, tree, addFnc, updateFnc, removeFnc)
 
     -- initialization of variables
@@ -20,11 +21,18 @@ function parseAST(parser, text, tree, addFnc, updateFnc, removeFnc)
     local oldTree = tree or {}
     local newTree = parser:match(text)
 
-    if newTree == nil or (#newTree > 0 and #text + 1 ~= newTree[#newTree].positionEnd) then
+    local parsedCharacters = 0
+    if newTree ~= nil and #newTree > 0 then
+        parsedCharacters = newTree[#newTree].positionEnd
+    end
+
+    io.write('Parsed ' .. tostring(parsedCharacters) .. ' characters, ')
+
+    if #text + 1 ~= parsedCharacters then
 
         -- if grammar failed to parse whole tree, return error
-        print 'Reparsing done with error!\n'
-        return
+        print 'reparsing done with error!\n'
+        return nil, parsedCharacters
 
     else
 
@@ -33,8 +41,8 @@ function parseAST(parser, text, tree, addFnc, updateFnc, removeFnc)
         local rootNew = { type = 'root' , value = newTree }
         compareTrees(rootOld, rootNew, 1, nil)
 
-        print "Reparsing file done!\n"
-        return newTree
+        print("reparsing file done!\n")
+        return newTree, parsedCharacters
     end
 end
 

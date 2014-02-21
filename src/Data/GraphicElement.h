@@ -2,11 +2,11 @@
 
 #include "pch.h"
 
-DECLARE_CLASS_PTR(BaseItem)
-DECLARE_CLASS_PTR(BaseGrid)
-DECLARE_CLASS_PTR(BaseElement)
+DECLARE_CLASS_PTR(BaseItem);
+DECLARE_CLASS_PTR(BaseGrid);
+DECLARE_CLASS_PTR(BaseElement);
 
-DECLARE_CLASS_PTR(GraphicElement)
+DECLARE_CLASS_PTR(GraphicElement);
 typedef std::list<GraphicElement*> GraphicElementsList;
 
 /// Je to minimalisticka trieda, ktora vznikne ako prva pri pridavani prvkov do grafickej sceny. Po vytvoreni sa pointer na this vratime naspat do Lua, aby sme pri update a delete vedeli najst tieto prvky.

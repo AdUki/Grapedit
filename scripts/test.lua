@@ -10,6 +10,32 @@ local style = require 'grammars.test.style'
 -- compile parser
 local parser = parserx.create(grammar, style)
 
+utils.offsetPrint = function() end
+
+local function benchmarkGrammar(text)
+
+    print "\n==============================================="
+    print ('Parsing ' .. tostring(#text) .. ' characters')
+
+	local benchmarkStart = os.clock()
+	print ('Benchmark started at ' .. tostring(benchmarkStart))
+
+	local additions = 0
+	local updates = 0
+	local deletions = 0
+	tree = compare.parse(parser, text, tree, 
+		function() additions = additions + 1 end, 
+		function() updates = updates + 1 end, 
+		function() deletions = deletions + 1 end)
+
+	local benchmarkEnded = os.clock()
+	print ('Benchmark ended at ' .. tostring(benchmarkEnded))
+	print ('Total additions ' .. tostring(additions))
+	print ('Total updates ' .. tostring(updates))
+	print ('Total deletions ' .. tostring(deletions))
+	print ('Total time ' .. tostring(benchmarkEnded - benchmarkStart))
+end
+
 -- test it
 local function parseText(text)
 
@@ -102,15 +128,15 @@ local function parseText(text)
 	tree = newTree
 end
 
-parseText('')
-parseText('(a)')
-parseText('()')
-parseText('(b)')
-parseText('(b)a')
-parseText('a(b)a')
-parseText('(b)')
-parseText('[a]')
-parseText('(a)(((b))(b))')
+parseText ''
+parseText '(a)'
+parseText '()'
+parseText '(b)'
+parseText '(b)a'
+parseText 'a(b)a'
+parseText '(b)'
+parseText '[a]'
+parseText '(a)(((b))(b))'
 parseText 's[bbb(cc[c]c)eee((nnnnnn)ddd(jjjj))]'
 parseText 's[bbb(cc[c]c)eee((nnnnn)ddd(jjjj))]'
 parseText 's[bbb(cc[c]c)eee((nnnnn)ddd)]'
@@ -119,7 +145,7 @@ parseText '(a)(100())(c)c(-)'
 parseText '(a)[(100())(c)c](-)'
 parseText '(a)(100(c)c)'
 parseText 's[bbb(cc[c]c)eee((nnnnn)ddd(jjjj))]'
-parseText('[a]')
+parseText '[a]'
 parseText '(a)(100)(cc)(-)'
 parseText '(a)(100(c)c)'
 parseText 's[bbb(cc[c]c)eee((nnnnn)ddd(jjjj))]'

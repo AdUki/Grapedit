@@ -8,7 +8,7 @@
 
 #include "../Data/GraphicElement.h"
 
-DECLARE_CLASS_PTR(BaseGrid)
+DECLARE_CLASS_PTR(BaseGrid);
 
 class BaseGrid : 
 	public BaseElement

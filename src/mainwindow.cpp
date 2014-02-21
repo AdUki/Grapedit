@@ -11,7 +11,15 @@ MainWindow::MainWindow() : QMainWindow()
 	UI->setupUi(this);
 
 	// TODO: testovaci kod
-	testCanvas();
+	// testCanvas();
+
+	GraphicTextPtr graphicText = boost::make_shared<GraphicText>("test");
+	setGraphicText(graphicText);
+
+	connect(UI->plainTextEdit, &QPlainTextEdit::textChanged, [this](){
+		if (_currentGraphicText != nullptr)
+			_currentGraphicText->setText(UI->plainTextEdit->toPlainText().toStdString());
+	});
 
 	qDebug() << "NEW" << this;
 }
@@ -41,4 +49,10 @@ void MainWindow::testCanvas()
 	connect(UI->plainTextEdit, &QPlainTextEdit::textChanged, [=](){
                 graphicText->setText(UI->plainTextEdit->toPlainText().toStdString());
             });
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void MainWindow::setupTextEditField()
+{
+
 }

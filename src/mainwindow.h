@@ -3,10 +3,10 @@
 
 #include <QMainWindow>
 
-DECLARE_NS_CLASS_PTR(Ui, MainWindow)
+DECLARE_NS_CLASS_PTR(Ui, MainWindow);
 
-DECLARE_CLASS_PTR(GraphicText)
-DECLARE_CLASS_PTR(MainWindow)
+DECLARE_CLASS_PTR(GraphicText);
+DECLARE_CLASS_PTR(MainWindow);
 
 class MainWindow : public QMainWindow
 {
@@ -30,5 +30,6 @@ private:
 	GraphicTextPtr _currentGraphicText;
 
 	void testCanvas();
+	void setupTextEditField();
 };
 

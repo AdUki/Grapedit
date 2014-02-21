@@ -1,5 +1,7 @@
 dofile 'init.lua'
 
+print "Initializing core"
+
 local parser = require 'parser'
 local compare = require 'compare'
 local utils = require 'utils'
@@ -8,9 +10,17 @@ local utils = require 'utils'
 -- Must be called to initialize lua state
 -- @param name
 function loadGrammarAndStyle(name)
+	print("Loading grammar and style: " .. name)
+
 	local grammar = require(string.format("grammars.%s.grammar", name))
 	currentActiveStyle = require(string.format("grammars.%s.style", name))
 	currentActiveParser = parser.create(grammar, currentActiveStyle)
+
+	print("Grammar and style " .. name .. " successfully loaded.")
+end
+
+function testFnc(text)
+	print(text)
 end
 
 --- Parse new text
@@ -22,6 +32,7 @@ function parseText(newText)
 
     print ('\nParsing text...')
     print "==============================================="
+
 	local newTree = compare.parse(currentActiveParser, newText, currentActiveAST,
 		
 		-- Add element 

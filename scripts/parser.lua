@@ -1,3 +1,4 @@
+-- local lpeg = require 'lpeglj'
 local lpeg = require 'lpeglj'
 
 -- Create shortcuts for lpeg

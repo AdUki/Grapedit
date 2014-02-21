@@ -36,7 +36,7 @@ void Console::setTextColor(TextColor color)
 	SetConsoleTextAttribute(hConsole, color);
 #else
 	// TODO: not tested
-	static char** ansiCodes = { "\033[30m", "", "\033[32m", "\033[36m", "", "", "", "", "\033[34m", "\033[32m", "", "\033[31m", "\033[35m", "\033[33m", "\033[37m" }
+	static std::vector<char*> ansiCodes = initializeAnsiCodes();
 	printf(ansiCodes[color]);
 #endif
 }
@@ -63,4 +63,28 @@ void Console::startReadingCommands()
 			emit commandEntered(command);
 		}
 	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+std::vector<char*> Console::initializeAnsiCodes()
+{
+	std::vector<char*> ansiCodes;
+
+	ansiCodes.push_back("\033[30m");
+	ansiCodes.push_back("");
+	ansiCodes.push_back("\033[32m");
+	ansiCodes.push_back("\033[36m");
+	ansiCodes.push_back("");
+	ansiCodes.push_back("");
+	ansiCodes.push_back("");
+	ansiCodes.push_back("");
+	ansiCodes.push_back("\033[34m");
+	ansiCodes.push_back("\033[32m");
+	ansiCodes.push_back("");
+	ansiCodes.push_back("\033[31m");
+	ansiCodes.push_back("\033[35m");
+	ansiCodes.push_back("\033[33m");
+	ansiCodes.push_back("\033[37m");
+
+	return ansiCodes;
 }

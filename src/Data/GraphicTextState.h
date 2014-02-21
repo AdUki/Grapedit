@@ -2,9 +2,11 @@
 
 #include "pch.h"
 
+#include <QMutex>
+
 #include "GraphicElement.h"
 
-DECLARE_CLASS_PTR(GraphicTextState)
+DECLARE_CLASS_PTR(GraphicTextState);
 
 /// Každý textový súbor má vlastný interpreter jazyka Lua. Táto trieda obsluhuje tento interpreter a poskytuje základné API.
 class GraphicTextState : public QObject
@@ -29,10 +31,10 @@ public:
 	/// @param text Text na parsovanie
 	void reparseText(const std::string& text);
 
-	/// Funkcia nám načíta súbor s gramatikov. Tento súbor musí byť uložený na preddefinovanom mieste.
+	/// Funkcia nám načíta súbory s gramatikov a so štýlom. Tieto súbory musia byť uložené na preddefinovanom mieste v priečinku.
 	///
-	/// @param filename Udáva názov súboru, ktorý sa ma načítať. Končí príponov .lua, ale túto príponu nezadávame
-	void loadGrammarFile(const std::string& filename);
+	/// @param name Udáva názov priečinku, kde sú uložené súbory s gramatikou a štýlom.
+	void loadGrammar(const std::string& name);
 
 	void addNewElement(GraphicElement* element);
 	void addUpdateElement(GraphicElement* element);
@@ -67,6 +69,8 @@ private:
 	GraphicElementsList _deleteElements;
 
 	lua_State* _state;
+	QMutex _mutex;
 
 	std::string _textType;
+	
 };

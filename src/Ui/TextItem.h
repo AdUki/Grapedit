@@ -4,8 +4,8 @@
 
 #include "BaseItem.h"
 
-DECLARE_CLASS_PTR(QFont)
-DECLARE_CLASS_PTR(TextItem)
+DECLARE_CLASS_PTR(QFont);
+DECLARE_CLASS_PTR(TextItem);
 
 class TextItem : public BaseItem
 {

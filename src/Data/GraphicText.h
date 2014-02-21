@@ -4,11 +4,11 @@
 
 #include "GraphicElement.h"
 
-DECLARE_CLASS_PTR(QGraphicsScene)
-DECLARE_CLASS_PTR(QGraphicsLinearLayout)
+DECLARE_CLASS_PTR(QGraphicsScene);
+DECLARE_CLASS_PTR(QGraphicsLinearLayout);
 
-DECLARE_CLASS_PTR(GraphicTextState)
-DECLARE_CLASS_PTR(GraphicText)
+DECLARE_CLASS_PTR(GraphicTextState);
+DECLARE_CLASS_PTR(GraphicText);
 
 class GraphicText : public QObject
 {
@@ -18,6 +18,9 @@ public:
 	GraphicText(const std::string& textType);
 	~GraphicText();
 
+	/// Funkcia nastavý typ textu
+	///
+	/// textType Názov priečinku, z ktorého bude načítaný súbor s gramatikou a štýlom 
 	void setTextType(const std::string& textType);
 
 	QGraphicsScenePtr getScene() { return _scene; }

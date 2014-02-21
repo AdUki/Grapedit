@@ -20,7 +20,6 @@ GraphicText::GraphicText(const std::string& textType)
 	container->setLayout(_root.get());
 	_scene->addItem(container);
 
-	_state = boost::make_shared<GraphicTextState>();
 	setTextType(textType);
 
 	qDebug() << "NEW" << this << "textType = " << textType.c_str();
@@ -40,7 +39,7 @@ void GraphicText::setTextType(const std::string& textType)
 		filename = filename.substr(0, filename.size() - 4);
 	}
 
-	if (textType == _state->getTextType())
+	if (_state != nullptr && textType == _state->getTextType())
 		return;
 
 	// Zmazeme zobrazene elementy
@@ -48,7 +47,7 @@ void GraphicText::setTextType(const std::string& textType)
 
 	// Nastartujeme novy state, ak mame stary automaticky sa znici
 	_state = boost::make_shared<GraphicTextState>();
-	_state->loadGrammarFile(filename);
+	_state->loadGrammar(textType);
 
 	connect(_state.get(), &GraphicTextState::addElementsToScene, this, &GraphicText::addElements);
 	connect(_state.get(), &GraphicTextState::removeElementsFromScene, this, &GraphicText::removeElements);

@@ -2,8 +2,8 @@
 
 #include "pch.h"
 
-DECLARE_CLASS_PTR(QThread)
-DECLARE_CLASS_PTR(Console)
+DECLARE_CLASS_PTR(QThread);
+DECLARE_CLASS_PTR(Console);
 
 class Console :
 	public QObject
@@ -38,4 +38,6 @@ private slots:
 private:
 
 	QThreadPtr _commandReader;
+
+	static std::vector<char*> initializeAnsiCodes();
 };

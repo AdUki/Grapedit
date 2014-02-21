@@ -1,6 +1,7 @@
 #include "./GraphicTextState.h"
 
 #include "../LuaBindings/CoreBindings.h"
+#include "../LuaUtils/LuaWorker.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const char* GraphicTextState::globalLuaName = "cpp_LuaState_this_ptr";
@@ -11,11 +12,21 @@ GraphicTextState::GraphicTextState()
 	_state = lua_open();
 	luaL_openlibs(_state);
 
-	setupCoreBindings(_state);
-
 	// Na to aby sme nasli prislusny LuaState pri statickych volaniach C funkcii, pridame this pointer do Lua stavu
 	lua_pushlightuserdata(_state, this);
 	lua_setglobal(_state, globalLuaName);
+
+	setupCoreBindings(_state);
+
+	// Nacitame core
+	LuaWorker* worker = new LuaWorker(_state);
+	worker->setFile("core.lua");
+
+	connect(worker, &LuaWorker::failed, [](const std::string& error) {
+		qDebug() << " >>> ERROR initializing core: " << error.c_str();
+	});
+
+    worker->startProtected(&_mutex);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,17 +38,38 @@ GraphicTextState::~GraphicTextState()
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void GraphicTextState::reparseText(const std::string& text)
 {
+	qDebug() << "Request text reparse...";
+
+	LuaWorker* worker = new LuaWorker(_state);
+
+	worker->setFunction("reparseText");
+	worker->addArgument(text);
+
+    // connect(worker, SIGNAL(failed(QByteArray)), this, SLOT(errorLoadConfig(QByteArray)));
+    // connect(worker, SIGNAL(finished()), this, SLOT(finishedLoadConfig()));
+    // connect(worker, SIGNAL(finished()), this, SIGNAL(workDone()));
+
+    connect(worker, &LuaWorker::failed, [](const std::string& error) {
+		qDebug() << " >>> ERROR reparseText(): " << error.c_str();
+	});
+
+    worker->startProtected(&_mutex);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-void GraphicTextState::loadGrammarFile(const std::string& filename)
+void GraphicTextState::loadGrammar(const std::string& name)
 {
-	_textType = filename;
-	
-	boost::format format("scripts\\grammars\\%s.lua");
-	format % filename;
+	_textType = name;
 
-	luaL_dofile(_state, format.str().c_str());
+	LuaWorker* worker = new LuaWorker(_state);
+	worker->setFunction("loadGrammarAndStyle");
+	worker->addArgument(name);
+    
+	connect(worker, &LuaWorker::failed, [](const std::string& error) {
+		qDebug() << " >>> ERROR loadGrammar(): " << error.c_str();
+	});
+
+    worker->startProtected(&_mutex);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
