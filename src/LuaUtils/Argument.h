@@ -1,9 +1,9 @@
 #pragma once
 
+#include "pch.h"
+
 #include <QByteArray>
 #include <QString>
-
-class lua_State;
 
 ///
 /// Use implicit constructors to initialize

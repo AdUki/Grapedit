@@ -1,7 +1,5 @@
 #include "LuaWorker.h"
 
-#include <lua.hpp>
-
 #include <QMutex>
 #include <QThread>
 #include <QDebug>

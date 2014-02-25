@@ -9,7 +9,7 @@ const char* GraphicTextState::globalLuaName = "cpp_LuaState_this_ptr";
 //////////////////////////////////////////////////////////////////////////////////////////////////
 GraphicTextState::GraphicTextState()
 {
-	_state = lua_open();
+	_state = luaL_newstate();
 	luaL_openlibs(_state);
 
 	// Na to aby sme nasli prislusny LuaState pri statickych volaniach C funkcii, pridame this pointer do Lua stavu

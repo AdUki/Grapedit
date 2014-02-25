@@ -1,7 +1,5 @@
 #include "Argument.h"
 
-#include <lua.hpp>
-
 ////////////////////////////////////////////////////////////////
 Argument::Argument()
     : _state(State::Uninitialized)

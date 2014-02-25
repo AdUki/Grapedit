@@ -37,7 +37,6 @@
 	#include <boost/make_shared.hpp>
 	#include <boost/algorithm/string/predicate.hpp>
 
-
 	#include <QApplication>
 	#include <QWidget>
 	#include <QObject>

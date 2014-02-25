@@ -78,8 +78,9 @@ find_package(Boost 1.55)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # Will find also LuaJIT, but must be named same as Lua51 and installed into directories
-find_package(Lua51)
-include_directories(${LUA_INCLUDE_DIR})
+# find_package(Lua51)
+find_package(LuaJIT)
+include_directories(${LUAJIT_INCLUDE_DIR})
 
 # Find Qt modules, every module separately
 find_package(Qt5Widgets REQUIRED)
@@ -113,16 +114,12 @@ qt5_use_modules (
 target_link_libraries(${PROJECT} ${Boost_LIBRARIES})
 
 # LuaJIT
-target_link_libraries(${PROJECT} ${LUA_LIBRARIES})
+target_link_libraries(${PROJECT} ${LUAJIT_LIBRARY})
 
 # Add precompiled header
 add_precompiled_header(${PROJECT} ${PC_HEADER}.h FORCEINCLUDE)
 
-# Will not show new windows prompt when running program
-# But also you will don't have aplication output :(
-#if (MSVC)
-#  set_target_properties(${PROJECT} PROPERTIES
-#    WIN32_EXECUTABLE YES
-#    LINK_FLAGS "/ENTRY:mainCRTStartup"
-#  )
-#endif ()
+# Flags for MacOS which links directly or indirectly against LuaJIT
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pagezero_size 10000 -image_base 100000000")
+endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
