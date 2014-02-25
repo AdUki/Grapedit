@@ -9,10 +9,10 @@ GraphicElement::ReusableInstancesMap GraphicElement::_reusableInstances;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 GraphicElement::GraphicElement(const std::string& textType, const std::string& graphicType, size_t index, GraphicElement* parentPointer) 
-	: _graphicType (graphicType)
-	, _index(index)
-	, _parentPointer(parentPointer)
+	: _index(index)
+    , _graphicType (graphicType)
 	, _type(Type::Grid)
+	, _parentPointer(parentPointer)
 {
 	qDebug() << "NEW GraphicElement" << (_type == Type::Grid ? "Grid" : "Item") 
 		<< this << _graphicType.c_str() << _index << _parentPointer;
@@ -20,11 +20,11 @@ GraphicElement::GraphicElement(const std::string& textType, const std::string& g
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 GraphicElement::GraphicElement(const std::string& textType, const std::string& graphicType, size_t index, const std::string& text, GraphicElement* parentPointer)
-	: _graphicType (graphicType)
-	, _index(index)
-	, _parentPointer(parentPointer)
-	, _type(Type::Item)
+	: _index(index)
 	, _text(text)
+    , _graphicType (graphicType)
+	, _type(Type::Item)
+	, _parentPointer(parentPointer)
 {
 	qDebug() << "NEW GraphicElement" << (_type == Type::Grid ? "Grid" : "Item") 
 		<< this << _graphicType.c_str() << _index << _parentPointer;

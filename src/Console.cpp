@@ -36,8 +36,8 @@ void Console::setTextColor(TextColor color)
 	SetConsoleTextAttribute(hConsole, color);
 #else
 	// TODO: not tested
-	static std::vector<char*> ansiCodes = initializeAnsiCodes();
-	printf(ansiCodes[color]);
+	static std::vector<const char*> ansiCodes = initializeAnsiCodes();
+	printf("%s", ansiCodes[color]);
 #endif
 }
 
@@ -66,9 +66,9 @@ void Console::startReadingCommands()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-std::vector<char*> Console::initializeAnsiCodes()
+std::vector<const char*> Console::initializeAnsiCodes()
 {
-	std::vector<char*> ansiCodes;
+	std::vector<const char*> ansiCodes;
 
 	ansiCodes.push_back("\033[30m");
 	ansiCodes.push_back("");

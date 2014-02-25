@@ -39,5 +39,5 @@ private:
 
 	QThreadPtr _commandReader;
 
-	static std::vector<char*> initializeAnsiCodes();
+	static std::vector<const char*> initializeAnsiCodes();
 };
