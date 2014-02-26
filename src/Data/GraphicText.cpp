@@ -13,11 +13,11 @@
 GraphicText::GraphicText(const std::string& textType)
 {
 	_scene = boost::make_shared<QGraphicsScene>();
-	_root = boost::make_shared<QGraphicsLinearLayout>(Qt::Orientation::Vertical);
-
+	_root = new QGraphicsLinearLayout(Qt::Orientation::Vertical);
+    
     // Vytvorime root element
 	QGraphicsWidget* container = new QGraphicsWidget();
-	container->setLayout(_root.get());
+	container->setLayout(_root);
 	_scene->addItem(container);
 
 	setTextType(textType);

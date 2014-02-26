@@ -45,7 +45,8 @@ private:
 	GraphicTextStatePtr _state;
 	QGraphicsScenePtr _scene;
 
-	QGraphicsLinearLayoutPtr _root;
+    /// Musíme mať raw pointer, pretože scéna automaticky maže všetky objekty pri dealokovaní
+	QGraphicsLinearLayout* _root;
 
 private slots:
 
