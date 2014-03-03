@@ -47,7 +47,7 @@ static int lua_print_output(lua_State* L)
 {
 	// TODO: farebne odlisit, nefunguje pre MSYS konzolu
 	// Console::setTextColor(Console::TextColor::Blue);
-	printf(" >>> ");
+//	printf(" >>> ");
 
 	int top = lua_gettop(L);
 	for (int i = 1; i <= top; i++) {  /* repeat for each level */

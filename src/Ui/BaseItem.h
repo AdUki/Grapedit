@@ -21,6 +21,8 @@ public:
 
 	const std::string& getText() const { return _text; }
 	void setText(const std::string& text);
+    
+    void updateGeometry() override;
 
 protected:
 

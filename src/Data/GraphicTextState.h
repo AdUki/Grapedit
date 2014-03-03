@@ -2,8 +2,6 @@
 
 #include "pch.h"
 
-#include <QMutex>
-
 #include "GraphicElement.h"
 
 DECLARE_CLASS_PTR(GraphicTextState);
@@ -23,7 +21,7 @@ public:
 
 	/// Funkcia na získanie typu textu.
 	///
-	/// @returns Funkcia vráti typ textu, ktorý udáva, čo je jeho obsahom, napr. XML, C, Java, Lua súbor
+	/// @return Funkcia vráti typ textu, ktorý udáva, čo je jeho obsahom, napr. XML, C, Java, Lua súbor
 	std::string getTextType() const { return _textType; }
 
 	/// Funkcia na reparsovanie noveho textu, volanie sa spusta na novom threade a nasledne su volane callbacky
@@ -53,15 +51,16 @@ signals:
 
 private:
 	
-	struct GraphicElementComparator {
+	struct GraphicElementIndexComparator {
 		bool operator() (GraphicElement* lhs, GraphicElement* rhs) const{
 			return lhs->getIndex() < rhs->getIndex();
 		}
 	};
 
-	typedef std::set<GraphicElement*, GraphicElementComparator> SortedElements;
-	typedef std::unordered_map<size_t, SortedElements> NewElementsBuckets;
-	typedef std::list<size_t> NewElementsIndexes;
+    typedef GraphicElement* GraphicElementKey;
+	typedef std::set<GraphicElement*, GraphicElementIndexComparator> SortedElements;
+	typedef std::map<GraphicElementKey, SortedElements> NewElementsBuckets;
+	typedef std::list<GraphicElementKey> NewElementsIndexes;
 
 	NewElementsBuckets _newElementsBuckets;
 	NewElementsIndexes _newElementsIndexes;
@@ -69,7 +68,6 @@ private:
 	GraphicElementsList _deleteElements;
 
 	lua_State* _state;
-	QMutex _mutex;
 
 	std::string _textType;
 	

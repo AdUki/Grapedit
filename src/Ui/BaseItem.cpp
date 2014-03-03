@@ -20,7 +20,15 @@ void BaseItem::setText(const std::string& text)
 
 	_text = text;
 
-	QGraphicsLayoutItem::updateGeometry();
+    updateGeometry();
+    QGraphicsItem::update();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void BaseItem::updateGeometry()
+{
+    qDebug() << "Update geometry";
+    QGraphicsLayoutItem::updateGeometry();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////

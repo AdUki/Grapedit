@@ -53,27 +53,30 @@ void LuaWorker::setFile(const std::string& name)
 }
 
 ////////////////////////////////////////////////////////////////
-void LuaWorker::start(QMutex* mutex)
+void LuaWorker::start(bool onThread)
 {
-    _mutex = mutex;
-    connect(_thread, SIGNAL(started()), this, SLOT(call()));
-    _thread->start();
+    if (onThread) {
+        connect(_thread, SIGNAL(started()), this, SLOT(call()));
+        _thread->start();
+    }
+    else
+        call();
 }
 
 ////////////////////////////////////////////////////////////////
-void LuaWorker::startProtected(QMutex* mutex)
+void LuaWorker::startProtected(bool onThread)
 {
-    _mutex = mutex;
-    connect(_thread, SIGNAL(started()), this, SLOT(protectedCall()));
-    _thread->start();
+    if (onThread) {
+        connect(_thread, SIGNAL(started()), this, SLOT(protectedCall()));
+        _thread->start();
+    }
+    else
+        protectedCall();
 }
 
 ////////////////////////////////////////////////////////////////
 void LuaWorker::protectedCall()
 {
-    if (_mutex != nullptr)
-        _mutex->lock();
-
     emit started(_thread);
 
     try {
@@ -90,26 +93,17 @@ void LuaWorker::protectedCall()
     }
 
     emit finished();
-
-    if (_mutex != nullptr)
-        _mutex->unlock();
 }
 
 ////////////////////////////////////////////////////////////////
 void LuaWorker::call()
 {
-    if (_mutex != nullptr)
-        _mutex->lock();
-
     emit started(_thread);
 
     prepareLuaState(_luaState);
     lua_call(_luaState, _arguments.size(), 0);
 
     emit finished();
-
-    if (_mutex != nullptr)
-        _mutex->unlock();
 }
 
 ////////////////////////////////////////////////////////////////

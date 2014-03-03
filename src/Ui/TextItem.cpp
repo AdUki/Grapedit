@@ -18,6 +18,8 @@ TextItem::~TextItem()
 //////////////////////////////////////////////////////////////////////////////////////////////////
 QSizeF TextItem::measureSize() const 
 {
+    qDebug() << "Measure size";
+
 	QFontMetrics fm(*_font);
 
 	// NOTE: flag Qt::TextSingleLine ignores newline characters.
@@ -33,6 +35,8 @@ void TextItem::setFont(const QFontPtr& font)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void TextItem::draw(QPainter *painter, const QRectF& bounds) 
 {
+    qDebug() << "Draw item";
+    
 	painter->setBrush(QBrush(Qt::black));
 	painter->setFont(*_font);
 	painter->drawText(bounds, QString::fromStdString(getText()));

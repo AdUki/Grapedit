@@ -1,6 +1,8 @@
 #include "./GraphicTextState.h"
 
 #include "../LuaBindings/CoreBindings.h"
+#include "../LuaBindings/ElementBindings.h"
+
 #include "../LuaUtils/LuaWorker.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,16 +19,17 @@ GraphicTextState::GraphicTextState()
 	lua_setglobal(_state, globalLuaName);
 
 	setupCoreBindings(_state);
-
+	setupElementBindings(_state);
+    
 	// Nacitame core
 	LuaWorker* worker = new LuaWorker(_state);
-	worker->setFile("core.lua");
+	worker->setFile("../../scripts/core.lua");
 
 	connect(worker, &LuaWorker::failed, [](const std::string& error) {
-		qDebug() << " >>> ERROR initializing core: " << error.c_str();
+		qDebug() << "ERROR initializing core: " << error.c_str();
 	});
 
-    worker->startProtected(&_mutex);
+    worker->startProtected(false);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,18 +45,15 @@ void GraphicTextState::reparseText(const std::string& text)
 
 	LuaWorker* worker = new LuaWorker(_state);
 
-	worker->setFunction("reparseText");
+	worker->setFunction("parseText");
 	worker->addArgument(text);
 
-    // connect(worker, SIGNAL(failed(QByteArray)), this, SLOT(errorLoadConfig(QByteArray)));
-    // connect(worker, SIGNAL(finished()), this, SLOT(finishedLoadConfig()));
-    // connect(worker, SIGNAL(finished()), this, SIGNAL(workDone()));
-
-    connect(worker, &LuaWorker::failed, [](const std::string& error) {
-		qDebug() << " >>> ERROR reparseText(): " << error.c_str();
+    connect(worker, SIGNAL(finished()), this, SLOT(commit()));
+    connect(worker, &LuaWorker::failed, [] (const std::string& error) {
+		qDebug() << "ERROR reparseText(): " << error.c_str();
 	});
 
-    worker->startProtected(&_mutex);
+    worker->startProtected(true);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,17 +66,18 @@ void GraphicTextState::loadGrammar(const std::string& name)
 	worker->addArgument(name);
     
 	connect(worker, &LuaWorker::failed, [](const std::string& error) {
-		qDebug() << " >>> ERROR loadGrammar(): " << error.c_str();
+		qDebug() << "ERROR loadGrammar(): " << error.c_str();
 	});
 
-    worker->startProtected(&_mutex);
+    worker->startProtected(false);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void GraphicTextState::addNewElement(GraphicElement* element)
 {
-	size_t key = reinterpret_cast<size_t>(element->getParent());
-
+    // Pointer rodica pouzivame ako kluc
+    GraphicElementKey key = element->getParent();
+    
 	NewElementsBuckets::iterator bucketsIterator = _newElementsBuckets.find(key);
 	if (bucketsIterator == _newElementsBuckets.end()) {
 
@@ -119,8 +120,9 @@ void GraphicTextState::commit()
 
 	// Na konci pridame elementy
 	GraphicElementsList newElementsList;
-	for (size_t key : _newElementsIndexes)
-		newElementsList.insert(newElementsList.begin(), _newElementsBuckets[key].begin(), _newElementsBuckets[key].end());
+	for (GraphicElementKey key : _newElementsIndexes)
+        for (GraphicElement* element : _newElementsBuckets[key])
+            newElementsList.push_back(element);
 
 	emit addElementsToScene(newElementsList);
 	_newElementsBuckets.clear();

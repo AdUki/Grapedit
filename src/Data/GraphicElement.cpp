@@ -8,23 +8,25 @@
 GraphicElement::ReusableInstancesMap GraphicElement::_reusableInstances;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-GraphicElement::GraphicElement(const std::string& textType, const std::string& graphicType, size_t index, GraphicElement* parentPointer) 
-	: _index(index)
-    , _graphicType (graphicType)
-	, _type(Type::Grid)
-	, _parentPointer(parentPointer)
+GraphicElement::GraphicElement(const std::string& textType, const std::string& graphicType, GraphicElement* parentPointer, size_t index) 
+: _index(index)
+, _textType(textType)
+, _graphicType (graphicType)
+, _type(Type::Grid)
+, _parentPointer(parentPointer)
 {
-	qDebug() << "NEW GraphicElement" << (_type == Type::Grid ? "Grid" : "Item") 
+	qDebug() << "NEW GraphicElement" << (_type == Type::Grid ? "Grid" : "Item")
 		<< this << _graphicType.c_str() << _index << _parentPointer;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-GraphicElement::GraphicElement(const std::string& textType, const std::string& graphicType, size_t index, const std::string& text, GraphicElement* parentPointer)
-	: _index(index)
-	, _text(text)
-    , _graphicType (graphicType)
-	, _type(Type::Item)
-	, _parentPointer(parentPointer)
+GraphicElement::GraphicElement(const std::string& textType, const std::string& graphicType, const std::string& text, GraphicElement* parentPointer, size_t index)
+: _index(index)
+, _text(text)
+, _textType(textType)
+, _graphicType (graphicType)
+, _type(Type::Item)
+, _parentPointer(parentPointer)
 {
 	qDebug() << "NEW GraphicElement" << (_type == Type::Grid ? "Grid" : "Item") 
 		<< this << _graphicType.c_str() << _index << _parentPointer;
@@ -70,7 +72,7 @@ BaseItemPtr GraphicElement::getItem() const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-void GraphicElement::initGraphicalElement()
+void GraphicElement::initialize()
 {
 	// TODO: ziskat graficke info zo stavu Lua
 	if (!isInitialized()) {
@@ -94,21 +96,24 @@ void GraphicElement::initGraphicalElement()
 			}
 		}
 	}
+}
 
-	// Nastavime novy text a nanovo nastylujeme element
-	switch (_type)
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void GraphicElement::update()
+{
+    switch (_type)
 	{
-	case GraphicElement::Type::Item:
-		boost::static_pointer_cast<BaseItem>(_graphicalElement)->setText(_text);
-		_text.clear();
-		break;
-
-	case GraphicElement::Type::Grid:
-		break;
-
-	default:
-		Q_ASSERT(false);
-		break;
+        case GraphicElement::Type::Item:
+            boost::static_pointer_cast<BaseItem>(_graphicalElement)->setText(_text);
+            _text.clear();
+            break;
+            
+        case GraphicElement::Type::Grid:
+            break;
+            
+        default:
+            Q_ASSERT(false);
+            break;
 	}
 }
 

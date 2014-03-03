@@ -37,35 +37,28 @@ function parseText(newText)
 		
 		-- Add element 
 		function(element, parent, index)
-		    utils.offsetPrint(
-		    	50, 'ADD: ' .. element.type .. ' "' .. tostring(element.value) .. '" ', 
-		    	18, ' at index ' .. tostring(index) .. ' ',
-		    	' to parent ' .. tostring(parent.type) .. ' "' .. tostring(parent.value) .. '"')
+		    print('ADD: ' .. element.type .. ' "' .. tostring(element.value) .. '" at index ' .. tostring(index) .. ' to parent[' .. tostring(parent.instance) .. '] ' .. tostring(parent.type) .. ' "' .. tostring(parent.value) .. '"')
 
+			-- Pozor Lua indexuje od 1, C++ od 0
 			if type(element.value) == 'table' then
-		        element.instance = QT_addGrid(parent.instance, element.index)
+		        element.instance = send_addGrid(element.type, parent.instance, element.index - 1)
 		    else
-		        element.instance = QT_addItem(parent.instance, element.index , element.value)
+		        element.instance = send_addItem(element.type, element.value, parent.instance, element.index - 1)
 		    end
 		end,
 
 		-- Update element
 		function(newElement, oldElement)
-			utils.offsetPrint(
-				50, 'UPDATE: ' .. tostring(oldElement.type) .. ' "' .. tostring(oldElement.value) .. '" ',
-				' to "' .. tostring(newElement.value) .. '"')
-
-		    QT_updateItem(newElement.instance, newElement.value)
+			print('UPDATE: ' .. tostring(oldElement.type) .. ' "' .. tostring(oldElement.value) .. '" to "' .. tostring(newElement.value) .. '"')
+			print (' >>> updating element with instance ' .. tostring(newElement.instance))
+		    send_updateItem(newElement.instance, newElement.value)
 		end,
 
 		-- Remove element
 		function(element, parent, index)
-		    utils.offsetPrint(
-		    	50, 'REMOVE: ' .. element.type .. ' "' .. tostring(element.value) .. '" ',
-		    	18, ' at index ' .. tostring(index) .. ' ',
-		    	' from parent ' .. tostring(parent and parent.type) .. ' "' .. tostring(parent and parent.value) .. '"')
+		    print('REMOVE: ' .. element.type .. ' "' .. tostring(element.value) .. '" at index ' .. tostring(index) .. ' from parent ' .. tostring(parent and parent.type) .. ' "' .. tostring(parent and parent.value) .. '"')
 
-	        QT_removeElement(element.instance)
+	        send_removeItem(element.instance)
 		end
 		)
 
@@ -83,44 +76,3 @@ function getStyle(type)
 	return style.type, style.object, style.style
 end
 
---[[
-
---- Adds element from NEW TREE
--- @param element Node from new tree
--- @param parent Parent node from new tree
--- @param index Index of node in parent from new tree
-function addElement(element, parent, index)
-
-    -- Lua is indexing from 1, C++ from 0
-    index = index - 1
-
-    -- TODO formatovanie objektu
-    if element.type == 'node' then
-        element.instance = QT_addGrid(parent.instance, index )
-    elseif element.type == 'leaf' then
-        element.instance = QT_addItem(parent.instance, index , element.value)
-    end
-
-    local firstStr = 'ADD: {' .. tostring(element.instance) .. ' ' 
-    			     .. element.type .. ' "' .. tostring(element.value) .. '"} '
-    local secondStr = 'to parent {' .. tostring(parent.instance) .. ' ' .. 
-    				  tostring(parent and parent.type) .. '} at index ' .. tostring(index + 1)
-    print(firstStr .. string.rep('.', 60 - #firstStr) .. ' ' .. secondStr)
-end
-
---- Removes element from OLD TREE
--- @param element Node from new tree
-function removeElement(element)
-    print('REMOVE: ' .. element.type .. ' "' .. tostring(element.value) .. '"')
-    QT_removeElement(element.instance)
-end
-
---- Updates element from OLD TREE to NEW TREE
--- @param newElement Node from new tree
--- @param oldElement Node from old tree
-function updateElement(newElement, oldElement)
-    print('UPDATE: ' .. tostring(newElement.instance) .. ' ' .. tostring(oldElement.type) .. ' "' .. tostring(oldElement.value) .. '" to "' .. tostring(newElement.value) .. '"')
-    QT_updateItem(newElement.instance, newElement.value)
-end
-
---]]

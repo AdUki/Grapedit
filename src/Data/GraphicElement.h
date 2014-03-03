@@ -20,44 +20,43 @@ public:
 	///
 	/// @param textType typ, ktory hovori o type textu, napr. C++, Lua, Java, txt...
 	/// @param graphicType typ, ktory hovori o grafickom obsahu elementu
-	/// @param index index v rodicovskej hierarchii
 	/// @param text obsahujuci text
 	/// @param parentPointer rodic, ak je NULL tak je to root
+    /// @param index index v rodicovskej hierarchii
 	///
-	/// @returns vytvoreny GraphicElement
+	/// @return vytvoreny GraphicElement
 	GraphicElement(
 		const std::string& textType, 
-		const std::string& graphicType, 
-		size_t index, 
-		const std::string& text, 
-		GraphicElement* parentPointer);
+		const std::string& graphicType,
+        const std::string& text,
+        GraphicElement* parentPointer,
+		size_t index);
 
 	/// Vytvori GraphicElement pre Grid (je to uzol v abstraktnom syntaktickom strome), ktory NEobsahuje text ALE dalsie vnorene graficke elementy.
 	///
 	/// @param textType typ, ktory hovori o type textu, napr. C++, Lua, Java, txt...
 	/// @param graphicType typ, ktory hovori o grafickom obsahu elementu
-	/// @param index index v rodicovskej hierarchii
 	/// @param parentPointer rodic, ak je NULL tak je to root
-	///
-	/// @returns vytvoreny GraphicElement
+	/// @param index index v rodicovskej hierarchii
+	/// @return vytvoreny GraphicElement
 	GraphicElement(
 		const std::string& textType, 
-		const std::string& graphicType, 
-		size_t index, 
-		GraphicElement* parentPointer);
+		const std::string& graphicType,
+		GraphicElement* parentPointer,
+        size_t index);
 
 	
 	~GraphicElement();
 
-	/// @returns index v rodicovskej hierarchii
+	/// @return index v rodicovskej hierarchii
 	size_t getIndex() const { return _index; }
 
-	/// @returns rodic, ak je NULL tak je to root
+	/// @return rodic, ak je NULL tak je to root
 	GraphicElement* getParent() const { return _parentPointer; }
 
 	Type getType() const { return _type; }
 
-	/// @returns typ, ktory hovori o grafickom obsahu elementu
+	/// @return typ, ktory hovori o grafickom obsahu elementu
 	const std::string& getGraphicType() const { return _graphicType; }
 
 	BaseElementPtr getElement() const { return _graphicalElement; }
@@ -77,7 +76,10 @@ public:
 	void setNewText(const std::string& text) { _text = text; }
 
 	/// Tato funkcia vytvori prislusny Qt-ckovsky graficky prvok
-	void initGraphicalElement();
+	void initialize();
+    
+    // Tato funkcia updatuje graficke info
+    void update();
 
 private:
 

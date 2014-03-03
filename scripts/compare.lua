@@ -1,3 +1,4 @@
+-- Global functions adding updating and removing items
 local addElement
 local updateElement
 local removeElement
@@ -155,6 +156,8 @@ function compareTrees(old, new, oldIndex, newIndex, oldParent, newParent)
         if  type(old.value) == 'string' and 
             type(new.value) == 'string' and 
             old.value ~= new.value then
+
+            print (' >>> updating element with instance ' .. tostring(old.instance))
 
             updateElement(new, old)
         end

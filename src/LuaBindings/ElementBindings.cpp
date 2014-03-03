@@ -2,8 +2,9 @@
 
 #include "../Data/GraphicTextState.h"
 
-/// Pomocn· funkcia na zÌskanie GraphicTextState
-/// @returns Vr·ti uloûen˝ graphicTextState, ktor˝ k danÈmu lua_Statu patrÌ
+/// Pomocn√° funkcia na z√≠skanie GraphicTextState
+///
+/// @return Vr√°ti ulo≈æen√Ω graphicTextState, ktor√Ω k dan√©mu lua_Statu patr√≠
 GraphicTextState* getGraphicTextState(lua_State* L)
 {
 	lua_getglobal(L, GraphicTextState::globalLuaName);
@@ -16,25 +17,24 @@ GraphicTextState* getGraphicTextState(lua_State* L)
 	return graphicTextState;
 }
 
-/// Funkcia na prid·vanie itemov.
+/// Funkcia na pridvanie itemov.
 ///
-/// @param graphicType [LUA] Typ grafickÈho objektu
-/// @param index [LUA] Index v rodiËovskej hierarchii
-/// @param text [LUA] Obsahuj˙ci text
-/// @param parent [LUA] RodiË elementu. MÙûe byù nullptr, vtedy je to root
-/// @returns [LUA] Funkcia vracia pointer (lightuserdata) na GraphicElement
+/// @param graphicType [LUA] Typ grafick√©ho objektu
+/// @param text [LUA] Obsahuj√∫ci text
+/// @param parent [LUA] Rodiƒç elementu. M√¥≈æe by≈• nullptr, vtedy je to root
+/// @param index [LUA] Index v rodiƒçovskej hierarchii
+/// @return [LUA] Funkcia vracia pointer (lightuserdata) na GraphicElement
 int lua_add_item(lua_State* L)
 {
-	if (!lua_isstring(L, 1) || !lua_isnumber(L, 2) || !lua_isstring(L, 3))
+	if (!lua_isstring(L, 1) || // element type
+        !lua_isstring(L, 2) || // element value/text
+        !(lua_isuserdata(L, 3) || lua_isnil(L, 3)) || // parent pointer
+        !lua_isnumber(L, 4)) // element parent index
 		throw LuaElementException(LuaElementException::Type::InvalidArguments);
 
 	GraphicTextState* state = getGraphicTextState(L);
-	GraphicElement* newElement = new GraphicElement(
-		state->getTextType(), 
-		lua_tostring(L, 1), 
-		lua_tointeger(L, 2), 
-		lua_tostring(L, 3), 
-		static_cast<GraphicElement*>(lua_touserdata(L, 4)));
+    
+	GraphicElement* newElement = new GraphicElement(state->getTextType(), lua_tostring(L, 1), lua_tostring(L, 2), static_cast<GraphicElement*>(lua_touserdata(L, 3)), lua_tointeger(L, 4));
 
 	state->addNewElement(newElement);
 
@@ -42,23 +42,21 @@ int lua_add_item(lua_State* L)
 	return 1;
 }
 
-/// Funkcia na prid·vanie gridov
+/// Funkcia na prid√°vanie gridov
 ///
-/// @param graphicType [LUA] Typ grafickÈho objektu
-/// @param index [LUA] Index v rodiËovskej hierarchii
-/// @param parent [LUA] RodiË elementu. MÙûe byù nullptr, vtedy je to root
-/// @returns [LUA] Funkcia vracia pointer (lightuserdata) na GraphicElement
+/// @param graphicType [LUA] Typ grafick√©ho objektu
+/// @param parent [LUA] Rodiƒç elementu. M√¥≈æe by≈• nullptr, vtedy je to root
+/// @param index [LUA] Index v rodiƒçovskej hierarchii
+/// @return [LUA] Funkcia vracia pointer (lightuserdata) na GraphicElement
 int lua_add_grid(lua_State* L)
 {
-	if (!lua_isstring(L, 1) || !lua_isnumber(L, 2))
+	if (!lua_isstring(L, 1) || // element typ
+        !(lua_isuserdata(L, 2) || lua_isnil(L, 2)) || // parent pointer
+        !lua_isnumber(L, 3)) // element parent index
 		throw LuaElementException(LuaElementException::Type::InvalidArguments);
 
 	GraphicTextState* state = getGraphicTextState(L);
-	GraphicElement* newElement = new GraphicElement(
-		state->getTextType(), 
-		lua_tostring(L, 1), 
-		lua_tointeger(L, 2), 
-		static_cast<GraphicElement*>(lua_touserdata(L, 4)));
+	GraphicElement* newElement = new GraphicElement(state->getTextType(), lua_tostring(L, 1), static_cast<GraphicElement*>(lua_touserdata(L, 2)), lua_tointeger(L, 3));
 
 	state->addNewElement(newElement);
 
@@ -68,9 +66,9 @@ int lua_add_grid(lua_State* L)
 
 /// Funckia na aktualizovanie obsahu elementov
 ///
-/// @param graphicElement [LUA] Pointer na grafick˝ element
-/// @param text [LUA] Nov˝ text
-/// @returns 0
+/// @param graphicElement [LUA] Pointer na grafick√Ω element
+/// @param text [LUA] Nov√Ω text
+/// @return 0
 int lua_update_item(lua_State* L)
 {
 	if (!lua_touserdata(L, 1) || !lua_isstring(L, 2))
@@ -85,8 +83,8 @@ int lua_update_item(lua_State* L)
 
 /// Funckia na mazanie elementov
 ///
-/// @param graphicElement [LUA] Pointer na grafick˝ element
-/// @returns 0
+/// @param graphicElement [LUA] Pointer na grafickÀù element
+/// @return 0
 int lua_remove_element(lua_State* L)
 {
 	if (!lua_touserdata(L, 1))

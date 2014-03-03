@@ -11,8 +11,9 @@ MainWindow::MainWindow() : QMainWindow()
 	UI->setupUi(this);
 
 	// TODO: testovaci kod
-	// testCanvas();
-
+//	testCanvas();
+//    return;
+    
 	GraphicTextPtr graphicText = boost::make_shared<GraphicText>("test");
 	setGraphicText(graphicText);
 
@@ -20,6 +21,9 @@ MainWindow::MainWindow() : QMainWindow()
 		if (_currentGraphicText != nullptr)
 			_currentGraphicText->setText(UI->plainTextEdit->toPlainText().toStdString());
 	});
+    connect(UI->reloadCanvasButton, &QPushButton::released, [this, graphicText](){
+        graphicText->getScene()->update();
+    });
 
 	qDebug() << "NEW" << this;
 }
@@ -40,7 +44,7 @@ void MainWindow::setGraphicText(const GraphicTextPtr& graphicText)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void MainWindow::testCanvas()
 {
-	GraphicTextPtr graphicText = boost::make_shared<GraphicText>("default");
+	GraphicTextPtr graphicText = boost::make_shared<GraphicText>("test");
 	setGraphicText(graphicText);
 	graphicText->testScene();
 

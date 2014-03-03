@@ -12,12 +12,18 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 GraphicText::GraphicText(const std::string& textType)
 {
-	_scene = boost::make_shared<QGraphicsScene>();
-	_root = new QGraphicsLinearLayout(Qt::Orientation::Vertical);
+    // Vytvorime custom deleter pre odstranenie vsetkych objektov pri mazani sceny, ktore sa automaticky mazu v destruktore QGraphicScene
+	_scene = boost::shared_ptr<QGraphicsScene>(new QGraphicsScene(), [] (QGraphicsScene* ptr) {
+        for (QGraphicsItem* item : ptr->items()) {
+            ptr->removeItem(item);
+        }
+    });
+
+    _root = boost::make_shared<QGraphicsLinearLayout>(Qt::Orientation::Vertical);
     
     // Vytvorime root element
 	QGraphicsWidget* container = new QGraphicsWidget();
-	container->setLayout(_root);
+	container->setLayout(_root.get());
 	_scene->addItem(container);
 
 	setTextType(textType);
@@ -72,14 +78,16 @@ void GraphicText::testScene()
 	GraphicElement* grid;
 	GraphicElement* item;
 
-	grid = new GraphicElement("default", "grid", 0, nullptr);
-	grid->initGraphicalElement();
+	grid = new GraphicElement("default", "grid", nullptr, 0);
+	grid->initialize();
 	scene.addItem(grid->getElement().get());
 	_root->addItem(grid->getGrid()->getLayout());
 
 	for (int i = 0; i < 10; ++i) {
-		item = new GraphicElement("default", "item", i, boost::lexical_cast<std::string>(i), grid);
-		item->initGraphicalElement();
+		item = new GraphicElement("default", "item", boost::lexical_cast<std::string>(i + pow(10, i)), grid, i);
+		item->initialize();
+        item->update();
+        
 		scene.addItem(item->getElement().get());
 		grid->getGrid()->insertElement(*item);
 	}
@@ -88,9 +96,10 @@ void GraphicText::testScene()
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void GraphicText::addElements(const GraphicElementsList& elements)
 {
+    qDebug() << "Adding " << boost::lexical_cast<int>(elements.size()) << " elements.";
 	for (GraphicElement* element : elements) {
-		element->initGraphicalElement();
-
+		element->initialize();
+        element->update();
 		_scene->addItem(element->getElement().get());
 
 		if (element->getParent() == nullptr) {
@@ -98,6 +107,7 @@ void GraphicText::addElements(const GraphicElementsList& elements)
 			{
 			case GraphicElement::Type::Item:
 				_root->insertItem(element->getIndex(), element->getItem().get());
+                    
 				break;
 
 			case GraphicElement::Type::Grid:
@@ -124,7 +134,7 @@ void GraphicText::addElements(const GraphicElementsList& elements)
 void GraphicText::updateElements(const GraphicElementsList& elements)
 {
 	for (GraphicElement* element : elements) {
-		element->initGraphicalElement();
+        element->update();
 	}
 }
 

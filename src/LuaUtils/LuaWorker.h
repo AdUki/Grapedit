@@ -7,8 +7,6 @@
 
 #include "./Argument.h"
 
-class QMutex;
-
 ////////////////////////////////////////////////////////////////
 class LuaWorker : public QObject
 {
@@ -30,9 +28,9 @@ public:
     template<typename T> void addArgument(const T& arg) {
         _arguments.append(Argument(arg));
     }
-
-    void startProtected(QMutex* mutex);
-    void start(QMutex* mutex);
+    
+    void startProtected(bool onThread);
+    void start(bool onThread);
 
 private slots:
     void protectedCall();
@@ -45,9 +43,9 @@ signals:
     void failed(const std::string& error);
 
 private:
+    
     QThread* _thread;
     lua_State* _luaState;
-    QMutex* _mutex;
 
     std::string _function;
     std::string _script;
