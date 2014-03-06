@@ -55,9 +55,9 @@ void GraphicText::setTextType(const std::string& textType)
 	_state = boost::make_shared<GraphicTextState>();
 	_state->loadGrammar(textType);
 
-	connect(_state.get(), &GraphicTextState::addElementsToScene, this, &GraphicText::addElements);
+	connect(_state.get(), &GraphicTextState::addElementsToScene,      this, &GraphicText::addElements);
 	connect(_state.get(), &GraphicTextState::removeElementsFromScene, this, &GraphicText::removeElements);
-	connect(_state.get(), &GraphicTextState::updateElementsOnScene, this, &GraphicText::updateElements);
+	connect(_state.get(), &GraphicTextState::updateElementsOnScene,   this, &GraphicText::updateElements);
 
 	_state->reparseText(_text);
 }
@@ -91,6 +91,20 @@ void GraphicText::testScene()
 		scene.addItem(item->getElement().get());
 		grid->getGrid()->insertElement(*item);
 	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void GraphicText::testSceneUpdate()
+{
+    QGraphicsLayoutItem* ptr = _root->itemAt(0);
+    BaseGrid* grid = dynamic_cast<BaseGrid*>(ptr);
+
+    ptr = grid->getLayout()->itemAt(0);
+    BaseItem* item = dynamic_cast<BaseItem*>(ptr);
+
+    grid->getLayout()->removeAt(0);
+    item->setText("velmi dlhy text, ktory sa musi zobrazit cely...");
+    dynamic_cast<QGraphicsLinearLayout*>(grid->getLayout())->insertItem(0, item);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////

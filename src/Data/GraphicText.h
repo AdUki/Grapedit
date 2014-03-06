@@ -26,6 +26,7 @@ public:
 	QGraphicsScenePtr getScene() { return _scene; }
 
 	void testScene();
+    void testSceneUpdate();
 
 public slots:
 
