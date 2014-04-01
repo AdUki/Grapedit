@@ -1,5 +1,7 @@
 #include "./GraphicTextState.h"
 
+#include <QMessageBox>
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 GraphicTextState::GraphicTextState()
 {
@@ -58,7 +60,18 @@ void GraphicTextState::loadGrammar(const std::string& name)
 {
 	_textType = name;
     
-    _state["loadGrammarAndStyle"](lua::String(name.c_str()));
+    try {
+        _state["loadGrammarAndStyle"].protectedCall(lua::String(name.c_str())).execute();
+    }
+    catch (lua::RuntimeError ex) {
+        QMessageBox msgBox;
+        msgBox.setText(QString("Error while loading grammar style: ").append(name.c_str()));
+        msgBox.setInformativeText(ex.what());
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.exec();
+        
+        throw std::runtime_error(ex.what());
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////

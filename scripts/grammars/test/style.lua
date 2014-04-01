@@ -1,6 +1,13 @@
-local textItemStyle = {
+local roundBracketsStyle = {
 	item = true,
-	object = "text"
+	object = "text",
+	size = 25,
+}
+
+local squareBracketsStyle = {
+	item = true,
+	object = "text",
+	size = 25,
 }
 
 return {
@@ -13,11 +20,27 @@ return {
 		object = "horizontal"
 	},
 
-	roundLeft = textItemStyle,
-	roundRight = textItemStyle,
-	squareLeft = textItemStyle,
-	squareRight = textItemStyle,
-	word = textItemStyle,
-	number = textItemStyle,
-	other = textItemStyle,
+	roundLeft = roundBracketsStyle,
+	roundRight = roundBracketsStyle,
+
+	squareLeft = squareBracketsStyle,
+	squareRight = squareBracketsStyle,
+
+	word = {
+		item = true,
+		object = "text",
+		size = 17,
+	},
+
+	number = {
+		item = true,
+		object = "text",
+		size = 20,
+	},
+
+	other = {
+		item = true,
+		object = "text",
+		size = 14,
+	},
 }
