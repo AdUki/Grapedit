@@ -1,13 +1,13 @@
 local roundBracketsStyle = {
 	item = true,
 	object = "text",
-	size = 25,
+	size = 18,
 }
 
 local squareBracketsStyle = {
 	item = true,
 	object = "text",
-	size = 25,
+	size = 30,
 }
 
 return {
@@ -29,18 +29,18 @@ return {
 	word = {
 		item = true,
 		object = "text",
-		size = 17,
+		size = 18,
 	},
 
 	number = {
 		item = true,
 		object = "text",
-		size = 20,
+		size = 21,
 	},
 
 	other = {
 		item = true,
 		object = "text",
-		size = 14,
+		size = 20,
 	},
 }

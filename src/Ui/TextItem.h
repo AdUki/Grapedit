@@ -10,7 +10,7 @@ DECLARE_CLASS_PTR(TextItem);
 class TextItem : public Item
 {
 public:
-	TextItem(const lua::Value& style);
+	TextItem(const lua::Ref& style);
 	virtual ~TextItem();
 	
 	void setFont(const QFontPtr& font);

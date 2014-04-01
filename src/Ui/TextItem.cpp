@@ -3,10 +3,12 @@
 #include <QPainter>
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-TextItem::TextItem(const lua::Value& style)
+TextItem::TextItem(const lua::Ref& style)
 {
+    int fontSize = style["size"];
+    
 	_font = std::make_shared<QFont>();
-	_font->setPointSize(style["size"]);
+	_font->setPointSize(fontSize);
 	_font->setBold(false);
 }
 
