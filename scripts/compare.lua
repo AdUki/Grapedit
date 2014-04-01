@@ -4,12 +4,14 @@ local updateElement
 local removeElement
 
 --- Parse AST with new text. This function can utilize old tree to delete and update old elements and create new ones.
+--
 -- @param parser 
 -- @param text New text to be parsed
 -- @param tree Old tree, you can be nil if we dont have it 
 -- @param addFnc Callback when item is created
 -- @param updateFnc Callback when item is updated
 -- @param removeFnc Callback when item is deleted
+--
 -- @return New reparsed tree (table) if succeeded, nil if not.
 -- @return Number of parsed characters from beginning.
 function parseAST(parser, text, tree, addFnc, updateFnc, removeFnc)

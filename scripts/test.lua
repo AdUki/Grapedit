@@ -150,3 +150,6 @@ parseText '(a)(100)(cc)(-)'
 parseText '(a)(100(c)c)'
 parseText 's[bbb(cc[c]c)eee((nnnnn)ddd(jjjj))]'
 parseText ''
+
+parseText 'a 1 h 8'
+

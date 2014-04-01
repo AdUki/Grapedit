@@ -29,7 +29,6 @@ private:
 
 	GraphicTextPtr _currentGraphicText;
 
-	void testCanvas();
 	void setupTextEditField();
 };
 

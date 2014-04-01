@@ -20,6 +20,7 @@
 	#include <vector>
 	#include <set>
 	#include <array>
+	#include <tuple>
 	#include <functional>
 	#include <unordered_map>
 	#include <unordered_set>
@@ -27,14 +28,14 @@
 	#include <string>
 	#include <limits>
 
+	#include <functional>
+    #include <memory>
+
 	#include <boost/any.hpp>
-	#include <boost/bind.hpp>
 	#include <boost/format.hpp>
 	#include <boost/lexical_cast.hpp>
 	#include <boost/noncopyable.hpp>
 	#include <boost/optional.hpp>
-	#include <boost/shared_ptr.hpp>
-	#include <boost/make_shared.hpp>
 	#include <boost/algorithm/string/predicate.hpp>
 
 	#include <QApplication>
@@ -43,18 +44,19 @@
 	#include <QDebug>
 
 	#include <lua.hpp>
+    #include <LuaState.h>
 
 	#define DECLARE_CLASS_PTR(type) \
 	class type; \
-	typedef boost::shared_ptr<type> type##Ptr; \
-	typedef const boost::shared_ptr<type> type##CPtr; \
+	typedef std::shared_ptr<type> type##Ptr; \
+	typedef const std::shared_ptr<type> type##CPtr; \
 	typedef std::weak_ptr<type> type##WPtr;
 
 	#define DECLARE_NS_CLASS_PTR(ns, type) \
 	namespace ns { \
 		class type; \
-		typedef boost::shared_ptr<type> type##Ptr; \
-		typedef const boost::shared_ptr<type> type##CPtr; \
+		typedef std::shared_ptr<type> type##Ptr; \
+		typedef const std::shared_ptr<type> type##CPtr; \
 		typedef std::weak_ptr<type> type##WPtr; \
 	}
 

@@ -2,11 +2,17 @@
 
 #include "pch.h"
 
-DECLARE_CLASS_PTR(BaseItem);
-DECLARE_CLASS_PTR(BaseGrid);
-DECLARE_CLASS_PTR(BaseElement);
+DECLARE_CLASS_PTR(Item);
+DECLARE_CLASS_PTR(Layout);
+DECLARE_CLASS_PTR(Drawable);
 
 DECLARE_CLASS_PTR(GraphicElement);
+DECLARE_CLASS_PTR(GraphicTextState);
+
+namespace lua {
+    class State;
+}
+
 typedef std::list<GraphicElement*> GraphicElementsList;
 
 /// Je to minimalisticka trieda, ktora vznikne ako prva pri pridavani prvkov do grafickej sceny. Po vytvoreni sa pointer na this vratime naspat do Lua, aby sme pri update a delete vedeli najst tieto prvky.
@@ -59,38 +65,38 @@ public:
 	/// @return typ, ktory hovori o grafickom obsahu elementu
 	const std::string& getGraphicType() const { return _graphicType; }
 
-	BaseElementPtr getElement() const { return _graphicalElement; }
+	DrawablePtr getElement() const { return _graphicalElement; }
 
 	/// Vrati graficky grid, tato trieda musi byt typu Grid.
 	///
 	/// @attention nemozme volat ak sme este neinicializovali graficky element, teda nezavolali funkciu initGraphicalElement
-	BaseGridPtr getGrid() const;
+	LayoutPtr getLayout() const;
 
 	/// Vrati graficky item, tato trieda musi byt typu Item
 	///
 	/// @attention nemozme volat ak sme este neinicializovali graficky element, teda nezavolali funkciu initGraphicalElement
-	BaseItemPtr getItem() const;
+	ItemPtr getItem() const;
 
 	bool isInitialized() const { return _graphicalElement != nullptr; }
 
 	void setNewText(const std::string& text) { _text = text; }
 
 	/// Tato funkcia vytvori prislusny Qt-ckovsky graficky prvok
-	void initialize();
+	void initialize(const GraphicTextStatePtr& state);
     
     // Tato funkcia updatuje graficke info
     void update();
 
 private:
 
-	typedef std::list<BaseElementPtr> ReusableInstances;
+	typedef std::list<DrawablePtr> ReusableInstances;
 	typedef std::map<std::string, ReusableInstances> ReusableInstancesMap;
 
 	/// Mapa mapujuca elementy, ktore sa daju zonapouzit namiesto vytvarania novych
 	static ReusableInstancesMap _reusableInstances;
 
 	/// Funckia vracia znovapouzitelne graficke elementy podla ich typu
-	static BaseElementPtr dequeueReusableElement(const std::string& graphicType);
+	static DrawablePtr dequeueReusableElement(const std::string& graphicType);
 
 	size_t _index;
 	std::string _text;
@@ -100,5 +106,7 @@ private:
 	
 	GraphicElement* _parentPointer;
 
-	BaseElementPtr _graphicalElement;
+	DrawablePtr _graphicalElement;
+    
+    static DrawablePtr createElement(lua::State state, const char* type);
 };

@@ -5,7 +5,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 Console::Console()
 {
-	_commandReader = boost::make_shared<QThread>();
+	_commandReader = std::make_shared<QThread>();
 
 	moveToThread(_commandReader.get());
     
@@ -23,34 +23,9 @@ Console::~Console()
 //////////////////////////////////////////////////////////////////////////////////////////////////
 ConsolePtr Console::getInstance()
 {
-	static ConsolePtr instance = boost::make_shared<Console>();
+	static ConsolePtr instance = std::make_shared<Console>();
 
 	return instance;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-void Console::setTextColor(TextColor color)
-{
-#ifdef _WIN32
-	static HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, color);
-#else
-	// TODO: not tested
-	static std::vector<const char*> ansiCodes = initializeAnsiCodes();
-	printf("%s", ansiCodes[color]);
-#endif
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-void Console::resetTextColor()
-{
-#ifdef _WIN32
-	static HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, TextColor::Silver);
-#else
-	// TODO: not tested
-	printf("\033[0m");
-#endif
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,28 +38,4 @@ void Console::startReadingCommands()
 			emit commandEntered(command);
 		}
 	}
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-std::vector<const char*> Console::initializeAnsiCodes()
-{
-	std::vector<const char*> ansiCodes;
-
-	ansiCodes.push_back("\033[30m");
-	ansiCodes.push_back("");
-	ansiCodes.push_back("\033[32m");
-	ansiCodes.push_back("\033[36m");
-	ansiCodes.push_back("");
-	ansiCodes.push_back("");
-	ansiCodes.push_back("");
-	ansiCodes.push_back("");
-	ansiCodes.push_back("\033[34m");
-	ansiCodes.push_back("\033[32m");
-	ansiCodes.push_back("");
-	ansiCodes.push_back("\033[31m");
-	ansiCodes.push_back("\033[35m");
-	ansiCodes.push_back("\033[33m");
-	ansiCodes.push_back("\033[37m");
-
-	return ansiCodes;
 }

@@ -1,41 +1,48 @@
 #include "./GraphicTextState.h"
 
-#include "../LuaBindings/CoreBindings.h"
-#include "../LuaBindings/ElementBindings.h"
-
-#include "../LuaUtils/LuaWorker.h"
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-const char* GraphicTextState::globalLuaName = "cpp_LuaState_this_ptr";
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 GraphicTextState::GraphicTextState()
 {
-	_state = luaL_newstate();
-	luaL_openlibs(_state);
+    _state["send_addItem"] = [this] (lua::String elementType, lua::String elementText, lua::Pointer parentPointer, lua::Integer elementIndex) -> lua::Pointer
+    {
+        GraphicElement* newElement = new GraphicElement(getTextType(), elementType, elementText, static_cast<GraphicElement*>(parentPointer), elementIndex);
+        
+        addNewElement(newElement);
+        
+        return newElement;
+    };
 
-	// Na to aby sme nasli prislusny LuaState pri statickych volaniach C funkcii, pridame this pointer do Lua stavu
-	lua_pushlightuserdata(_state, this);
-	lua_setglobal(_state, globalLuaName);
-
-	setupCoreBindings(_state);
-	setupElementBindings(_state);
+    _state["send_addGrid"] = [this] (lua::String elementType, lua::Pointer parentPointer, lua::Integer elementIndex) -> lua::Pointer
+    {
+        GraphicElement* newElement = new GraphicElement(getTextType(), elementType, static_cast<GraphicElement*>(parentPointer), elementIndex);
+        
+        addNewElement(newElement);
+        
+        return newElement;
+    };
+    
+    _state["send_updateItem"] = [this] (lua::Pointer elementPtr, lua::String newElementText)
+    {
+        GraphicElement* element = static_cast<GraphicElement*>(elementPtr);
+        element->setNewText(newElementText);
+        addUpdateElement(element);
+    };
+    
+    _state["send_removeItem"] = [this] (lua::Pointer elementPtr)
+    {
+        addDeleteElement(static_cast<GraphicElement*>(elementPtr));
+    };
+    
+    _state["send_commit"] = [this] () { commit(); };
     
 	// Nacitame core
-	LuaWorker* worker = new LuaWorker(_state);
-	worker->setFile("../../scripts/core.lua");
-
-	connect(worker, &LuaWorker::failed, [](const std::string& error) {
-		qDebug() << "ERROR initializing core: " << error.c_str();
-	});
-
-    worker->startProtected(false);
+    _state.doFile("scripts/init.lua");
+    _state.doFile("scripts/core.lua");
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 GraphicTextState::~GraphicTextState()
 {
-	lua_close(_state);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,33 +50,15 @@ void GraphicTextState::reparseText(const std::string& text)
 {
 	qDebug() << "Request text reparse...";
 
-	LuaWorker* worker = new LuaWorker(_state);
-
-	worker->setFunction("parseText");
-	worker->addArgument(text);
-
-    connect(worker, SIGNAL(finished()), this, SLOT(commit()));
-    connect(worker, &LuaWorker::failed, [] (const std::string& error) {
-		qDebug() << "ERROR reparseText(): " << error.c_str();
-	});
-
-    worker->startProtected(true);
+    _state["parseText"](lua::String(text.c_str()));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void GraphicTextState::loadGrammar(const std::string& name)
 {
 	_textType = name;
-
-	LuaWorker* worker = new LuaWorker(_state);
-	worker->setFunction("loadGrammarAndStyle");
-	worker->addArgument(name);
     
-	connect(worker, &LuaWorker::failed, [](const std::string& error) {
-		qDebug() << "ERROR loadGrammar(): " << error.c_str();
-	});
-
-    worker->startProtected(false);
+    _state["loadGrammarAndStyle"](lua::String(name.c_str()));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -110,23 +99,20 @@ void GraphicTextState::addDeleteElement(GraphicElement* element)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void GraphicTextState::commit()
 {
-	// Zmazeme elementy
-	emit removeElementsFromScene(_deleteElements);
-	_deleteElements.clear();
-
-	// Updatujeme elementy
-	emit updateElementsOnScene(_updateElements);
-	_updateElements.clear();
-
-	// Na konci pridame elementy
+	// Vytvorime zoznam prvkov, ktore sa maju pridat...
 	GraphicElementsList newElementsList;
 	for (GraphicElementKey key : _newElementsIndexes)
         for (GraphicElement* element : _newElementsBuckets[key])
             newElementsList.push_back(element);
-
-	emit addElementsToScene(newElementsList);
+    
+    if (_updatesCallback != NULL) {
+        _updatesCallback(newElementsList, _updateElements, _deleteElements);
+    }
+    
 	_newElementsBuckets.clear();
 	_newElementsIndexes.clear();
+	_updateElements.clear();
+    _deleteElements.clear();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////

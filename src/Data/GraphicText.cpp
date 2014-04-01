@@ -2,28 +2,31 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsWidget>
+#include <QGraphicsLayout>
 
 #include "GraphicElement.h"
 #include "GraphicTextState.h"
 
-#include "../Ui/LinearGrid.h"
+#include "../Ui/LinearLayout.h"
 #include "../Ui/TextItem.h"
+
+using namespace std::placeholders;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 GraphicText::GraphicText(const std::string& textType)
 {
     // Vytvorime custom deleter pre odstranenie vsetkych objektov pri mazani sceny, ktore sa automaticky mazu v destruktore QGraphicScene
-	_scene = boost::shared_ptr<QGraphicsScene>(new QGraphicsScene(), [] (QGraphicsScene* ptr) {
+	_scene = std::shared_ptr<QGraphicsScene>(new QGraphicsScene(), [] (QGraphicsScene* ptr) {
         for (QGraphicsItem* item : ptr->items()) {
             ptr->removeItem(item);
         }
     });
 
-    _root = boost::make_shared<QGraphicsLinearLayout>(Qt::Orientation::Vertical);
+    _root = std::make_shared<LinearLayout>(Qt::Orientation::Horizontal);
     
     // Vytvorime root element
 	QGraphicsWidget* container = new QGraphicsWidget();
-	container->setLayout(_root.get());
+	container->setLayout(_root->getQtLayout());
 	_scene->addItem(container);
 
 	setTextType(textType);
@@ -52,13 +55,10 @@ void GraphicText::setTextType(const std::string& textType)
 	_displayedElements.clear();
 
 	// Nastartujeme novy state, ak mame stary automaticky sa znici
-	_state = boost::make_shared<GraphicTextState>();
+	_state = std::make_shared<GraphicTextState>();
+    
+    _state->setUpdateCallback(std::bind(&GraphicText::updateElementsOnScene, this, _1, _2, _3));
 	_state->loadGrammar(textType);
-
-	connect(_state.get(), &GraphicTextState::addElementsToScene,      this, &GraphicText::addElements);
-	connect(_state.get(), &GraphicTextState::removeElementsFromScene, this, &GraphicText::removeElements);
-	connect(_state.get(), &GraphicTextState::updateElementsOnScene,   this, &GraphicText::updateElements);
-
 	_state->reparseText(_text);
 }
 
@@ -71,113 +71,44 @@ void GraphicText::setText(const std::string& text)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-void GraphicText::testScene()
+void GraphicText::updateElementsOnScene(const GraphicElementsList& newElements, const GraphicElementsList& updateElements, const GraphicElementsList& deleteElements)
 {
-	QGraphicsScene& scene = *_scene;
-
-	GraphicElement* grid;
-	GraphicElement* item;
-
-	grid = new GraphicElement("default", "grid", nullptr, 0);
-	grid->initialize();
-	scene.addItem(grid->getElement().get());
-	_root->addItem(grid->getGrid()->getLayout());
-
-	for (int i = 0; i < 10; ++i) {
-		item = new GraphicElement("default", "item", boost::lexical_cast<std::string>(i + pow(10, i)), grid, i);
-		item->initialize();
-        item->update();
+    _root->getQtLayout()->invalidate();
+    
+    qDebug() << "Deleting " << boost::lexical_cast<int>(deleteElements.size()) << " elements.";
+    for (GraphicElement* element : deleteElements) {
         
-		scene.addItem(item->getElement().get());
-		grid->getGrid()->insertElement(*item);
-	}
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-void GraphicText::testSceneUpdate()
-{
-    QGraphicsLayoutItem* ptr = _root->itemAt(0);
-    BaseGrid* grid = dynamic_cast<BaseGrid*>(ptr);
-
-    ptr = grid->getLayout()->itemAt(0);
-    BaseItem* item = dynamic_cast<BaseItem*>(ptr);
-
-    grid->getLayout()->removeAt(0);
-    item->setText("velmi dlhy text, ktory sa musi zobrazit cely...");
-    dynamic_cast<QGraphicsLinearLayout*>(grid->getLayout())->insertItem(0, item);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-void GraphicText::addElements(const GraphicElementsList& elements)
-{
-    qDebug() << "Adding " << boost::lexical_cast<int>(elements.size()) << " elements.";
-	for (GraphicElement* element : elements) {
-		element->initialize();
-        element->update();
-		_scene->addItem(element->getElement().get());
-
-		if (element->getParent() == nullptr) {
-			switch (element->getType())
-			{
-			case GraphicElement::Type::Item:
-				_root->insertItem(element->getIndex(), element->getItem().get());
-                    
-				break;
-
-			case GraphicElement::Type::Grid:
-				_root->insertItem(element->getIndex(), element->getGrid()->getLayout());
-				break;
-
-			default:
-				Q_ASSERT(false);
-				break;
-			}
-		}
-		else {
-
-			// Kriticka cast kodu, rodic musi splnat vsetky tieto podmienky ak je dany
-			Q_ASSERT(element->getParent()->getType() == GraphicElement::Type::Grid);
-			Q_ASSERT(element->getParent()->isInitialized());
-
-			element->getParent()->getGrid()->insertElement(*element);
-		}
-	}
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-void GraphicText::updateElements(const GraphicElementsList& elements)
-{
-	for (GraphicElement* element : elements) {
-        element->update();
-	}
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-void GraphicText::removeElements(const GraphicElementsList& elements)
-{
-	for (GraphicElement* element : elements) {
-
-		_scene->removeItem(element->getElement().get());
-
-		if (element->getParent() == nullptr) {
-			switch (element->getType())
-			{
-			case GraphicElement::Type::Item:
-				_root->removeItem(element->getItem().get());
-				break;
-
-			case GraphicElement::Type::Grid:
-				_root->removeItem(element->getGrid()->getLayout());
-				break;
-
-			default:
-				Q_ASSERT(false);
-				break;
-			}
-		}
+		if (element->getParent() == nullptr)
+            _root->removeElement(*element);
 		else
-			element->getParent()->getGrid()->removeElement(*element);
-
+			element->getParent()->getLayout()->removeElement(*element);
+        
+        _scene->removeItem(element->getElement().get());
 		delete element;
 	}
+    
+    qDebug() << "Updating " << boost::lexical_cast<int>(updateElements.size()) << " elements.";
+    for (GraphicElement* element : updateElements) {
+        element->update();
+	}
+    
+    qDebug() << "Adding " << boost::lexical_cast<int>(newElements.size()) << " elements.";
+	for (GraphicElement* element : newElements) {
+		element->initialize(_state);
+        element->update();
+		_scene->addItem(element->getElement().get());
+        
+		if (element->getParent() == nullptr) {
+            _root->insertElement(*element);
+		}
+		else {
+			assert(element->getParent()->getType() == GraphicElement::Type::Grid);
+			assert(element->getParent()->isInitialized());
+            
+			element->getParent()->getLayout()->insertElement(*element);
+		}
+	}
+    
+    _scene->update();
 }
+

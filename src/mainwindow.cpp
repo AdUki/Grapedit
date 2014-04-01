@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 MainWindow::MainWindow() : QMainWindow()
 {
-	UI = boost::make_shared<Ui::MainWindow>();
+	UI = std::make_shared<Ui::MainWindow>();
 	UI->setupUi(this);
 
     connect(UI->plainTextEdit, &QPlainTextEdit::textChanged, [this]() {
@@ -16,19 +16,11 @@ MainWindow::MainWindow() : QMainWindow()
 	});
     
     connect(UI->reloadCanvasButton, &QPushButton::clicked, [this]() {
-        // TODO: testovaci kod
-        _currentGraphicText->testSceneUpdate();
-        return;
-        
         if (_currentGraphicText != nullptr)
             _currentGraphicText->getScene()->update();
     });
     
-	// TODO: testovaci kod
-	testCanvas();
-    return;
-    
-	GraphicTextPtr graphicText = boost::make_shared<GraphicText>("test");
+	GraphicTextPtr graphicText = std::make_shared<GraphicText>("test");
 	setGraphicText(graphicText);
 
 	qDebug() << "NEW" << this;
@@ -45,14 +37,6 @@ void MainWindow::setGraphicText(const GraphicTextPtr& graphicText)
 {
 	_currentGraphicText = graphicText;
 	UI->graphicsView->setScene(graphicText->getScene().get());
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-void MainWindow::testCanvas()
-{
-	_currentGraphicText = boost::make_shared<GraphicText>("test");
-	setGraphicText(_currentGraphicText);
-	_currentGraphicText->testScene();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////

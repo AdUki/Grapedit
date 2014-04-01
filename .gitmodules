@@ -1,0 +1,3 @@
+[submodule "LuaState"]
+	path = libs/LuaState
+	url = git@github.com:AdUki/LuaState.git

@@ -4,6 +4,8 @@
 
 #include "GraphicElement.h"
 
+#include "../Ui/LinearLayout.h"
+
 DECLARE_CLASS_PTR(QGraphicsScene);
 DECLARE_CLASS_PTR(QGraphicsLinearLayout);
 
@@ -12,7 +14,7 @@ DECLARE_CLASS_PTR(GraphicText);
 
 class GraphicText : public QObject
 {
-	Q_OBJECT //-V524
+	Q_OBJECT
 
 public:
 	GraphicText(const std::string& textType);
@@ -24,9 +26,6 @@ public:
 	void setTextType(const std::string& textType);
 
 	QGraphicsScenePtr getScene() { return _scene; }
-
-	void testScene();
-    void testSceneUpdate();
 
 public slots:
 
@@ -46,11 +45,10 @@ private:
 	GraphicTextStatePtr _state;
 	QGraphicsScenePtr _scene;
 
-	QGraphicsLinearLayoutPtr _root;
+	LayoutPtr _root;
 
-private slots:
+    void updateElementsOnScene(const GraphicElementsList& newElements,
+                        const GraphicElementsList& updateElements,
+                        const GraphicElementsList& deleteElements);
 
-	void addElements(const GraphicElementsList& elements);
-	void updateElements(const GraphicElementsList& elements);
-	void removeElements(const GraphicElementsList& elements);
 };

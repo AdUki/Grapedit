@@ -11,73 +11,30 @@ set(PC_HEADER "pch")
 
 set (PROJECT "Grapedit")
 
-set(SOURCE_GROUP
-    src/main.cpp
-    src/mainwindow.h
-    src/mainwindow.cpp
-    src/Console.h
-    src/Console.cpp
-)
-source_group("src" FILES ${SOURCE_GROUP})
-set(SOURCE_FILES ${SOURCE_FILES} ${SOURCE_GROUP})
+# Must be executed BEFORE add_executable!
+macro(add_folder FOLDER)
+	file(GLOB SOURCE_GROUP ${FOLDER}/*.c ${FOLDER}/*.h ${FOLDER}/*.cpp ${FOLDER}/*.hpp)
+	string(REGEX REPLACE "/" "\\\\\\\\" SOURCE_GROUP_NAME ${FOLDER})
+	source_group(${SOURCE_GROUP_NAME} FILES ${SOURCE_GROUP})
+	set(SOURCE_FILES ${SOURCE_FILES} ${SOURCE_GROUP})
+endmacro()
 
-set(SOURCE_GROUP
-    src/Data/GraphicText.h
-    src/Data/GraphicText.cpp
-    src/Data/GraphicElement.h
-    src/Data/GraphicElement.cpp
-    src/Data/GraphicTextState.h
-    src/Data/GraphicTextState.cpp
-)
-source_group("src\\Data" FILES ${SOURCE_GROUP})
-set(SOURCE_FILES ${SOURCE_FILES} ${SOURCE_GROUP})
-
-set(SOURCE_GROUP
-    src/Ui/BaseElement.h
-    src/Ui/BaseElement.cpp
-    src/Ui/BaseItem.h
-    src/Ui/BaseItem.cpp
-    src/Ui/TextItem.h
-    src/Ui/TextItem.cpp
-    src/Ui/BaseGrid.h
-    src/Ui/BaseGrid.cpp
-    src/Ui/LinearGrid.h
-    src/Ui/LinearGrid.cpp
-)
-source_group("src\\Ui" FILES ${SOURCE_GROUP})
-set(SOURCE_FILES ${SOURCE_FILES} ${SOURCE_GROUP})
-
-set(SOURCE_GROUP
-    src/LuaBindings/CoreBindings.h
-    src/LuaBindings/CoreBindings.cpp
-    src/LuaBindings/ElementBindings.h
-    src/LuaBindings/ElementBindings.cpp
-)
-source_group("src\\LuaBindings" FILES ${SOURCE_GROUP})
-set(SOURCE_FILES ${SOURCE_FILES} ${SOURCE_GROUP})
-
-set(SOURCE_GROUP
-    src/LuaUtils/Argument.h
-    src/LuaUtils/Argument.cpp
-    src/LuaUtils/LuaWorker.h
-    src/LuaUtils/LuaWorker.cpp
-)
-source_group("src\\LuaUtils" FILES ${SOURCE_GROUP})
-set(SOURCE_FILES ${SOURCE_FILES} ${SOURCE_GROUP})
+add_folder("src")
+add_folder("src/Data")
+add_folder("src/Ui")
+add_folder("src/LuaUtils")
 
 set(SOURCE_FILES ${SOURCE_FILES}
     ${PC_HEADER}.h
     ${PC_HEADER}.cpp
 )
 
-set(UI_FILES
-	ui/mainwindow.ui
-)
+file(GLOB UI_FILES "ui/*.ui")
 
 # Set project name
 project(${PROJECT})
 
-ADD_DEFINITIONS(
+add_definitions(
     -std=c++11
     -DUSING_PCH
 )
@@ -85,22 +42,19 @@ ADD_DEFINITIONS(
 # Qt Stuff
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
-set(QT_PRECOMPILED_HEADER "pch.h")
-
-# Boost stuff
-#set(Boost_USE_STATIC_LIBS OFF)
-#set(Boost_USE_MULTITHREADED ON)
-#set(Boost_USE_STATIC_RUNTIME OFF)
+set(QT_PRECOMPILED_HEADER ${PC_HEADER}.h)
 
 # Find packages...
 
-find_package(Boost 1.55)
+include_directories("libs/LuaState/include")
+
+# Boost
+find_package(Boost)
 include_directories(${Boost_INCLUDE_DIRS})
 
-# Will find also LuaJIT, but must be named same as Lua51 and installed into directories
-# find_package(Lua51)
+# Will find also LuaJIT
 find_package(LuaJIT)
-include_directories(${LUAJIT_INCLUDE_DIR})
+include_directories(${LUA_INCLUDE_DIR})
 
 # Find Qt modules, every module separately
 find_package(Qt5Widgets REQUIRED)
@@ -134,7 +88,7 @@ qt5_use_modules (
 target_link_libraries(${PROJECT} ${Boost_LIBRARIES})
 
 # LuaJIT
-target_link_libraries(${PROJECT} ${LUAJIT_LIBRARY})
+target_link_libraries(${PROJECT} ${LUA_LIBRARY})
 
 # Add precompiled header
 add_precompiled_header(${PROJECT} ${PC_HEADER}.h FORCEINCLUDE)
@@ -143,3 +97,10 @@ add_precompiled_header(${PROJECT} ${PC_HEADER}.h FORCEINCLUDE)
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pagezero_size 10000 -image_base 100000000")
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
+# Compile lua files
+add_custom_command(
+	TARGET ${PROJECT}
+	PRE_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_directory 
+		${CMAKE_SOURCE_DIR}/scripts $<TARGET_FILE_DIR:Grapedit>/scripts)

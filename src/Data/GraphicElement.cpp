@@ -1,9 +1,11 @@
 #include "GraphicElement.h"
 
-#include "../Ui/BaseGrid.h"
-#include "../Ui/BaseItem.h"
+#include "./GraphicTextState.h"
+
+#include "../Ui/Layout.h"
+#include "../Ui/Item.h"
 #include "../Ui/TextItem.h"
-#include "../Ui/LinearGrid.h"
+#include "../Ui/LinearLayout.h"
 
 GraphicElement::ReusableInstancesMap GraphicElement::_reusableInstances;
 
@@ -54,74 +56,46 @@ GraphicElement::~GraphicElement()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-BaseGridPtr GraphicElement::getGrid() const
+LayoutPtr GraphicElement::getLayout() const
 {
 	Q_ASSERT(_type == Type::Grid);
 	Q_ASSERT(_graphicalElement != nullptr);
 
-	return boost::static_pointer_cast<BaseGrid>(_graphicalElement);
+	return std::static_pointer_cast<Layout>(_graphicalElement);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-BaseItemPtr GraphicElement::getItem() const
+ItemPtr GraphicElement::getItem() const
 {
 	Q_ASSERT(_type == Type::Item);
 	Q_ASSERT(_graphicalElement != nullptr);
 
-	return boost::static_pointer_cast<BaseItem>(_graphicalElement);
+	return std::static_pointer_cast<Item>(_graphicalElement);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-void GraphicElement::initialize()
+void GraphicElement::initialize(const GraphicTextStatePtr& state)
 {
-	// TODO: ziskat graficke info zo stavu Lua
 	if (!isInitialized()) {
 		// Pozrieme ci nemozme reusenut objekt
 		_graphicalElement = dequeueReusableElement(_textType + _graphicType);
-		if (_graphicalElement == nullptr) {
-			// TODO: pre testovacie ucely sa vytvori iba text item a horizontalny layout
-			switch (_type) 
-			{
-			case GraphicElement::Type::Item:
-				_graphicalElement = boost::make_shared<TextItem>();
-				break;
-
-			case GraphicElement::Type::Grid:
-				_graphicalElement = boost::make_shared<LinearGrid>(Qt::Orientation::Horizontal);
-				break;
-
-			default:
-				Q_ASSERT(false);
-				break;
-			}
-		}
+		if (_graphicalElement == nullptr)
+            _graphicalElement = createElement(state->getLuaState(), _graphicType.c_str());
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void GraphicElement::update()
 {
-    switch (_type)
-	{
-        case GraphicElement::Type::Item:
-            boost::static_pointer_cast<BaseItem>(_graphicalElement)->setText(_text);
-            _text.clear();
-            break;
-            
-        case GraphicElement::Type::Grid:
-            break;
-            
-        default:
-            Q_ASSERT(false);
-            break;
-	}
+    if (_type == GraphicElement::Type::Item)
+        std::static_pointer_cast<Item>(_graphicalElement)->setText(_text);
 }
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-BaseElementPtr GraphicElement::dequeueReusableElement(const std::string& graphicType)
+DrawablePtr GraphicElement::dequeueReusableElement(const std::string& graphicType)
 {
-	BaseElementPtr element;
+	DrawablePtr element;
 	ReusableInstancesMap::iterator mapIterator = _reusableInstances.find(graphicType);
 	if (mapIterator != _reusableInstances.end() && mapIterator->second.size() > 0) {
 		element = mapIterator->second.front();
@@ -129,3 +103,27 @@ BaseElementPtr GraphicElement::dequeueReusableElement(const std::string& graphic
 	}
 	return element;
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+DrawablePtr GraphicElement::createElement(lua::State state, const char* type)
+{
+    lua::Value item = state["currentActiveStyle"][type];
+    lua::String objectType = item["object"];
+    
+    if (item["grid"] == true) {
+        
+        if (strcmp(objectType, "vertical") == 0)
+            return std::make_shared<LinearLayout>(Qt::Orientation::Vertical);
+        
+        else if (strcmp(objectType, "horizontal") == 0)
+            return std::make_shared<LinearLayout>(Qt::Orientation::Horizontal);
+    }
+    else if (item["item"] == true) {
+        
+        if (strcmp(objectType, "text") == 0)
+            return std::make_shared<TextItem>();
+    }
+    
+    Q_ASSERT(false); // Unknown type
+}
+

@@ -10,9 +10,9 @@ return {
 	squareLeft = P'[',
 	squareRight = P']',
 	
-	word = (R'az' + R'AZ')^1,
-	number = R'09'^1 * P'.'^-1 * R'09'^0 ,
-	other = (P(1) - S'()[]')^1,
+	word = (R'az' + R'AZ')^1 * P' '^0,
+	number = R'09'^1 * P'.'^-1 * R'09'^0 * P' '^0,
+	other = (P(1) - V'word' - V'number' - S'()[]')^1,
 
 	chunk = V'squareBrackets' + V'roundBrackets' + V'token',
 	token = V'word' + V'number' + V'other',

@@ -2,12 +2,12 @@
 
 #include "pch.h"
 
-#include "BaseItem.h"
+#include "Item.h"
 
 DECLARE_CLASS_PTR(QFont);
 DECLARE_CLASS_PTR(TextItem);
 
-class TextItem : public BaseItem
+class TextItem : public Item
 {
 public:
 	TextItem();

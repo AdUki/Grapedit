@@ -12,9 +12,8 @@ class GraphicTextState : public QObject
 	Q_OBJECT //-V524
 
 public:
-
-	/// Nazov identifikatora ktory drzi this pointer na LuaState, cez tento pointer vieme najst v statickych bindovanych funkciach triedu, ktora k tomu volaniu patri
-	static const char* globalLuaName;
+    
+    typedef std::function<void(const GraphicElementsList& newElements, const GraphicElementsList& updateElements, const GraphicElementsList& deleteElements)> UpdatesFncCallback;
 
 	GraphicTextState();
 	~GraphicTextState();
@@ -33,21 +32,17 @@ public:
 	///
 	/// @param name Udáva názov priečinku, kde sú uložené súbory s gramatikou a štýlom.
 	void loadGrammar(const std::string& name);
-
-	void addNewElement(GraphicElement* element);
-	void addUpdateElement(GraphicElement* element);
-	void addDeleteElement(GraphicElement* element);
+    
+    void setUpdateCallback(const UpdatesFncCallback& callback) {
+        _updatesCallback = callback;
+    }
+    
+    lua::State getLuaState() { return _state; }
 
 public slots:
 
 	void commit();
 	void reset();
-
-signals:
-
-	void addElementsToScene(const GraphicElementsList& elements);
-	void removeElementsFromScene(const GraphicElementsList& elements);
-	void updateElementsOnScene(const GraphicElementsList& elements);
 
 private:
 	
@@ -66,9 +61,14 @@ private:
 	NewElementsIndexes _newElementsIndexes;
 	GraphicElementsList _updateElements;
 	GraphicElementsList _deleteElements;
+    
+    UpdatesFncCallback _updatesCallback;
 
-	lua_State* _state;
+    lua::State _state;
 
 	std::string _textType;
-	
+    
+    void addNewElement(GraphicElement* element);
+	void addUpdateElement(GraphicElement* element);
+	void addDeleteElement(GraphicElement* element);
 };

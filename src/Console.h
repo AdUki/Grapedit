@@ -12,17 +12,10 @@ class Console :
 
 public:
 
-	/// Farby ako na tomto obrazku:
-	/// http://unindented.org/articles/2005/02/color-in-a-console-application/image-01.png
-	enum TextColor { Black = 0, Navy, Green, Teal, Maroon, Purple, Silver, Gray, Blue, Lime, Aqua, Red, Fuchisa, Yellow, White };
-
 	Console();
 	~Console();
 
 	static ConsolePtr getInstance();
-
-	static void setTextColor(TextColor color);
-	static void resetTextColor();
 
 signals:
 

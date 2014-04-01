@@ -1,5 +1,3 @@
-dofile 'init.lua'
-
 print "Initializing core"
 
 local parser = require 'parser'
@@ -17,10 +15,6 @@ function loadGrammarAndStyle(name)
 	currentActiveParser = parser.create(grammar, currentActiveStyle)
 
 	print("Grammar and style " .. name .. " successfully loaded.")
-end
-
-function testFnc(text)
-	print(text)
 end
 
 --- Parse new text
@@ -63,7 +57,12 @@ function parseText(newText)
 		)
 
 	-- pretty.dump(newTree)
-	currentActiveAST = newTree
+
+	-- If successfully parsed we will set new tree and commit updates
+	if newTree ~= nil then
+		currentActiveAST = newTree
+		send_commit()
+	end
 end
 
 --- Get element style
