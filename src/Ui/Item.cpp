@@ -97,8 +97,11 @@ void Item::updateGeometry()
 //////////////////////////////////////////////////////////////////////////////////////////////////
 QSizeF Item::sizeHint(Qt::SizeHint which, const QSizeF& constraint) const
 {
-	Q_UNUSED(which);
-    
-    // Vratime najmensiu velkost, lebo nechceme aby nam prvky behali v layoute po zmene...
-    return measureSize();
+    switch (which) {
+        case Qt::MaximumSize:
+            return QSize(MAXFLOAT, MAXFLOAT);
+            
+        default:
+            return measureSize();
+    }
 }

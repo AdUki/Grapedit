@@ -91,7 +91,6 @@ void GraphicElement::update()
         std::static_pointer_cast<Item>(_graphicalElement)->setText(_text);
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 DrawablePtr GraphicElement::dequeueReusableElement(const std::string& graphicType)
 {
