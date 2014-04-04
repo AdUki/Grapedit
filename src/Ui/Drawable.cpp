@@ -28,3 +28,4 @@ void Drawable::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     
     draw(painter, boundingRect());
 }
+

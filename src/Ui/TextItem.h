@@ -18,7 +18,7 @@ public:
 protected:
 
 	QSizeF measureSize() const override;
-	void draw(QPainter *painter, const QRectF& bounds) override;
+	void drawContent(QPainter *painter, const QRectF& bounds) override;
 
 private:
 

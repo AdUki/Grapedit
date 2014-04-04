@@ -38,39 +38,42 @@ QRectF Item::boundingRect() const
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void Item::setGeometry(const QRectF &rect)
 {
-	QPointF position;
+    qreal left, top, right, bottom;
+    getContentsMargins(&left, &top, &right, &bottom);
+
+	QPointF position(-left, -top); // rect sa automaticky posunie o contentMargins
 	QSizeF size(measureSize());
-    
+
 	QGraphicsLayoutItem* parent = parentLayoutItem();
 	if (parent != nullptr) {
         
 		switch (_hAlignment) {
                 
             case HorizontalAlignment::Center:
-                position.setX((rect.width() - size.width()) / 2 + rect.x());
+                position.setX((rect.width() - size.width()) / 2 + rect.x() + position.x());
                 break;
                 
             case HorizontalAlignment::Left:
-                position.setX(rect.x());
+                position.setX(rect.x() + position.x());
                 break;
                 
             case HorizontalAlignment::Right:
-                position.setX(rect.right() - size.width() + rect.x());
+                position.setX(rect.right() - size.width() + rect.x() + position.x());
                 break;
 		}
         
 		switch (_vAlignment) {
                 
             case VerticalAlignment::Center:
-                position.setY((rect.height() - size.height()) / 2 + rect.y());
+                position.setY((rect.height() - size.height()) / 2 + rect.y() + position.y());
                 break;
                 
             case VerticalAlignment::Top:
-                position.setY(rect.y());
+                position.setY(rect.y() + position.y());
                 break;
                 
             case VerticalAlignment::Bottom:
-                position.setY(rect.bottom() - size.height() + rect.y());
+                position.setY(rect.bottom() - size.height() + rect.y() + position.y());
                 break;
 		}
 	}
@@ -98,10 +101,32 @@ void Item::updateGeometry()
 QSizeF Item::sizeHint(Qt::SizeHint which, const QSizeF& constraint) const
 {
     switch (which) {
-        case Qt::MaximumSize:
-            return QSize(MAXFLOAT, MAXFLOAT);
+//        case Qt::MaximumSize:
+//            return QSize(MAXFLOAT, MAXFLOAT);
             
-        default:
-            return measureSize();
+        default: {
+            qreal left, top, right, bottom;
+            getContentsMargins(&left, &top, &right, &bottom);
+            
+            QSizeF size = measureSize();
+            size.setWidth(size.width() + left + right);
+            size.setHeight(size.height() + top + bottom);
+            
+            return size;
+        }
     }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void Item::draw(QPainter *painter, const QRectF &bounds)
+{
+    drawBackground(painter, bounds);
+    
+    qreal left, top, right, bottom;
+    getContentsMargins(&left, &top, &right, &bottom);
+
+    drawContent(painter, QRectF(bounds.x() + left,
+                                bounds.y() + top,
+                                bounds.width() - left - right,
+                                bounds.height() - top - bottom));
 }

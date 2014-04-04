@@ -33,8 +33,9 @@ void TextItem::setFont(const QFontPtr& font)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-void TextItem::draw(QPainter *painter, const QRectF& bounds) 
+void TextItem::drawContent(QPainter *painter, const QRectF& bounds)
 {
+    painter->fillRect(bounds, QBrush(QColor(0, 255, 60, 33)));
 	painter->setBrush(QBrush(Qt::black));
 	painter->setFont(*_font);
 	painter->drawText(bounds, QString::fromStdString(getText()));

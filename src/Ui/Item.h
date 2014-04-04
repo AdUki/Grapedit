@@ -29,7 +29,10 @@ public:
     const std::string& getText() const { return _text; }
     
     virtual QSizeF measureSize() const = 0;
-    virtual void draw(QPainter *painter, const QRectF& bounds) = 0;
+    void draw(QPainter *painter, const QRectF& bounds) final;
+    
+    virtual void drawBackground(QPainter *painter, const QRectF& bounds) {}
+    virtual void drawContent(QPainter *painter, const QRectF& bounds) {}
     
 protected:
     
