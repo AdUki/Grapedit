@@ -44,8 +44,6 @@
 	#include <QDebug>
 
 	#include <lua.hpp>
-
-#define LUASTATE_DEBUG_MODE
     #include <LuaState.h>
 
 	#define DECLARE_CLASS_PTR(type) \

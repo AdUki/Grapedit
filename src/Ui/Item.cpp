@@ -123,6 +123,7 @@ void Item::updateGeometry()
 QSizeF Item::sizeHint(Qt::SizeHint which, const QSizeF& constraint) const
 {
     switch (which) {
+        // TODO: fix pre alignment
 //        case Qt::MaximumSize:
 //            return QSize(MAXFLOAT, MAXFLOAT);
             
