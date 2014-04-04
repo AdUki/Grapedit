@@ -11,7 +11,7 @@ local squareBracketsStyle = {
 	item = true,
 	object = "text",
 	text = {
-		size = 20,
+		size = 25,
 		color = { 0, 0.5, 0 },
 		bold = true,
 	},
@@ -67,6 +67,14 @@ return {
 		text = {
 			size = 20,
 			color = { 1, 0, 1 }
+		},
+		content = {
+			padding = { 
+				left = 5,
+				right = 5,
+				-- top = 0,
+				-- bottom = 0,
+			},
 		},
 	},
 }

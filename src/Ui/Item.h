@@ -45,6 +45,15 @@ protected:
     
 private:
     
+    struct ContentMargins {
+        size_t left = 0;
+        size_t top = 0;
+        size_t right = 0;
+        size_t bottom = 0;
+    };
+    
+    ContentMargins _contentMargins;
+    
 	VerticalAlignment _vAlignment;
 	HorizontalAlignment _hAlignment;
     

@@ -36,6 +36,21 @@ Item::Item(const lua::Ref& style)
         if (color[4].is<lua::Number>())
             _contentColor->setAlphaF(color[4]);
     }
+    
+    if (contentStyle["padding"].is<lua::Table>()) {
+        lua::Ref padding = contentStyle["padding"];
+        if (padding["top"].is<lua::Number>())
+            _contentMargins.top = lua::Number(padding["top"]);
+        
+        if (padding["bottom"].is<lua::Number>())
+            _contentMargins.bottom = lua::Number(padding["bottom"]);
+        
+        if (padding["left"].is<lua::Number>())
+            _contentMargins.left = lua::Number(padding["left"]);
+        
+        if (padding["right"].is<lua::Number>())
+            _contentMargins.right = lua::Number(padding["right"]);
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -107,10 +122,10 @@ void Item::setGeometry(const QRectF &rect)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void Item::getContentsMargins(qreal *left, qreal *top, qreal *right, qreal *bottom) const
 {
-    *left = 10;
-    *top = 10;
-    *right = 10;
-    *bottom = 10;
+    *left = _contentMargins.left;
+    *top = _contentMargins.top;
+    *right = _contentMargins.right;
+    *bottom = _contentMargins.bottom;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
