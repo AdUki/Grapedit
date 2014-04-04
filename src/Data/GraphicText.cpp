@@ -95,6 +95,7 @@ void GraphicText::updateElementsOnScene(const GraphicElementsList& newElements, 
 		_scene->addItem(element->getElement().get());
         
 		if (element->getParent() == nullptr) {
+            element->getElement()->setZValue(1);
             _root->insertElement(*element);
 		}
 		else {
@@ -102,6 +103,16 @@ void GraphicText::updateElementsOnScene(const GraphicElementsList& newElements, 
 			assert(element->getParent()->isInitialized());
             
 			element->getParent()->getLayout()->insertElement(*element);
+            
+            // NOTE: ZValue by sa mohla vyratat uz pri parsovani LPegom a poslat do aplikacie
+            size_t zValue = 1;
+            LayoutPtr layout = element->getElement()->getParent();
+            while (layout != nullptr) {
+                ++zValue;
+                layout = layout->getParent();
+            }
+            
+            element->getElement()->setZValue(zValue);
 		}
 	}
     
