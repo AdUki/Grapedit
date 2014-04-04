@@ -36,6 +36,12 @@ public:
         _parent = parent;
     }
     
+    void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent * event) override;
+    
+    bool isHighlighted() const { return _highlighted; }
+    bool isSelected() const { return _selected; }
+    
 protected:
     
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0) final;
@@ -45,4 +51,7 @@ private:
     LayoutWPtr _parent;
     
     boost::optional<QColor> _backgroundColor;
+    
+    bool _highlighted;
+    bool _selected;
 };

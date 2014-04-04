@@ -13,12 +13,18 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 Drawable::Drawable()
+: _highlighted(false)
+, _selected(false)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 Drawable::Drawable(const lua::Ref& style)
+: _highlighted(false)
+, _selected(false)
 {
+    setAcceptHoverEvents(true);
+    
     lua::Ref backgroundStyle = style["background"];
     if (!backgroundStyle.is<lua::Table>())
         return;
@@ -48,9 +54,29 @@ Drawable::~Drawable()
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void Drawable::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget* widget)
 {
-    if (_backgroundColor.is_initialized())
-        painter->fillRect(boundingRect(), QBrush(*_backgroundColor));
+    QRectF bounds(boundingRect());
+    if (isHighlighted()) {
+        // TODO: stylovanie onHoverEvent
+        painter->setPen(Qt::red);
+        painter->drawRect(bounds);
+    }
     
-    draw(painter, boundingRect());
+    if (_backgroundColor.is_initialized())
+        painter->fillRect(bounds, QBrush(*_backgroundColor));
+    
+    draw(painter, bounds);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void Drawable::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
+{
+    _highlighted = true;
+    update();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void Drawable::hoverLeaveEvent(QGraphicsSceneHoverEvent * event)
+{
+    _highlighted = false;
+    update();
+}
