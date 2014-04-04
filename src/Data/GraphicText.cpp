@@ -15,14 +15,8 @@ using namespace std::placeholders;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 GraphicText::GraphicText(const std::string& textType)
 {
-    // Vytvorime custom deleter pre odstranenie vsetkych objektov pri mazani sceny, ktore sa automaticky mazu v destruktore QGraphicScene
-	_scene = std::shared_ptr<QGraphicsScene>(new QGraphicsScene(), [this] (QGraphicsScene* ptr) {
-        for (QGraphicsItem* item : ptr->items()) {
-            ptr->invalidate();
-            ptr->removeItem(item);
-        }
-        delete ptr;
-    });
+    // TODO: zmazat scenu
+	_scene = new QGraphicsScene();
 
     _root = std::make_shared<LinearLayout>(Qt::Orientation::Horizontal);
     

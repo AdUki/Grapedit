@@ -25,7 +25,7 @@ public:
 	/// textType Názov priečinku, z ktorého bude načítaný súbor s gramatikou a štýlom 
 	void setTextType(const std::string& textType);
 
-	QGraphicsScenePtr getScene() { return _scene; }
+	QGraphicsScene* getScene() { return _scene; }
 
 public slots:
 
@@ -43,7 +43,7 @@ private:
 	std::string _text;
 
 	GraphicTextStatePtr _state;
-	QGraphicsScenePtr _scene;
+	QGraphicsScene* _scene;
 
 	LayoutPtr _root;
 

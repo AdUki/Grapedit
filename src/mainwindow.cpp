@@ -36,7 +36,9 @@ MainWindow::~MainWindow()
 void MainWindow::setGraphicText(const GraphicTextPtr& graphicText)
 {
 	_currentGraphicText = graphicText;
-	UI->graphicsView->setScene(graphicText->getScene().get());
+    
+    QGraphicsScene* scene = graphicText->getScene();
+	UI->graphicsView->setScene(scene);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
