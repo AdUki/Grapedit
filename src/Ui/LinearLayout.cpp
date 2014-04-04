@@ -18,9 +18,11 @@ LinearLayout::LinearLayout(Qt::Orientation orientation)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-LinearLayout::LinearLayout(Qt::Orientation orientation, const lua::Ref& style)
-: LinearLayout(orientation)
+LinearLayout::LinearLayout(const lua::Ref& style, Qt::Orientation orientation)
+: Layout(style)
 {
+    _layout = new QGraphicsLinearLayout(orientation);
+    static_cast<QGraphicsLinearLayout*>(_layout)->setSpacing(0);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////

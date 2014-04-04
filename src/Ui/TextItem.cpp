@@ -4,12 +4,39 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 TextItem::TextItem(const lua::Ref& style)
+: Item(style)
+, _textColor(Qt::black)
 {
-    int fontSize = style["size"];
+    _font = std::make_shared<QFont>();
+    _font->setPointSize(20);
     
-	_font = std::make_shared<QFont>();
-	_font->setPointSize(fontSize);
-	_font->setBold(false);
+    lua::Ref textStyle = style["text"];
+    if (!textStyle.is<lua::Table>())
+        return;
+    
+    _font = std::make_shared<QFont>();
+    if (textStyle["size"].is<lua::Number>())
+        _font->setPointSize(textStyle["size"]);
+    
+    if (textStyle["color"].is<lua::Table>()) {
+        lua::Ref color = textStyle["color"];
+        if (color[1].is<lua::Number>())
+            _textColor.setRedF(color[1]);
+        
+        if (color[2].is<lua::Number>())
+            _textColor.setGreenF(color[2]);
+        
+        if (color[3].is<lua::Number>())
+            _textColor.setBlueF(color[3]);
+        
+        if (color[4].is<lua::Number>())
+            _textColor.setAlphaF(color[4]);
+    }
+    
+    if (textStyle["bold"].is<lua::Boolean>())
+        _font->setBold(textStyle["bold"]);
+    else
+        _font->setBold(false);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,8 +62,7 @@ void TextItem::setFont(const QFontPtr& font)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void TextItem::drawContent(QPainter *painter, const QRectF& bounds)
 {
-    painter->fillRect(bounds, QBrush(QColor(0, 255, 60, 33)));
-	painter->setBrush(QBrush(Qt::black));
+    painter->setPen(_textColor);
 	painter->setFont(*_font);
 	painter->drawText(bounds, QString::fromStdString(getText()));
 }

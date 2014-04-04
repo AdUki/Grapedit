@@ -25,6 +25,9 @@ class Layout :
 {
 public:
     
+    Layout();
+    Layout(const lua::Ref& style);
+    
     QRectF boundingRect() const override;
     
     // Functions to be overloaded

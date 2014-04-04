@@ -8,12 +8,34 @@
 
 #include "Item.h"
 
+#include <QPainter>
+#include <QBrush>
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
-Item::Item()
-: _vAlignment(VerticalAlignment::Center)
+Item::Item(const lua::Ref& style)
+: Drawable(style)
+, _vAlignment(VerticalAlignment::Center)
 , _hAlignment(HorizontalAlignment::Center)
 {
+    lua::Ref contentStyle = style["content"];
+    if (!contentStyle.is<lua::Table>())
+        return;
     
+    if (contentStyle["color"].is<lua::Table>()) {
+        _contentColor = Qt::white;
+        lua::Ref color = contentStyle["color"];
+        if (color[1].is<lua::Number>())
+            _contentColor->setRedF(color[1]);
+        
+        if (color[2].is<lua::Number>())
+            _contentColor->setGreenF(color[2]);
+        
+        if (color[3].is<lua::Number>())
+            _contentColor->setBlueF(color[3]);
+        
+        if (color[4].is<lua::Number>())
+            _contentColor->setAlphaF(color[4]);
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -125,8 +147,13 @@ void Item::draw(QPainter *painter, const QRectF &bounds)
     qreal left, top, right, bottom;
     getContentsMargins(&left, &top, &right, &bottom);
 
-    drawContent(painter, QRectF(bounds.x() + left,
-                                bounds.y() + top,
-                                bounds.width() - left - right,
-                                bounds.height() - top - bottom));
+    QRectF contentRect(bounds.x() + left,
+                       bounds.y() + top,
+                       bounds.width() - left - right,
+                       bounds.height() - top - bottom);
+    
+    if (_contentColor.is_initialized())
+        painter->fillRect(contentRect, QBrush(*_contentColor));
+    
+    drawContent(painter, contentRect);
 }

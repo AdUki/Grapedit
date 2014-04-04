@@ -112,10 +112,10 @@ DrawablePtr GraphicElement::createElement(lua::State state, const char* type)
     if (item["grid"] == true) {
         
         if (strcmp(objectType, "vertical") == 0)
-            return std::make_shared<LinearLayout>(Qt::Orientation::Vertical, item);
+            return std::make_shared<LinearLayout>(item, Qt::Orientation::Vertical);
         
         else if (strcmp(objectType, "horizontal") == 0)
-            return std::make_shared<LinearLayout>(Qt::Orientation::Horizontal, item);
+            return std::make_shared<LinearLayout>(item, Qt::Orientation::Horizontal);
     }
     else if (item["item"] == true) {
         

@@ -18,7 +18,7 @@ class LinearLayout : public Layout
 {
 public:
     LinearLayout(Qt::Orientation orientation);
-    LinearLayout(Qt::Orientation orientation, const lua::Ref& style);
+    LinearLayout(const lua::Ref& style, Qt::Orientation orientation);
     ~LinearLayout();
     
     void insertItem(size_t index, const ItemPtr& item) override;

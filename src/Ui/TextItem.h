@@ -23,4 +23,5 @@ protected:
 private:
 
 	QFontPtr _font;
+    QColor _textColor;
 };

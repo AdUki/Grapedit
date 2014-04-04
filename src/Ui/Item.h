@@ -20,7 +20,7 @@ class Item : public Drawable, public QGraphicsLayoutItem
 {
 public:
     
-    Item();
+    Item(const lua::Ref& style);
     
     enum class VerticalAlignment { Center, Top, Bottom};
 	enum class HorizontalAlignment { Center, Left, Right};
@@ -49,4 +49,6 @@ private:
 	HorizontalAlignment _hAlignment;
     
     std::string _text;
+    
+    boost::optional<QColor> _contentColor;
 };

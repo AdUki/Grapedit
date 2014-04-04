@@ -22,6 +22,7 @@ class Drawable : public QGraphicsItem
 {
 public:
     Drawable();
+    Drawable(const lua::Ref& style);
     virtual ~Drawable();
     
     virtual void draw(QPainter *painter, const QRectF& bounds) {}
@@ -42,4 +43,6 @@ protected:
 private:
     
     LayoutWPtr _parent;
+    
+    boost::optional<QColor> _backgroundColor;
 };
