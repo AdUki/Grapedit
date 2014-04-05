@@ -13,14 +13,24 @@
 #include <QGraphicsLinearLayout>
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-Layout::Layout()
+Layout::Layout(QGraphicsLayout* layout)
+: _layout(layout)
 {
+    _layout->setContentsMargins(getContentInset().left, getContentInset().top, getContentInset().right, getContentInset().bottom);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-Layout::Layout(const lua::Ref& style)
+Layout::Layout(const lua::Ref& style, QGraphicsLayout* layout)
 : Drawable(style)
+, _layout(layout)
 {
+    _layout->setContentsMargins(getContentInset().left, getContentInset().top, getContentInset().right, getContentInset().bottom);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+Layout::~Layout()
+{
+    delete _layout;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////

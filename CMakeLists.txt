@@ -22,6 +22,7 @@ endmacro()
 add_folder("src")
 add_folder("src/Data")
 add_folder("src/Ui")
+add_folder("src/Utils")
 
 set(SOURCE_FILES ${SOURCE_FILES}
     ${PC_HEADER}.h

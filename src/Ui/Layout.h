@@ -25,8 +25,9 @@ class Layout :
 {
 public:
     
-    Layout();
-    Layout(const lua::Ref& style);
+    Layout(QGraphicsLayout* layout);
+    Layout(const lua::Ref& style, QGraphicsLayout* layout);
+    virtual ~Layout();
     
     QRectF boundingRect() const override;
     
@@ -48,11 +49,6 @@ public:
     
     size_t childrenCount();
     QGraphicsLayout* getQtLayout() { return _layout; }
-    
-protected:
-    
-    /// Vsetky triedy dediace od tejto triedy su zodpovedne za inicializaciu tohto layoutu, je to koli tomu, ze zakladne QGraphicsLayout neobsahuje funckie pre pridavanie elementov.
-    QGraphicsLayout* _layout;
     
 private:
     
@@ -87,4 +83,6 @@ private:
     };
     
     std::vector<Child> _children;
+    
+    QGraphicsLayout* _layout;
 };

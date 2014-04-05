@@ -11,45 +11,20 @@
 #include <QPainter>
 #include <QBrush>
 
+#include "../Utils/LuaReader.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 Item::Item(const lua::Ref& style)
 : Drawable(style)
 , _vAlignment(VerticalAlignment::Center)
 , _hAlignment(HorizontalAlignment::Center)
 {
-    lua::Ref contentStyle = style["content"];
-    if (!contentStyle.is<lua::Table>())
-        return;
-    
-    if (contentStyle["color"].is<lua::Table>()) {
-        _contentColor = Qt::white;
-        lua::Ref color = contentStyle["color"];
-        if (color[1].is<lua::Number>())
-            _contentColor->setRedF(color[1]);
-        
-        if (color[2].is<lua::Number>())
-            _contentColor->setGreenF(color[2]);
-        
-        if (color[3].is<lua::Number>())
-            _contentColor->setBlueF(color[3]);
-        
-        if (color[4].is<lua::Number>())
-            _contentColor->setAlphaF(color[4]);
-    }
-    
-    if (contentStyle["padding"].is<lua::Table>()) {
-        lua::Ref padding = contentStyle["padding"];
-        if (padding["top"].is<lua::Number>())
-            _contentMargins.top = lua::Number(padding["top"]);
-        
-        if (padding["bottom"].is<lua::Number>())
-            _contentMargins.bottom = lua::Number(padding["bottom"]);
-        
-        if (padding["left"].is<lua::Number>())
-            _contentMargins.left = lua::Number(padding["left"]);
-        
-        if (padding["right"].is<lua::Number>())
-            _contentMargins.right = lua::Number(padding["right"]);
+    if (style["content"].is<lua::Table>()) {
+        lua::Ref contentStyle = style["content"];
+
+        QColor color;
+        if (lua::readColor(contentStyle["color"], color))
+            _contentColor = color;
     }
 }
 
@@ -75,11 +50,11 @@ QRectF Item::boundingRect() const
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void Item::setGeometry(const QRectF &rect)
 {
-    qreal left, top, right, bottom;
-    getContentsMargins(&left, &top, &right, &bottom);
-
-	QPointF position(-left, -top); // rect sa automaticky posunie o contentMargins
-	QSizeF size(measureSize());
+	QPointF position;
+	QSizeF size(rect.size());
+    
+    // Zvacsime size o contentInset
+//    getContentInset().inflateSize(size);
 
 	QGraphicsLayoutItem* parent = parentLayoutItem();
 	if (parent != nullptr) {
@@ -120,15 +95,6 @@ void Item::setGeometry(const QRectF &rect)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-void Item::getContentsMargins(qreal *left, qreal *top, qreal *right, qreal *bottom) const
-{
-    *left = _contentMargins.left;
-    *top = _contentMargins.top;
-    *right = _contentMargins.right;
-    *bottom = _contentMargins.bottom;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
 void Item::updateGeometry()
 {
     QGraphicsLayoutItem::updateGeometry();
@@ -143,12 +109,10 @@ QSizeF Item::sizeHint(Qt::SizeHint which, const QSizeF& constraint) const
 //            return QSize(MAXFLOAT, MAXFLOAT);
             
         default: {
-            qreal left, top, right, bottom;
-            getContentsMargins(&left, &top, &right, &bottom);
-            
             QSizeF size = measureSize();
-            size.setWidth(size.width() + left + right);
-            size.setHeight(size.height() + top + bottom);
+            
+            // Zvacsime size o contentInset
+            getContentInset().inflateSize(size);
             
             return size;
         }
@@ -158,18 +122,6 @@ QSizeF Item::sizeHint(Qt::SizeHint which, const QSizeF& constraint) const
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void Item::draw(QPainter *painter, const QRectF &bounds)
 {
-    drawBackground(painter, bounds);
-    
-    qreal left, top, right, bottom;
-    getContentsMargins(&left, &top, &right, &bottom);
-
-    QRectF contentRect(bounds.x() + left,
-                       bounds.y() + top,
-                       bounds.width() - left - right,
-                       bounds.height() - top - bottom);
-    
     if (_contentColor.is_initialized())
-        painter->fillRect(contentRect, QBrush(*_contentColor));
-    
-    drawContent(painter, contentRect);
+        painter->fillRect(bounds, QBrush(*_contentColor));
 }

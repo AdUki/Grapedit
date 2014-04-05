@@ -1,14 +1,19 @@
-#include "./mainwindow.h"
-#include "./ui_mainwindow.h"
+#include "mainwindow.h"
+
+#include <QGraphicsScene>
+#include <QPushButton>
 
 #include "Data/GraphicText.h"
 #include "Data/GraphicElement.h"
+
+#include "./ui_mainwindow.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 MainWindow::MainWindow() : QMainWindow()
 {
 	UI = std::make_shared<Ui::MainWindow>();
 	UI->setupUi(this);
+    UI->plainTextEdit->setFocus();
 
     connect(UI->plainTextEdit, &QPlainTextEdit::textChanged, [this]() {
 		if (_currentGraphicText != nullptr)

@@ -10,38 +10,33 @@
 
 #include <QGraphicsLinearLayout>
 
+#include "../Utils/LuaReader.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 LinearLayout::LinearLayout(Qt::Orientation orientation)
+: Layout(new QGraphicsLinearLayout(orientation))
 {
-    _layout = new QGraphicsLinearLayout(orientation);
-    static_cast<QGraphicsLinearLayout*>(_layout)->setSpacing(0);
+    static_cast<QGraphicsLinearLayout*>(getQtLayout())->setSpacing(0);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 LinearLayout::LinearLayout(const lua::Ref& style, Qt::Orientation orientation)
-: Layout(style)
+: Layout(style, new QGraphicsLinearLayout(orientation))
 {
-    _layout = new QGraphicsLinearLayout(orientation);
-    static_cast<QGraphicsLinearLayout*>(_layout)->setSpacing(0);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-LinearLayout::~LinearLayout()
-{
-    delete _layout;
+    static_cast<QGraphicsLinearLayout*>(getQtLayout())->setSpacing(0);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void LinearLayout::insertItem(size_t index, const ItemPtr& item)
 {
     super::insertItem(index, item);
-    static_cast<QGraphicsLinearLayout*>(_layout)->insertItem(index, item.get());
+    static_cast<QGraphicsLinearLayout*>(getQtLayout())->insertItem(index, item.get());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void LinearLayout::insertLayout(size_t index, const LayoutPtr& layout)
 {
     super::insertLayout(index, layout);
-    static_cast<QGraphicsLinearLayout*>(_layout)->insertItem(index, layout->getQtLayout());
+    static_cast<QGraphicsLinearLayout*>(getQtLayout())->insertItem(index, layout->getQtLayout());
 }
 

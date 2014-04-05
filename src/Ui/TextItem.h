@@ -11,16 +11,17 @@ class TextItem : public Item
 {
 public:
 	TextItem(const lua::Ref& style);
-	virtual ~TextItem();
 	
 	void setFont(const QFontPtr& font);
 
 protected:
 
 	QSizeF measureSize() const override;
-	void drawContent(QPainter *painter, const QRectF& bounds) override;
+	void draw(QPainter *painter, const QRectF& bounds) override;
 
 private:
+    
+    typedef Item super;
 
 	QFontPtr _font;
     QColor _textColor;

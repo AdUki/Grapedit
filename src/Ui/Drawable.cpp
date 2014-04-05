@@ -11,10 +11,13 @@
 #include <QPainter>
 #include <QBrush>
 
+#include "../Utils/LuaReader.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 Drawable::Drawable()
 : _highlighted(false)
 , _selected(false)
+, _backgroundRadius(0)
 {
 }
 
@@ -22,27 +25,23 @@ Drawable::Drawable()
 Drawable::Drawable(const lua::Ref& style)
 : _highlighted(false)
 , _selected(false)
+, _backgroundRadius(0)
 {
     setAcceptHoverEvents(true);
     
-    lua::Ref backgroundStyle = style["background"];
-    if (!backgroundStyle.is<lua::Table>())
-        return;
-    
-    if (backgroundStyle["color"].is<lua::Table>()) {
-        _backgroundColor = Qt::white;
-        lua::Ref color = backgroundStyle["color"];
-        if (color[1].is<lua::Number>())
-            _backgroundColor->setRedF(color[1]);
+    if (style["background"].is<lua::Table>()) {
+        lua::Ref backgroundStyle = style["background"];
         
-        if (color[2].is<lua::Number>())
-            _backgroundColor->setGreenF(color[2]);
+        // Farba pozadia
+        QColor color;
+        if (lua::readColor(backgroundStyle["color"], color))
+            _backgroundColor = color;
         
-        if (color[3].is<lua::Number>())
-            _backgroundColor->setBlueF(color[3]);
+        // Content inset
+        lua::readInset(backgroundStyle["padding"], _contentInset);
         
-        if (color[4].is<lua::Number>())
-            _backgroundColor->setAlphaF(color[4]);
+        if (backgroundStyle["radius"].is<lua::Number>())
+            _backgroundRadius = backgroundStyle["radius"];
     }
 }
 
@@ -55,15 +54,14 @@ Drawable::~Drawable()
 void Drawable::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget* widget)
 {
     QRectF bounds(boundingRect());
-    if (isHighlighted()) {
-        // TODO: stylovanie onHoverEvent
-        painter->setPen(Qt::red);
-        painter->drawRect(bounds);
-    }
     
-    if (_backgroundColor.is_initialized())
-        painter->fillRect(bounds, QBrush(*_backgroundColor));
+    // Vykreslime pozadie
+    drawBackground(painter, bounds);
     
+    // Zmensime bounds o contentInset
+    _contentInset.deflateRect(bounds);
+    
+    // Vykreslime content
     draw(painter, bounds);
 }
 
@@ -79,4 +77,22 @@ void Drawable::hoverLeaveEvent(QGraphicsSceneHoverEvent * event)
 {
     _highlighted = false;
     update();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void Drawable::drawBackground(QPainter *painter, const QRectF& bounds)
+{
+    QPainterPath path;
+    path.addRoundRect(bounds, 2*_backgroundRadius, 2*_backgroundRadius);
+    
+    if (isHighlighted()) {
+        // TODO: stylovanie onHoverEvent
+        painter->setPen(Qt::red);
+        painter->drawPath(path);
+    }
+    
+    if (_backgroundColor.is_initialized()) {
+        painter->fillPath(path, QBrush(*_backgroundColor));
+    }
+    
 }

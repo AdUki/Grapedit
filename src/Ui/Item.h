@@ -29,30 +29,18 @@ public:
     const std::string& getText() const { return _text; }
     
     virtual QSizeF measureSize() const = 0;
-    void draw(QPainter *painter, const QRectF& bounds) final;
-    
-    virtual void drawBackground(QPainter *painter, const QRectF& bounds) {}
-    virtual void drawContent(QPainter *painter, const QRectF& bounds) {}
+    void draw(QPainter *painter, const QRectF& bounds) override;
     
 protected:
     
     QRectF boundingRect() const final;
     
     void setGeometry(const QRectF &rect) final;
-    void getContentsMargins(qreal *left, qreal *top, qreal *right, qreal *bottom) const final;
+    void getContentsMargins(qreal *left, qreal *top, qreal *right, qreal *bottom) const final {};
     void updateGeometry() final;
     QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const final;
     
 private:
-    
-    struct ContentMargins {
-        size_t left = 0;
-        size_t top = 0;
-        size_t right = 0;
-        size_t bottom = 0;
-    };
-    
-    ContentMargins _contentMargins;
     
 	VerticalAlignment _vAlignment;
 	HorizontalAlignment _hAlignment;

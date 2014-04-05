@@ -13,6 +13,8 @@
 #include <QGraphicsItem>
 #include <QRectF>
 
+#include "../Utils/Geometry.h"
+
 class QPainter;
 
 DECLARE_CLASS_PTR(Layout);
@@ -36,6 +38,8 @@ public:
         _parent = parent;
     }
     
+    const RectInset& getContentInset() const { return _contentInset; }
+    
     void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent * event) override;
     
@@ -48,10 +52,15 @@ protected:
     
 private:
     
-    LayoutWPtr _parent;
+    RectInset _contentInset;
     
-    boost::optional<QColor> _backgroundColor;
+    LayoutWPtr _parent;
     
     bool _highlighted;
     bool _selected;
+    
+    boost::optional<QColor> _backgroundColor;
+    qreal _backgroundRadius;
+    
+    void drawBackground(QPainter *painter, const QRectF& bounds);
 };

@@ -2,6 +2,8 @@
 
 #include <QPainter>
 
+#include "../Utils/LuaReader.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 TextItem::TextItem(const lua::Ref& style)
 : Item(style)
@@ -18,30 +20,12 @@ TextItem::TextItem(const lua::Ref& style)
     if (textStyle["size"].is<lua::Number>())
         _font->setPointSize(textStyle["size"]);
     
-    if (textStyle["color"].is<lua::Table>()) {
-        lua::Ref color = textStyle["color"];
-        if (color[1].is<lua::Number>())
-            _textColor.setRedF(color[1]);
-        
-        if (color[2].is<lua::Number>())
-            _textColor.setGreenF(color[2]);
-        
-        if (color[3].is<lua::Number>())
-            _textColor.setBlueF(color[3]);
-        
-        if (color[4].is<lua::Number>())
-            _textColor.setAlphaF(color[4]);
-    }
+    lua::readColor(textStyle["color"], _textColor);
     
     if (textStyle["bold"].is<lua::Boolean>())
         _font->setBold(textStyle["bold"]);
     else
         _font->setBold(false);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-TextItem::~TextItem()
-{
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,8 +44,10 @@ void TextItem::setFont(const QFontPtr& font)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-void TextItem::drawContent(QPainter *painter, const QRectF& bounds)
+void TextItem::draw(QPainter *painter, const QRectF& bounds)
 {
+    super::draw(painter, bounds);
+    
     painter->setPen(_textColor);
 	painter->setFont(*_font);
 	painter->drawText(bounds, QString::fromStdString(getText()));
