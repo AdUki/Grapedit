@@ -15,9 +15,6 @@ local squareBracketsStyle = {
 		color = { 0, 0.5, 0 },
 		bold = true,
 	},
-	-- background = {
-	-- 	padding = 10,
-	-- },
 }
 
 return {
@@ -27,6 +24,7 @@ return {
 		background = {
 			color = { 0, 0, 1, 0.05 },
 			padding = 10,
+			radius = 10,
 			radius = 10,
 		},
 	},

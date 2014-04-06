@@ -13,6 +13,7 @@
 
 #include "../Utils/LuaReader.h"
 
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 Drawable::Drawable()
 : _highlighted(false)
@@ -83,7 +84,9 @@ void Drawable::hoverLeaveEvent(QGraphicsSceneHoverEvent * event)
 void Drawable::drawBackground(QPainter *painter, const QRectF& bounds)
 {
     QPainterPath path;
-    path.addRoundRect(bounds, 2*_backgroundRadius, 2*_backgroundRadius);
+    path.addRoundRect(bounds, // radius je v percentach: 0 najmensi a 99 najvacsi
+                      screen::scale<float>(_backgroundRadius) / bounds.width() * 99.f,
+                      screen::scale<float>(_backgroundRadius) / bounds.height() * 99.f);
     
     if (isHighlighted()) {
         // TODO: stylovanie onHoverEvent

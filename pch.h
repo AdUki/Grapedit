@@ -46,6 +46,8 @@
 	#include <lua.hpp>
     #include <LuaState.h>
 
+    #include "./src/Utils/Screen.h"
+
 	#define DECLARE_CLASS_PTR(type) \
 	class type; \
 	typedef std::shared_ptr<type> type##Ptr; \
