@@ -25,7 +25,15 @@ MainWindow::MainWindow() : QMainWindow()
             _currentGraphicText->getScene()->update();
     });
     
-	GraphicTextPtr graphicText = std::make_shared<GraphicText>("test");
+    connect(UI->reloadGrammarButton, &QPushButton::clicked, [this]() {
+        if (_currentGraphicText != nullptr) {
+            _currentGraphicText->reloadTextStyle();
+
+            UI->graphicsView->setScene(_currentGraphicText->getScene());
+        }
+    });
+    
+	GraphicTextPtr graphicText = std::make_shared<GraphicText>("lua");
 	setGraphicText(graphicText);
 
 	qDebug() << "NEW" << this;

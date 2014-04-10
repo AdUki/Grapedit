@@ -29,10 +29,9 @@ http://www.inf.puc-rio.br/~roberto/lpeg/
 ** [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --]]
 
-local ffi = require "ffi"
-
-local lpcap = require   "lpeglj.lpcap"
--- local lpprint = require "lpeglj.lpprint" --only for debug purpose
+local ffi = require"ffi"
+local lpcap = require"lpeglj.lpcap"
+-- local lpprint = require"lpprint" --only for debug purpose
 
 local band, rshift, lshift = bit.band, bit.rshift, bit.lshift
 

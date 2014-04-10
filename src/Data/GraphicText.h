@@ -24,6 +24,8 @@ public:
 	///
 	/// textType Názov priečinku, z ktorého bude načítaný súbor s gramatikou a štýlom 
 	void setTextType(const std::string& textType);
+    
+    void reloadTextStyle();
 
 	QGraphicsScene* getScene() { return _scene; }
 
@@ -36,12 +38,8 @@ public slots:
 
 private:
 
-	typedef std::unordered_map<size_t, GraphicElementPtr> GraphicElements;
-
-	GraphicElements _displayedElements;
-
 	std::string _text;
-
+    
 	GraphicTextStatePtr _state;
 	QGraphicsScene* _scene;
 
@@ -51,4 +49,5 @@ private:
                         const GraphicElementsList& updateElements,
                         const GraphicElementsList& deleteElements);
 
+	void loadTextStyle(const std::string& textType);
 };

@@ -1,3 +1,7 @@
+local function Vw(pattern)
+	return pattern * P' '^0
+end
+
 return {
 
 	[1] = V'chunk'^0,

@@ -39,25 +39,42 @@ GraphicText::~GraphicText()
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void GraphicText::setTextType(const std::string& textType)
 {
-	std::string filename(textType);
-	if (boost::algorithm::ends_with(textType, ".lua")) {
-		filename = filename.substr(0, filename.size() - 4);
-	}
-
 	if (_state != nullptr && textType == _state->getTextType())
 		return;
 
-	// Zmazeme zobrazene elementy
-	_displayedElements.clear();
+    loadTextStyle(textType);
+}
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void GraphicText::reloadTextStyle()
+{
+    assert(_state != nullptr);
+    
+    // QGraphicsScene* oldScene = _scene;
+    // TODO: delete oldScene; - memory leak
+    
+    _scene = new QGraphicsScene();
+    
+	QGraphicsWidget* container = new QGraphicsWidget();
+	container->setLayout(_root->getQtLayout());
+	_scene->addItem(container);
+
+    std::string textType = _state->getTextType();
+    loadTextStyle(textType);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void GraphicText::loadTextStyle(const std::string& textType)
+{
+    _root->removeAllChildrenFromScene(_scene);
+    
 	// Nastartujeme novy state, ak mame stary automaticky sa znici
 	_state = std::make_shared<GraphicTextState>();
     
     _state->setUpdateCallback(std::bind(&GraphicText::updateElementsOnScene, this, _1, _2, _3));
-	_state->loadGrammar(textType);
+    _state->loadGrammar(textType);
 	_state->reparseText(_text);
 }
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void GraphicText::setText(const std::string& text)

@@ -11,6 +11,7 @@
 #include <QGraphicsLayout>
 #include <QGraphicsLayoutItem>
 #include <QGraphicsLinearLayout>
+#include <QGraphicsScene>
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 Layout::Layout(QGraphicsLayout* layout)
@@ -154,6 +155,25 @@ void Layout::removeChild(const ItemPtr& item)
             removeChild(i);
             break;
         }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void Layout::removeAllChildrenFromScene(QGraphicsScene* scene)
+{
+    for (int i = 0; i < _children.size(); ++i) {
+        
+        if (_children[i].layout != nullptr) {
+            _children[i].layout->removeAllChildrenFromScene(scene);
+            scene->removeItem(_children[i].layout.get());
+        }
+        else {
+            scene->removeItem(_children[i].item.get());
+        }
+        
+        _layout->removeAt(i);
+        _children[i].deleteChild();
+        _children.erase(_children.begin() + i);
     }
 }
 

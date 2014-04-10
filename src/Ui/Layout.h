@@ -43,6 +43,8 @@ public:
     void removeChild(const ItemPtr& item);
     void removeChild(size_t index);
     
+    void removeAllChildrenFromScene(QGraphicsScene* scene);
+    
     const ItemPtr& getItem(size_t index);
     const LayoutPtr& getLayout(size_t index);
     DrawablePtr getDrawable(size_t index);
