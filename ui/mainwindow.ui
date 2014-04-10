@@ -31,7 +31,7 @@
         <property name="font">
          <font>
           <family>Menlo</family>
-          <pointsize>15</pointsize>
+          <pointsize>11</pointsize>
          </font>
         </property>
         <property name="styleSheet">

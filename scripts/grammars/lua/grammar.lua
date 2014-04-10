@@ -169,7 +169,7 @@ return {
 
 	-- exp ::=  nil | false | true | Number | String | ‘...’ | functiondef | 
 	-- 	 prefixexp | tableconstructor | exp binary_op exp | unary_op exp 
-	exp = (V'exp' * V'binary_op' * V'exp'
+	exp = V'exp' * V'binary_op' * V'exp'
 		+ V'unary_op' * V'exp'
 		+ V'tableconstructor' 
 		+ V'prefixexp' 
@@ -179,7 +179,7 @@ return {
 		+ V'keyword_true' 
 		+ V'Number' 
 		+ V'String' 
-		+ V'...')	
+		+ V'...'
 		,
 
 	-- prefixexp ::= var | functioncall_stat | ‘(’ exp ‘)’
@@ -198,7 +198,7 @@ return {
 		 + V'String',
 
 	-- par_list ::= name_list [‘,’ ‘...’] | ‘...’
-	par_list = V'name_list' * P( V'.' * V'...' )^-1 + V'...',
+	par_list = V'name_list' * P( V',' * V'...' )^-1 + V'...',
 
 	-- tableconstructor ::= ‘{’ [field_list] ‘}’
 	tableconstructor = V'{' * V'field_list'^-1 * V'}',
