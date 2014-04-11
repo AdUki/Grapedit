@@ -86,10 +86,10 @@ local Cfold = 12
 local Cruntime = 13
 local Cgroup = 14
 
-local maxstack = 100
+local maxstack = 170
 local maxcapturedefault = 100
 local maxmemo = 1000
-local usememoization = false
+local usememoization = true
 
 local FAIL = -1
 local LRFAIL = -1

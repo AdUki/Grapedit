@@ -1,36 +1,46 @@
 local whitespace = S' \n\t'
+local EOF = P(-1)
+local number = R'09'^1 * P( P'.' * R'09'^1 )^-1
+
+-- TODO: vytiahnut komentare do samostatnych blokov
 
 local function token(pattern)
-	return pattern * whitespace^0 * V'block_comment'^0 * V'normal_comment'^0
+	return pattern * whitespace^0 * V'comment'^-1
 end
 
 local function tokenw(pattern)
-	return pattern * whitespace^1 * V'block_comment'^0 * V'normal_comment'^0
+	return pattern * whitespace^1 * V'comment'^-1
 end
+
+-- Adds boundary flag (\b in regexp) at the end of pattern
+local function tokenb(pattern)
+	return (pattern * #((1 - (R'az' + R'AZ' + P'_') + EOF))) * whitespace^0 * V'comment'^-1
+end
+
 
 return {
 
 	--[[========================================================]]
 
-	keyword_break = 	{ "keyword" , token'break' },
-	keyword_do = 		{ "keyword" , token'do' },
-	keyword_else = 		{ "keyword" , tokenw'else' },
-	keyword_elseif = 	{ "keyword" , token'elseif' },
-	keyword_end = 		{ "keyword" , token'end' },
-	keyword_false = 	{ "keyword" , token'false' },
-	keyword_for = 		{ "keyword" , token'for' },
-	keyword_function = 	{ "keyword" , token'function' },
-	keyword_goto = 		{ "keyword" , tokenw'goto' },
-	keyword_if = 		{ "keyword" , token'if' },
-	keyword_in = 		{ "keyword" , token'in' },
-	keyword_local = 	{ "keyword" , tokenw'local' },
-	keyword_nil = 		{ "keyword" , token'nil' },
-	keyword_repeat = 	{ "keyword" , token'repeat' },
-	keyword_return = 	{ "keyword" , token'return' },
-	keyword_then = 		{ "keyword" , tokenw'then' },
-	keyword_true = 		{ "keyword" , token'true' },
-	keyword_until = 	{ "keyword" , token'until' },
-	keyword_while = 	{ "keyword" , token'while' },
+	keyword_break = 	{ "keyword" , tokenb'break' },
+	keyword_do = 		{ "keyword" , tokenb'do' },
+	keyword_else = 		{ "keyword" , tokenb'else' },
+	keyword_elseif = 	{ "keyword" , tokenb'elseif' },
+	keyword_end = 		{ "keyword" , tokenb'end' },
+	keyword_false = 	{ "keyword" , tokenb'false' },
+	keyword_for = 		{ "keyword" , tokenb'for' },
+	keyword_function = 	{ "keyword" , tokenb'function' },
+	keyword_goto = 		{ "keyword" , tokenb'goto' },
+	keyword_if = 		{ "keyword" , tokenb'if' },
+	keyword_in = 		{ "keyword" , tokenb'in' },
+	keyword_local = 	{ "keyword" , tokenb'local' },
+	keyword_nil = 		{ "keyword" , tokenb'nil' },
+	keyword_repeat = 	{ "keyword" , tokenb'repeat' },
+	keyword_return = 	{ "keyword" , tokenb'return' },
+	keyword_then = 		{ "keyword" , tokenb'then' },
+	keyword_true = 		{ "keyword" , tokenb'true' },
+	keyword_until = 	{ "keyword" , tokenb'until' },
+	keyword_while = 	{ "keyword" , tokenb'while' },
 
 	--[[========================================================]]
 
@@ -41,7 +51,7 @@ return {
 	['*'] = 	{ "operator" , token'*' },
 	['+'] = 	{ "operator" , token'+' },
 	[','] = 	{ "operator" , token',' },
-	['-'] = 	{ "operator" , token'-' },
+	['-'] = 	{ "operator" , token'-' - P'--' },
 	['.'] = 	{ "operator" , token'.' },
 	['..'] = 	{ "operator" , token'..' },
 	['...'] = 	{ "operator" , token'...' },
@@ -58,17 +68,18 @@ return {
 	['['] = 	{ "operator" , token'[' },
 	[']'] = 	{ "operator" , token']' },
 	['^'] = 	{ "operator" , token'^' },
-	['and'] = 	{ "operator" , token'and' },
-	['or'] = 	{ "operator" , token'or' },
-	['not'] = 	{ "operator" , token'not' },
+	['and'] = 	{ "operator" , tokenb'and' },
+	['or'] = 	{ "operator" , tokenb'or' },
+	['not'] = 	{ "operator" , tokenb'not' },
 	['{'] = 	{ "operator" , token'{' },
 	['}'] = 	{ "operator" , token'}' },
 	['~='] = 	{ "operator" , token'~=' },
 
 	--[[========================================================]]
 
-	block_comment = 	{ "comment" , P'--[[' * (1 - P"]]")^0 * P"]]"^-1 * whitespace^0 },
-	normal_comment = 	{ "comment" , P'--' * (1 - P'\n')^0 * P'\n'^-1 * whitespace^0 },
+	block_comment = P'--[[' * (1 - P"]]")^0 * P"]]"^-1 * whitespace^0,
+	normal_comment = P'--' * (1 - P'\n')^0 * P'\n'^-1 * whitespace^0 ,
+	comment = (V'block_comment' + V'normal_comment')^1,
 
 	--[[========================================================]]
 
@@ -76,12 +87,13 @@ return {
 	[1] =  V'block',
 	
 	-- block ::= {stat} [return_stat]
-	block = token'' * V'stat'^0 * V'return_stat'^-1,
+	block = token'' 
+	      * V'stat'^0 
+	      * V'return_stat'^-1
+		  ,
 
-	-- stat ::=  ‘;’ | 
-	stat = V'block_comment'
-		 + V'normal_comment'
-		 + V'function_stat'
+	-- stat ::=
+	stat = V'function_stat'
 		 + V'if_stat'
 		 + V'while_stat'
 		 + V'repeat_stat'
@@ -121,8 +133,12 @@ return {
 
 	-- for Name ‘=’ exp ‘,’ exp [‘,’ exp] do block end | 
 	-- for name_list in exp_list do block end | 
-	for_stat = V'keyword_for' * V'Name' * V'=' * V'exp' * V',' * V'exp' * ( V',' * V'exp' )^-1 * V'keyword_do' * V'block' * V'keyword_end'
-			 + V'keyword_for' * V'name_list' * V'keyword_in' * V'exp_list' * V'keyword_do' * V'block' * V'keyword_end',
+	for_stat = V'keyword_for' 
+			   * V'Name' * V'=' * V'exp' * V',' * V'exp' * ( V',' * V'exp' )^-1 
+			   * V'keyword_do' * V'block' * V'keyword_end'
+			 + V'keyword_for' 
+			   * V'name_list' * V'keyword_in' * V'exp_list' 
+			   * V'keyword_do' * V'block' * V'keyword_end',
 
 	-- label_stat ‘::’ Name ‘::’
 	label_stat = V'::' * V'Name' * V'::',
@@ -167,12 +183,17 @@ return {
 	-- exp_list ::= exp {‘,’ exp}
 	exp_list = V'exp' * P( V',' * V'exp' )^0,
 
+	-- speed hack, rule: V'exp' * V'binary_op' * V'exp'
+	-- can result in O(!n) performance while chaining binary operators: res = a+a+a+a+a+a+a+a+a+a+a+a+a
+	exp_op_list = V'exp' * ( V'binary_op' * V'exp_op_list' )^0,
+
 	-- exp ::=  nil | false | true | Number | String | ‘...’ | functiondef | 
 	-- 	 prefixexp | tableconstructor | exp binary_op exp | unary_op exp 
-	exp = V'exp' * V'binary_op' * V'exp'
+	exp = V'comment'
+		+ V'exp' * V'binary_op' * V'exp'
 		+ V'unary_op' * V'exp'
-		+ V'tableconstructor' 
 		+ V'prefixexp' 
+		+ V'tableconstructor' 
 		+ V'functiondef' 
 		+ V'keyword_nil' 
 		+ V'keyword_false' 
@@ -184,8 +205,8 @@ return {
 
 	-- prefixexp ::= var | functioncall_stat | ‘(’ exp ‘)’
 	prefixexp = V'functioncall_stat'
+			  + V'var' 
 			  + V'(' * V'exp' * V')'
-		      + V'var' 
 		      ,
 
 	-- functioncall_stat ::=  prefixexp args | prefixexp ‘:’ Name args 
@@ -224,24 +245,24 @@ return {
 		      + V'and' 
 		      + V'or'
 		      + V'+' 
-	          + V'-' 
+	          + V'-'
 	          + V'*' 
 	          + V'/' 
 	          + V'^' 
 	          + V'%' 
 	          + V'..' 
 	          + V'<'
-		      + V'>' 
+		      + V'>'
 		      ,
 
 	-- unary_op ::= ‘-’ | not | ‘#’
-	unary_op = V'not'
+	unary_op =
+			 ( V'not'
 			 + V'-' 
 			 + V'#'
-			 ,
+			 ) * V'comment'^-1,
 
-	-- Names in Lua can be any string of letters, digits, and underscores, not beginning with a digit.
-	-- NOTE: they cannot be any keyword!
+	-- Names in Lua can be any string of letters, digits, and underscores, not beginning with a digit BUT they cannot be any keyword!
 	-- TODO: zahrnut vsetky znaky z locale
 	Name = token( (R'az' + R'AZ' + P'_') * (R'az' + R'AZ' + R'09' + P'_')^0 )
 	     - ((
@@ -249,14 +270,15 @@ return {
 	       P'false' + P'for' + P'function' + P'goto' + P'if' + 
 	       P'in' + P'local' + P'nil' + P'repeat' + P'return' + 
 	       P'then' + P'true' + P'until' + P'while'
-	       ) * (1 - (R'az' + R'AZ' + P'_')) ),
+	       ) * (1 - (R'az' + R'AZ' + P'_')) )
+	     ,
 
 	String = token(P'"' * (P('\\"') + P(1 - S'"\n') )^0 * P'"')
 		   + token(P"'" * (P("\\'") + P(1 - S"'\n") )^0 * P"'")
 		   + token(P'[[' * (1 - P"]]")^0 * P"]]")
 		   ,
 
-	-- TODO: pridat vsetky formaty cisiel (hexa, binary, octa ... )
 	Number = token(P'0x' * P( R'09' + R'af' + R'AF' )^1) -- hexa
-		   + token(R'09'^1 * P( P'.' * R'09'^1 )^-1 ),   -- decimal / floating
+		   + token( number * (P'e' * number)^-1 )        -- decimal / floating / e-notation
+		   ,
 }

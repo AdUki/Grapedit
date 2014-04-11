@@ -43,8 +43,8 @@ function parseText(newText)
 
 		-- Update element
 		function(newElement, oldElement)
-			print('UPDATE: ' .. tostring(oldElement.type) .. ' "' .. tostring(oldElement.value) .. '" to "' .. tostring(newElement.value) .. '"')
-			print (' >>> updating element with instance ' .. tostring(newElement.instance))
+			print('UPDATE: ' .. tostring(oldElement.type) .. ' "' .. tostring(oldElement.value) .. '" to[' .. tostring(newElement.instance) .. ', ' .. tostring(newElement.value) .. ']')
+			
 		    send_updateItem(newElement.instance, newElement.value)
 		end,
 

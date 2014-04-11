@@ -33,9 +33,6 @@ end
 -- test it
 local function parseText(text)
 
-    print ('\nParsing text: ' .. tostring(text))
-    print "==============================================="
-
 	local newItems = {}
 	local oldItems = {}
 
@@ -80,6 +77,11 @@ local function parseText(text)
 			end
 		end
 		)
+
+	if (newTree == nil) then
+		print ('Parsed text: [[' .. tostring(text) .. ']]')
+		print "==============================================="
+	end
 
 	-- remove elements
 	tablex.map(function(v) 
@@ -994,3 +996,70 @@ return {
     compile = compile,
 }
 ]]
+
+parseText'(a)()'
+parseText'(a).a()'
+parseText'a((a)())'
+parseText'a(a == true)'
+parseText'a((a) == true)'
+parseText'a((a).a == true)'
+parseText' fnc((reply or emptytable).queued == true) '
+
+parseText'for k, v in pairs(defaults) do end'
+parseText'for i = 1, 1, 1 do end'
+parseText'if not hascaptures(tree) then end'
+parseText'a=(a)or(c)and order'
+parseText[[
+a = c
+order = 6
+]]
+
+parseText [[
+a = a + a / a + a + a * a * a * a * a * a + a + a + a + a / a * a * a * a * a * a / a + a + a + a / a + a + a / a + a + a * a * a * a * a * a + a + a + a / a + a + a + a + a + a / a + a + a + a + a
+]]
+
+parseText [[
+
+local exp = m.P{ "Exp",
+  Exp = S * ( m.V"Grammar"
+            + m.Cf(m.V"Seq" * ("/" * S * m.V"Seq")^0, mt.__add) );
+  Seq = m.Cf(m.Cc(m.P"") * m.V"Prefix"^0 , mt.__mul)
+        * (#seq_follow + patt_error);
+  Prefix = "&" * S * m.V"Prefix" / mt.__len
+         + "!" * S * m.V"Prefix" / mt.__unm
+         + m.V"Suffix";
+  Suffix = m.Cf(m.V"Primary" * S *
+          ( ( m.P"+" * m.Cc(1, mt.__pow)
+            + m.P"*" * m.Cc(0, mt.__pow)
+            + m.P"?" * m.Cc(-1, mt.__pow)
+            + "^" * ( m.Cg(num * m.Cc(mult))
+                    + m.Cg(m.C(m.S"+-" * m.R"09"^1) * m.Cc(mt.__pow))
+                    )
+            + "->" * S * ( m.Cg((String + num) * m.Cc(mt.__div))
+                         + m.P"{}" * m.Cc(nil, m.Ct)
+                         + m.Cg(Def / getdef * m.Cc(mt.__div))
+                         )
+            + "=>" * S * m.Cg(Def / getdef * m.Cc(m.Cmt))
+            ) * S
+          )^0, function (a,b,f) return f(a,b) end );
+  Primary = "(" * m.V"Exp" * ")"
+            + String / mm.P
+            + Class
+            + defined
+            + "{:" * (name * ":" + m.Cc(nil)) * m.V"Exp" * ":}" /
+                     function (n, p) return mm.Cg(p, n) end
+            + "=" * name / function (n) return mm.Cmt(mm.Cb(n), equalcap) end
+            + m.P"{}" / mm.Cp
+            + "{~" * m.V"Exp" * "~}" / mm.Cs
+            + "{|" * m.V"Exp" * "|}" / mm.Ct
+            + "{" * m.V"Exp" * "}" / mm.C
+            + m.P"." * m.Cc(any)
+            + (name * m.Cb("G") * (S * ":" * S * num)^-1 * -arrow + "<" * name * m.Cb("G") * (S * ":" * S * num)^-1 * ">") / NT;
+  Definition = name * arrow * m.V"Exp";
+  Grammar = m.Cg(m.Cc(true), "G") *
+            m.Cf(m.V"Definition" / firstdef * m.Cg(m.V"Definition")^0,
+              adddef) / mm.P
+}
+]]
+
+parseText' for i=1,1,1 do end '

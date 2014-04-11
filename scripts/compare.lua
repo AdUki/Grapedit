@@ -29,11 +29,12 @@ function parseAST(parser, text, tree, addFnc, updateFnc, removeFnc)
         parsedCharacters = newTree[#newTree].positionEnd
     end
 
-    io.write('Parsed ' .. tostring(parsedCharacters) .. ' characters, ')
+    -- io.write('Parsed ' .. tostring(parsedCharacters) .. ' characters, ')
 
     if #text + 1 ~= parsedCharacters then
 
         -- if grammar failed to parse whole tree, return error
+        io.write('Parsed ' .. tostring(parsedCharacters) .. ' characters, ')
         print 'reparsing done with error!\n'
         return nil, parsedCharacters
 
@@ -44,7 +45,7 @@ function parseAST(parser, text, tree, addFnc, updateFnc, removeFnc)
         local rootNew = { type = 'root' , value = newTree }
         compareTrees(rootOld, rootNew, 1, nil)
 
-        print("reparsing file done!\n")
+        -- print("reparsing file done!\n")
         return newTree, parsedCharacters
     end
 end
@@ -158,8 +159,6 @@ function compareTrees(old, new, oldIndex, newIndex, oldParent, newParent)
         if  type(old.value) == 'string' and 
             type(new.value) == 'string' and 
             old.value ~= new.value then
-
-            print (' >>> updating element with instance ' .. tostring(old.instance))
 
             updateElement(new, old)
         end
