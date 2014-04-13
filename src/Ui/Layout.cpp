@@ -84,6 +84,8 @@ void Layout::insertItem(size_t index, const ItemPtr& item)
     
     item->setParent(shared_from_this());
     item->setParentLayoutItem(_layout);
+    
+    _layout->updateGeometry();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -101,6 +103,8 @@ void Layout::insertLayout(size_t index, const LayoutPtr& layout)
     
     layout->setParent(shared_from_this());
     layout->_layout->setParentLayoutItem(_layout);
+    
+    _layout->updateGeometry();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -132,6 +136,8 @@ void Layout::removeChild(size_t index)
     _layout->removeAt(index);
     _children[index].deleteChild();
     _children.erase(_children.begin() + index);
+    
+    _layout->updateGeometry();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////

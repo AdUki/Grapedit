@@ -10,6 +10,9 @@
 
 #include <QPainter>
 #include <QBrush>
+#include <QGraphicsLayout>
+
+#include "./Layout.h"
 
 #include "../Utils/LuaReader.h"
 
@@ -38,6 +41,9 @@ void Item::setText(const std::string& text)
     
     QGraphicsItem::update();
     QGraphicsLayoutItem::updateGeometry();
+    
+    if (getParent() != nullptr)
+        getParent()->getQtLayout()->invalidate();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
