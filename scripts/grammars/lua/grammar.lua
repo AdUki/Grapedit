@@ -279,6 +279,6 @@ return {
 		   ,
 
 	Number = token(P'0x' * P( R'09' + R'af' + R'AF' )^1) -- hexa
-		   + token( number * (P'e' * number)^-1 )        -- decimal / floating / e-notation
+		   + token( number * (P'e' * P'-'^-1 * number)^-1 )        -- decimal / floating / e-notation
 		   ,
 }

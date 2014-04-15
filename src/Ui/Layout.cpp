@@ -42,6 +42,13 @@ QRectF Layout::boundingRect() const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
+void Layout::findTextBoundaries(size_t& left, size_t& right) const
+{
+    left = findLeftOffset();
+    right = left + calculateTextLenght();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 void Layout::insertElement(const GraphicElement& element)
 {
     switch (element.getType()) {
@@ -189,5 +196,21 @@ void Layout::removeAllChildrenFromScene(QGraphicsScene* scene)
 size_t Layout::childrenCount()
 {
     return _children.size();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+size_t Layout::calculateTextLenght() const
+{
+    size_t textLenght = 0;
+    for (size_t i = 0; i < _children.size(); ++i) {
+        if (_children[i].layout != nullptr) {
+            textLenght += _children[i].layout->calculateTextLenght();
+        }
+        else if (_children[i].item != nullptr) {
+            textLenght += _children[i].item->getText().length();
+        }
+    }
+    
+    return textLenght;
 }
 

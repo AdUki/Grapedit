@@ -105,6 +105,9 @@ void GraphicText::updateElementsOnScene(const GraphicElementsList& newElements, 
 	for (GraphicElement* element : newElements) {
 		element->initialize(_state);
         element->update();
+        
+        connect(element->getDrawable().get(), SIGNAL(onElementClicked(Qt::MouseButton)), this, SLOT(onElementClicked(Qt::MouseButton)));
+        
 		_scene->addItem(element->getDrawable().get());
         
 		if (element->getParent() == nullptr) {
@@ -130,5 +133,14 @@ void GraphicText::updateElementsOnScene(const GraphicElementsList& newElements, 
 	}
     
     _scene->update();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void GraphicText::onElementClicked(Qt::MouseButton button)
+{
+    if (button & Qt::MouseButton::LeftButton) {
+        Drawable* drawable = static_cast<Drawable*>(QObject::sender());
+        emit onElementLeftButtonClicked(*drawable);
+    }
 }
 

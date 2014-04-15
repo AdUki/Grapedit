@@ -29,13 +29,17 @@ public:
 
 	QGraphicsScene* getScene() { return _scene; }
 
+signals:
+    
+    void onElementLeftButtonClicked(Drawable& drawable);
+    
 public slots:
 
 	/// Funkcia na nastavenie nového obsahu textu s grafickými prvkami. Po nastavení sa zavolá LPeg parser a následne vytvoria grafické elementy
 	///
 	/// @param text Nový text
 	void setText(const std::string& text);
-
+    
 private:
 
 	std::string _text;
@@ -50,4 +54,9 @@ private:
                         const GraphicElementsList& deleteElements);
 
 	void loadTextStyle(const std::string& textType);
+    
+private slots:
+    
+    void onElementClicked(Qt::MouseButton button);
+
 };

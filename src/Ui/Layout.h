@@ -30,6 +30,7 @@ public:
     virtual ~Layout();
     
     QRectF boundingRect() const override;
+    void findTextBoundaries(size_t& left, size_t& right) const final;
     
     // Functions to be overloaded
     virtual void insertItem(size_t index, const ItemPtr& item);
@@ -52,8 +53,13 @@ public:
     size_t childrenCount();
     QGraphicsLayout* getQtLayout() { return _layout; }
     
+protected:
+    
+    size_t calculateTextLenght() const final;
+    
 private:
     
+    friend class Item;
     friend class Drawable;
     
     struct Child {
@@ -63,12 +69,13 @@ private:
         Child(const LayoutPtr& layout) : layout(layout), item(nullptr) {}
         Child(const ItemPtr& item) : layout(nullptr), item(item) {}
         
-        bool operator==(const ItemPtr& value) const {
-            return item != nullptr && value != nullptr && item == value;
-        }
-        
-        bool operator==(const LayoutPtr& value) const {
-            return layout != nullptr && value != nullptr && layout == value;
+        bool operator==(const Drawable* value) const {
+            if (layout != nullptr)
+                return &*layout == value;
+            else if (item != nullptr)
+                return &*item == value;
+            else
+                return false;
         }
         
         bool operator==(const Child& value) const {
@@ -85,6 +92,15 @@ private:
                 layout->getQtLayout()->setParentLayoutItem(nullptr);
                 layout.reset();
             }
+        }
+        
+        DrawablePtr getDrawable() {
+            if (layout != nullptr)
+                return std::static_pointer_cast<Drawable>(layout);
+            else if (item != nullptr)
+                return std::static_pointer_cast<Drawable>(item);
+            else
+                return DrawablePtr();
         }
     };
     

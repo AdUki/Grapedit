@@ -4,6 +4,9 @@
 #include <QPushButton>
 #include <QFileDialog>
 
+
+#include "Ui/Drawable.h"
+
 #include "Data/GraphicText.h"
 #include "Data/GraphicElement.h"
 
@@ -71,6 +74,7 @@ MainWindow::~MainWindow()
 void MainWindow::setGraphicText(const GraphicTextPtr& graphicText)
 {
 	_currentGraphicText = graphicText;
+    connect(_currentGraphicText.get(), SIGNAL(onElementLeftButtonClicked(Drawable&)), this, SLOT(onElementLeftButtonClicked(Drawable&)));
     
     QGraphicsScene* scene = graphicText->getScene();
 	UI->graphicsView->setScene(scene);
@@ -81,3 +85,17 @@ void MainWindow::setupTextEditField()
 {
 
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void MainWindow::onElementLeftButtonClicked(Drawable& drawable)
+{
+    size_t left, right;
+    drawable.findTextBoundaries(left, right);
+    
+    QTextCursor textCursor = UI->plainTextEdit->textCursor();
+    textCursor.setPosition(left);
+    textCursor.setPosition(right, QTextCursor::KeepAnchor);
+    
+    UI->plainTextEdit->setTextCursor(textCursor);
+}
+

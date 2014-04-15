@@ -54,6 +54,13 @@ QRectF Item::boundingRect() const
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
+void Item::findTextBoundaries(size_t& left, size_t& right) const
+{
+    left = findLeftOffset();
+    right = left + _text.length();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 void Item::setGeometry(const QRectF &rect)
 {
 	QPointF position;
@@ -131,3 +138,10 @@ void Item::draw(QPainter *painter, const QRectF &bounds)
     if (_contentColor.is_initialized())
         painter->fillRect(bounds, QBrush(*_contentColor));
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+size_t Item::calculateTextLenght() const
+{
+    return _text.length();
+}
+

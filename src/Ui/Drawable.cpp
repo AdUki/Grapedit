@@ -10,6 +10,9 @@
 
 #include <QPainter>
 #include <QBrush>
+#include <QGraphicsSceneMouseEvent>
+
+#include "./Layout.h"
 
 #include "../Utils/LuaReader.h"
 
@@ -45,13 +48,13 @@ Drawable::Drawable(const lua::Ref& style)
             _backgroundRadius = backgroundStyle["radius"];
     }
     
-    qDebug() << "NEW" << this;
+    qDebug() << "NEW" << (QGraphicsItem*)this;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 Drawable::~Drawable()
 {
-    qDebug() << "DELETE" << this;
+    qDebug() << "DELETE" << (QGraphicsItem*)this;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -77,10 +80,16 @@ void Drawable::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-void Drawable::hoverLeaveEvent(QGraphicsSceneHoverEvent * event)
+void Drawable::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 {
     _highlighted = false;
     update();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void Drawable::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+    emit onElementClicked(event->button());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -102,3 +111,38 @@ void Drawable::drawBackground(QPainter *painter, const QRectF& bounds)
     }
     
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+size_t Drawable::findLeftOffset() const
+{
+    // Rekurzivne spocitame velkost textu vsetkych itemov nalavo v strome
+    for (size_t itemIndex = 0; itemIndex < getParent()->_children.size(); ++itemIndex) {
+        if (getParent()->_children[itemIndex] == this) {
+            return calculateLeftOffset(itemIndex);
+        }
+    }
+    
+    return 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+size_t Drawable::calculateLeftOffset(size_t elementIndex) const
+{
+    size_t leftOffset = 0;
+    
+    // Rekurzivne spocitame velkost textu vsetkych itemov nalavo v strome
+    if (elementIndex == 0) {
+        const LayoutPtr& parent = getParent()->getParent();
+        
+        if (parent != nullptr) {
+            leftOffset += getParent()->findLeftOffset();
+        }
+    }
+    else {
+        leftOffset += getParent()->_children[elementIndex - 1].getDrawable()->calculateTextLenght();
+        leftOffset += calculateLeftOffset(elementIndex - 1);
+    }
+    
+    return leftOffset;
+}
+

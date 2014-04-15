@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+class Drawable;
+
 DECLARE_NS_CLASS_PTR(Ui, MainWindow);
 
 DECLARE_CLASS_PTR(GraphicText);
@@ -30,5 +32,9 @@ private:
 	GraphicTextPtr _currentGraphicText;
 
 	void setupTextEditField();
+    
+private slots:
+    
+    void onElementLeftButtonClicked(Drawable& drawable);
 };
 
