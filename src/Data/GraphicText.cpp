@@ -26,14 +26,11 @@ GraphicText::GraphicText(const std::string& textType)
 	_scene->addItem(container);
 
 	setTextType(textType);
-
-	qDebug() << "NEW" << this << "textType = " << textType.c_str();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 GraphicText::~GraphicText()
 {
-	qDebug() << "DELETE" << this;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,6 +49,8 @@ void GraphicText::reloadTextStyle()
     
     // QGraphicsScene* oldScene = _scene;
     // TODO: delete oldScene; - memory leak
+    
+    _root->removeAllChildrenFromScene(_scene);
     
     _scene = new QGraphicsScene();
     
@@ -89,12 +88,11 @@ void GraphicText::updateElementsOnScene(const GraphicElementsList& newElements, 
     qDebug() << "Deleting " << boost::lexical_cast<int>(deleteElements.size()) << " elements.";
     for (GraphicElement* element : deleteElements) {
         
-		if (element->getParent() == nullptr)
-            _root->removeElement(*element);
-		else
-			element->getParent()->getLayout()->removeElement(*element);
+        LayoutPtr layout = element->getParent()->getLayout();
+        assert(layout != nullptr);
         
-        _scene->removeItem(element->getElement().get());
+        layout->removeElement(*element);
+//        _scene->removeItem(element->getDrawable().get());
 		delete element;
 	}
     
@@ -107,10 +105,10 @@ void GraphicText::updateElementsOnScene(const GraphicElementsList& newElements, 
 	for (GraphicElement* element : newElements) {
 		element->initialize(_state);
         element->update();
-		_scene->addItem(element->getElement().get());
+		_scene->addItem(element->getDrawable().get());
         
 		if (element->getParent() == nullptr) {
-            element->getElement()->setZValue(1);
+            element->getDrawable()->setZValue(1);
             _root->insertElement(*element);
 		}
 		else {
@@ -121,14 +119,16 @@ void GraphicText::updateElementsOnScene(const GraphicElementsList& newElements, 
             
             // NOTE: ZValue by sa mohla vyratat uz pri parsovani LPegom a poslat do aplikacie
             size_t zValue = 1;
-            LayoutPtr layout = element->getElement()->getParent();
+            LayoutPtr layout = element->getDrawable()->getParent();
             while (layout != nullptr) {
                 ++zValue;
                 layout = layout->getParent();
             }
             
-            element->getElement()->setZValue(zValue);
+            element->getDrawable()->setZValue(zValue);
 		}
 	}
+    
+    _scene->update();
 }
 

@@ -45,25 +45,9 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QLabel" name="debugPanelLabel">
-          <property name="font">
-           <font>
-            <family>Lucida Grande</family>
-            <pointsize>17</pointsize>
-           </font>
-          </property>
+         <widget class="QPushButton" name="openFileButton">
           <property name="text">
-           <string>Debug panel</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="Line" name="debugPanelLine">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+           <string>Open file</string>
           </property>
          </widget>
         </item>
@@ -95,7 +79,7 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_2">
+         <widget class="QPushButton" name="clearButton">
           <property name="styleSheet">
            <string notr="true"/>
           </property>

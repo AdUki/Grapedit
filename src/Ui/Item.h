@@ -16,7 +16,7 @@
 
 DECLARE_CLASS_PTR(Item);
 
-class Item : public Drawable, public QGraphicsLayoutItem
+class Item : public QGraphicsLayoutItem, public Drawable
 {
 public:
     

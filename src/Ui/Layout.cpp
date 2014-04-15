@@ -31,6 +31,7 @@ Layout::Layout(const lua::Ref& style, QGraphicsLayout* layout)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 Layout::~Layout()
 {
+    removeAllChildrenFromScene(this->scene());
     delete _layout;
 }
 
@@ -137,7 +138,7 @@ void Layout::removeChild(size_t index)
     _children[index].deleteChild();
     _children.erase(_children.begin() + index);
     
-    _layout->updateGeometry();
+    _layout->invalidate();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -145,7 +146,6 @@ void Layout::removeChild(const LayoutPtr& layout)
 {
     for (int i = 0; i < _children.size(); ++i) {
         if (_children[i] == layout) {
-            layout->_layout->setParentLayoutItem(nullptr);
             removeChild(i);
             break;
         }
@@ -157,7 +157,6 @@ void Layout::removeChild(const ItemPtr& item)
 {
     for (int i = 0; i < _children.size(); ++i) {
         if (_children[i] == item) {
-            item->setParentLayoutItem(nullptr);
             removeChild(i);
             break;
         }
@@ -167,6 +166,9 @@ void Layout::removeChild(const ItemPtr& item)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void Layout::removeAllChildrenFromScene(QGraphicsScene* scene)
 {
+    if (scene == nullptr)
+        return;
+    
     for (int i = 0; i < _children.size(); ++i) {
         
         if (_children[i].layout != nullptr) {

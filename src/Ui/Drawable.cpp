@@ -44,11 +44,14 @@ Drawable::Drawable(const lua::Ref& style)
         if (backgroundStyle["radius"].is<lua::Number>())
             _backgroundRadius = backgroundStyle["radius"];
     }
+    
+    qDebug() << "NEW" << this;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 Drawable::~Drawable()
 {
+    qDebug() << "DELETE" << this;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////

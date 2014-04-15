@@ -65,7 +65,7 @@ public:
 	/// @return typ, ktory hovori o grafickom obsahu elementu
 	const std::string& getGraphicType() const { return _graphicType; }
 
-	DrawablePtr getElement() const { return _graphicalElement; }
+	DrawablePtr getDrawable() const { return _graphicalElement; }
 
 	/// Vrati graficky grid, tato trieda musi byt typu Grid.
 	///

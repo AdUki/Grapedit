@@ -37,6 +37,9 @@ GraphicElement::GraphicElement(const std::string& textType, const std::string& g
 //////////////////////////////////////////////////////////////////////////////////////////////////
 GraphicElement::~GraphicElement()
 {
+    // TODO: elementy sa nedaju "vybrat" zo sceny aby tam neostali artefakty, tym padom nemozeme reusovat
+    return;
+    
 	// Reusneme element pred tym ako sa znici objekt
 	if (_graphicalElement != nullptr) {
 		std::string key = _textType + _graphicType;

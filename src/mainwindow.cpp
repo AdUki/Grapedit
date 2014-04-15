@@ -2,6 +2,7 @@
 
 #include <QGraphicsScene>
 #include <QPushButton>
+#include <QFileDialog>
 
 #include "Data/GraphicText.h"
 #include "Data/GraphicElement.h"
@@ -30,6 +31,27 @@ MainWindow::MainWindow() : QMainWindow()
             _currentGraphicText->reloadTextStyle();
 
             UI->graphicsView->setScene(_currentGraphicText->getScene());
+        }
+    });
+    
+    connect(UI->clearButton, &QPushButton::clicked, [this]() {
+        UI->plainTextEdit->setPlainText("");
+    });
+    
+    connect(UI->openFileButton, &QPushButton::clicked, [this]() {
+        QFileDialog dialog(this);
+        dialog.setFileMode(QFileDialog::AnyFile);
+        dialog.setWindowTitle(tr("Open file"));
+        QString fileName = dialog.getOpenFileName();
+        
+        if (!fileName.isEmpty()) {
+            QFile file(fileName);
+            if (!file.open(QFile::ReadOnly | QFile::Text))
+                return;
+            
+            QTextStream in(&file);
+            UI->plainTextEdit->setPlainText(in.readAll());
+            file.close();
         }
     });
     

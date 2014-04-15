@@ -15,7 +15,7 @@
 
 #include "../Data/GraphicElement.h"
 
-class QGraphicsLayout;
+#include <QGraphicsLayout>
 
 DECLARE_CLASS_PTR(Layout);
 
@@ -76,11 +76,15 @@ private:
         }
         
         void deleteChild() {
-            if (item != nullptr)
+            if (item != nullptr) {
+                item->setParentLayoutItem(nullptr);
                 item.reset();
+            }
             
-            else if (layout != nullptr)
+            else if (layout != nullptr) {
+                layout->getQtLayout()->setParentLayoutItem(nullptr);
                 layout.reset();
+            }
         }
     };
     
