@@ -109,7 +109,7 @@ DrawablePtr GraphicElement::dequeueReusableElement(const std::string& graphicTyp
 //////////////////////////////////////////////////////////////////////////////////////////////////
 DrawablePtr GraphicElement::createElement(lua::State state, const char* type)
 {
-    lua::Ref item = state["currentActiveStyle"][type];
+    lua::CValue item = state["currentActiveStyle"][type];
     lua::String objectType = item["object"];
     
     if (item["grid"] == true) {

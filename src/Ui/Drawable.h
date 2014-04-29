@@ -29,7 +29,7 @@ class Drawable : public QObject, public QGraphicsItem
 public:
     
     Drawable();
-    Drawable(const lua::Ref& style);
+    Drawable(const lua::CValue& style);
     virtual ~Drawable();
     
     //////////////////////////////////////////////////////////////////////////////////////////////////

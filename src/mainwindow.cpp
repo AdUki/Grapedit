@@ -97,5 +97,6 @@ void MainWindow::onElementLeftButtonClicked(Drawable& drawable)
     textCursor.setPosition(right, QTextCursor::KeepAnchor);
     
     UI->plainTextEdit->setTextCursor(textCursor);
+    UI->plainTextEdit->setFocus();
 }
 

@@ -26,7 +26,7 @@ class Layout :
 public:
     
     Layout(QGraphicsLayout* layout);
-    Layout(const lua::Ref& style, QGraphicsLayout* layout);
+    Layout(const lua::CValue& style, QGraphicsLayout* layout);
     virtual ~Layout();
     
     QRectF boundingRect() const override;

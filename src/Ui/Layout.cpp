@@ -21,7 +21,7 @@ Layout::Layout(QGraphicsLayout* layout)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-Layout::Layout(const lua::Ref& style, QGraphicsLayout* layout)
+Layout::Layout(const lua::CValue& style, QGraphicsLayout* layout)
 : Drawable(style)
 , _layout(layout)
 {

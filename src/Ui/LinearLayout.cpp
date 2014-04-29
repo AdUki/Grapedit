@@ -20,7 +20,7 @@ LinearLayout::LinearLayout(Qt::Orientation orientation)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-LinearLayout::LinearLayout(const lua::Ref& style, Qt::Orientation orientation)
+LinearLayout::LinearLayout(const lua::CValue& style, Qt::Orientation orientation)
 : Layout(style, new QGraphicsLinearLayout(orientation))
 {
     static_cast<QGraphicsLinearLayout*>(getQtLayout())->setSpacing(0);

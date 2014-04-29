@@ -14,8 +14,8 @@
 
 namespace lua {
 
-    bool readColor(const lua::Ref& colorRef, QColor& color);
+    bool readColor(const lua::CValue& colorRef, QColor& color);
     
-    bool readInset(const lua::Ref& insetRef, RectInset& inset);
+    bool readInset(const lua::CValue& insetRef, RectInset& inset);
 }
 

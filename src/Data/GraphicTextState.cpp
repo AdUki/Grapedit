@@ -5,37 +5,37 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 GraphicTextState::GraphicTextState()
 {
-    _state["send_addItem"] = [this] (lua::String elementType, lua::String elementText, lua::Pointer parentPointer, lua::Integer elementIndex) -> lua::Pointer
+    _state.set("send_addItem", [this] (lua::String elementType, lua::String elementText, lua::Pointer parentPointer, lua::Integer elementIndex) -> lua::Pointer
     {
         GraphicElement* newElement = new GraphicElement(getTextType(), elementType, elementText, static_cast<GraphicElement*>(parentPointer), elementIndex);
         
         addNewElement(newElement);
         
         return newElement;
-    };
+    });
 
-    _state["send_addGrid"] = [this] (lua::String elementType, lua::Pointer parentPointer, lua::Integer elementIndex) -> lua::Pointer
+    _state.set("send_addGrid", [this] (lua::String elementType, lua::Pointer parentPointer, lua::Integer elementIndex) -> lua::Pointer
     {
         GraphicElement* newElement = new GraphicElement(getTextType(), elementType, static_cast<GraphicElement*>(parentPointer), elementIndex);
         
         addNewElement(newElement);
         
         return newElement;
-    };
+    });
     
-    _state["send_updateItem"] = [this] (lua::Pointer elementPtr, lua::String newElementText)
+    _state.set("send_updateItem", [this] (lua::Pointer elementPtr, lua::String newElementText)
     {
         GraphicElement* element = static_cast<GraphicElement*>(elementPtr);
         element->setNewText(newElementText);
         addUpdateElement(element);
-    };
+    });
     
-    _state["send_removeItem"] = [this] (lua::Pointer elementPtr)
+    _state.set("send_removeItem", [this] (lua::Pointer elementPtr)
     {
         addDeleteElement(static_cast<GraphicElement*>(elementPtr));
-    };
+    });
     
-    _state["send_commit"] = [this] () { commit(); };
+    _state.set("send_commit", [this] () { commit(); } );
     
 	// Nacitame core
     _state.doFile("scripts/init.lua");

@@ -16,11 +16,13 @@
 
 DECLARE_CLASS_PTR(Item);
 
+class QGraphicsSimpleTextItem;
+
 class Item : public QGraphicsLayoutItem, public Drawable
 {
 public:
     
-    Item(const lua::Ref& style);
+    Item(const lua::CValue& style);
     
     enum class VerticalAlignment { Center, Top, Bottom};
 	enum class HorizontalAlignment { Center, Left, Right};
@@ -44,6 +46,8 @@ protected:
 
     size_t calculateTextLenght() const override;
     
+//    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+
 private:
     
 	VerticalAlignment _vAlignment;
