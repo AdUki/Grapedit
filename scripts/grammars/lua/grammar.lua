@@ -93,16 +93,16 @@ return {
 		  ,
 
 	-- stat ::=
-	stat = V'function_stat'
+	stat = V'assing_stat'
+		 + V'functioncall_stat'
+		 + V'function_stat'
 		 + V'if_stat'
 		 + V'while_stat'
 		 + V'repeat_stat'
 		 + V'for_stat'
 		 + V'do_stat'
-		 + V'functioncall_stat'
 		 + V'break_stat'
 		 + V'goto_stat'
-		 + V'assing_stat'
 		 + V'label_stat'
 		 + V';'
 		 ,
@@ -146,8 +146,6 @@ return {
 	-- break
 	break_stat = V'keyword_break',
 
-	
-
 	-- function funcname funcbody | 
 	-- local function Name funcbody | 
 	function_stat = V'keyword_function' * V'funcname' * V'funcbody'
@@ -184,13 +182,12 @@ return {
 	exp_list = V'exp' * P( V',' * V'exp' )^0,
 
 	-- speed hack, rule: V'exp' * V'binary_op' * V'exp'
-	-- can result in O(!n) performance while chaining binary operators: res = a+a+a+a+a+a+a+a+a+a+a+a+a
+	-- results in O(!n) performance while chaining binary operators: res = a+a+a+a+a+a+a+a+a+a+a+a+a without memoization
 	exp_op_list = V'exp' * ( V'binary_op' * V'exp_op_list' )^0,
 
 	-- exp ::=  nil | false | true | Number | String | ‘...’ | functiondef | 
 	-- 	 prefixexp | tableconstructor | exp binary_op exp | unary_op exp 
-	exp = V'comment'
-		+ V'exp' * V'binary_op' * V'exp'
+	exp = V'exp' * V'binary_op' * V'exp'
 		+ V'unary_op' * V'exp'
 		+ V'prefixexp' 
 		+ V'tableconstructor' 
@@ -210,7 +207,7 @@ return {
 		      ,
 
 	-- functioncall_stat ::=  prefixexp args | prefixexp ‘:’ Name args 
-	functioncall_stat = V'prefixexp' * V'args' 
+	functioncall_stat = V'prefixexp' * V'args'
 				      + V'prefixexp' * V':' * V'Name' * V'args',
 
 	-- args ::=  ‘(’ [exp_list] ‘)’ | tableconstructor | String 
@@ -238,29 +235,10 @@ return {
 	-- binary_op ::= ‘+’ | ‘-’ | ‘*’ | ‘/’ | ‘^’ | ‘%’ | ‘..’ | 
 	-- 	 ‘<’ | ‘<=’ | ‘>’ | ‘>=’ | ‘==’ | ‘~=’ | 
 	-- 	 and | or
-	binary_op = V'<=' 
-		      + V'>=' 
-		      + V'==' 
-		      + V'~=' 
-		      + V'and' 
-		      + V'or'
-		      + V'+' 
-	          + V'-'
-	          + V'*' 
-	          + V'/' 
-	          + V'^' 
-	          + V'%' 
-	          + V'..' 
-	          + V'<'
-		      + V'>'
-		      ,
+	binary_op = V'<=' + V'>=' + V'==' + V'~=' + V'and' + V'or'+ V'+' + V'-'+ V'*' + V'/' + V'^' + V'%' + V'..' + V'<'+ V'>',
 
 	-- unary_op ::= ‘-’ | not | ‘#’
-	unary_op =
-			 ( V'not'
-			 + V'-' 
-			 + V'#'
-			 ) * V'comment'^-1,
+	unary_op = V'not'+ V'-' + V'#',
 
 	-- Names in Lua can be any string of letters, digits, and underscores, not beginning with a digit BUT they cannot be any keyword!
 	-- TODO: zahrnut vsetky znaky z locale
@@ -278,7 +256,7 @@ return {
 		   + token(P'[[' * (1 - P"]]")^0 * P"]]")
 		   ,
 
-	Number = token(P'0x' * P( R'09' + R'af' + R'AF' )^1) -- hexa
-		   + token( number * (P'e' * P'-'^-1 * number)^-1 )        -- decimal / floating / e-notation
+	Number = token(P'0x' * P( R'09' + R'af' + R'AF' )^1)    -- hexa
+		   + token( number * (P'e' * P'-'^-1 * number)^-1 ) -- decimal / floating / e-notation
 		   ,
 }

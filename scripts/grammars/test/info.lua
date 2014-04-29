@@ -1,5 +1,5 @@
 return {
 	name = "Nesting",
-	description = "Test grammar for testing purposes",
+	description = "Grammar with nesting for testing purposes",
 	extensions = "test"
 }
