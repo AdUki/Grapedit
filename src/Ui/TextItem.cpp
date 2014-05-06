@@ -5,14 +5,14 @@
 #include "../Utils/LuaReader.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-TextItem::TextItem(const lua::CValue& style)
+TextItem::TextItem(const lua::Value& style)
 : Item(style)
 , _textColor(Qt::black)
 {
     _font = std::make_shared<QFont>();
     _font->setPointSize(20);
     
-    lua::CValue textStyle = style["text"];
+    lua::Value textStyle = style["text"];
     if (!textStyle.is<lua::Table>())
         return;
     

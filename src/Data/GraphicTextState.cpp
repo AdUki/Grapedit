@@ -61,7 +61,7 @@ void GraphicTextState::loadGrammar(const std::string& name)
 	_textType = name;
     
     try {
-        _state["loadGrammarAndStyle"].protectedCall(lua::String(name.c_str())).execute();
+        _state["loadGrammarAndStyle"].call(lua::String(name.c_str()));
     }
     catch (lua::RuntimeError ex) {
         QMessageBox msgBox;

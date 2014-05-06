@@ -17,13 +17,13 @@
 #include "../Utils/LuaReader.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-Item::Item(const lua::CValue& style)
+Item::Item(const lua::Value& style)
 : Drawable(style)
 , _vAlignment(VerticalAlignment::Center)
 , _hAlignment(HorizontalAlignment::Center)
 {
     if (style["content"].is<lua::Table>()) {
-        lua::CValue contentStyle = style["content"];
+        lua::Value contentStyle = style["content"];
 
         QColor color;
         if (lua::readColor(contentStyle["color"], color))

@@ -10,9 +10,10 @@ DECLARE_NS_CLASS_PTR(Ui, MainWindow);
 DECLARE_CLASS_PTR(GraphicText);
 DECLARE_CLASS_PTR(MainWindow);
 
+/// Hlavné okno programu
 class MainWindow : public QMainWindow
 {
-	Q_OBJECT //-V524
+	Q_OBJECT
 
 public:
 	MainWindow();

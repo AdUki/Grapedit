@@ -14,7 +14,10 @@ function loadGrammarAndStyle(name)
 	currentActiveStyle = require(string.format("grammars.%s.style", name))
 	currentActiveParser = parser.create(grammar, currentActiveStyle)
 
-	print("Grammar and style " .. name .. " successfully loaded.")
+	local sep = "/"
+	currentGramarBasePath = "scripts"..sep.."grammars"..sep..name..sep
+
+	print("Grammar and style '" .. currentGramarBasePath .. "' successfully loaded.")
 end
 
 --- Parse new text
@@ -65,12 +68,19 @@ function parseText(newText)
 	end
 end
 
+--- Get path to current selected grammar. Useful for loading images for display.
+-- @returns string(required) Base path to current grammar
+function getCurrentGrammarPath()
+	assert(currentGramarBasePath)
+	return currentGramarBasePath
+end
+
 --- Get element style
 -- @param type Element type defined in style file
 -- @returns string(required), type(grid, item)
 -- @returns string(required), object to be created
 -- @returns string(optional), CSS style for Qt object
-function getStyle(type)
+function getElementStyle(type)
 	local style = currentActiveStyle[type]
 	return style.type, style.object, style.style
 end

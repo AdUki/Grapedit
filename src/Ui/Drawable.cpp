@@ -26,7 +26,7 @@ Drawable::Drawable()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-Drawable::Drawable(const lua::CValue& style)
+Drawable::Drawable(const lua::Value& style)
 : _highlighted(false)
 , _selected(false)
 , _backgroundRadius(0)
@@ -34,7 +34,7 @@ Drawable::Drawable(const lua::CValue& style)
     setAcceptHoverEvents(true);
     
     if (style["background"].is<lua::Table>()) {
-        lua::CValue backgroundStyle = style["background"];
+        lua::Value backgroundStyle = style["background"];
         
         // Farba pozadia
         QColor color;

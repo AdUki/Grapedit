@@ -11,7 +11,7 @@
 using namespace lua;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-bool lua::readColor(const CValue& colorRef, QColor& color) {
+bool lua::readColor(const Value& colorRef, QColor& color) {
     
     if (colorRef.is<Table>()) {
         
@@ -41,7 +41,7 @@ bool lua::readColor(const CValue& colorRef, QColor& color) {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-bool lua::readInset(const CValue& insetRef, RectInset& inset) {
+bool lua::readInset(const Value& insetRef, RectInset& inset) {
     
     if (insetRef.is<Table>()) {
         if (insetRef["top"].is<Number>())

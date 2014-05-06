@@ -17,7 +17,6 @@ local function tokenb(pattern)
 	return (pattern * #((1 - (R'az' + R'AZ' + P'_') + EOF))) * whitespace^0 * V'comment'^-1
 end
 
-
 return {
 
 	--[[========================================================]]
@@ -35,12 +34,13 @@ return {
 	keyword_in = 		{ "keyword" , tokenb'in' },
 	keyword_local = 	{ "keyword" , tokenb'local' },
 	keyword_nil = 		{ "keyword" , tokenb'nil' },
-	keyword_repeat = 	{ "keyword" , tokenb'repeat' },
 	keyword_return = 	{ "keyword" , tokenb'return' },
 	keyword_then = 		{ "keyword" , tokenb'then' },
 	keyword_true = 		{ "keyword" , tokenb'true' },
-	keyword_until = 	{ "keyword" , tokenb'until' },
-	keyword_while = 	{ "keyword" , tokenb'while' },
+	
+	keyword_repeat = 	{ "cycle" , tokenb'repeat' },
+	keyword_until = 	{ "cycle" , tokenb'until' },
+	keyword_while = 	{ "cycle" , tokenb'while' },
 
 	--[[========================================================]]
 
@@ -251,8 +251,8 @@ return {
 	       ) * (1 - (R'az' + R'AZ' + P'_')) )
 	     ,
 
-	String = token(P'"' * (P('\\"') + P(1 - S'"\n') )^0 * P'"')
-		   + token(P"'" * (P("\\'") + P(1 - S"'\n") )^0 * P"'")
+	String = token(P'"' * ( (P'\\' * 1) + (1 - S'"\n') )^0 * P'"')
+		   + token(P"'" * ( (P'\\' * 1) + (1 - S"'\n") )^0 * P"'")
 		   + token(P'[[' * (1 - P"]]")^0 * P"]]")
 		   ,
 

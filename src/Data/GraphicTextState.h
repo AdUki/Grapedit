@@ -9,7 +9,7 @@ DECLARE_CLASS_PTR(GraphicTextState);
 /// Každý textový súbor má vlastný interpreter jazyka Lua. Táto trieda obsluhuje tento interpreter a poskytuje základné API.
 class GraphicTextState : public QObject
 {
-	Q_OBJECT //-V524
+	Q_OBJECT
 
 public:
     
@@ -33,34 +33,50 @@ public:
 	/// @param name Udáva názov priečinku, kde sú uložené súbory s gramatikou a štýlom.
 	void loadGrammar(const std::string& name);
     
+    /// Funkcia nastaví notifikačnú funkcia pre ADD, UPDATE, DELETE operácie z interpreta jazyka Lua, ku ktorým dochádza počas parsovania
     void setUpdateCallback(const UpdatesFncCallback& callback) {
         _updatesCallback = callback;
     }
     
+    /// Funckia vráti stav interpreta jazyka Lua
     lua::State getLuaState() { return _state; }
 
 public slots:
 
+    /// Notifikačná funkcia pre interpret jazyka Lua, ktorá sa zavolá po úspešnom sparsovaní textu.
 	void commit();
+    
+    /// Notifikačná funkcia pre interpret jazyka Lua, ktorá sa zavolá po neúspešnom sparsovaní textu.
 	void reset();
 
 private:
 	
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+    
 	struct GraphicElementIndexComparator {
 		bool operator() (GraphicElement* lhs, GraphicElement* rhs) const{
 			return lhs->getIndex() < rhs->getIndex();
 		}
 	};
-
+    
     typedef GraphicElement* GraphicElementKey;
 	typedef std::set<GraphicElement*, GraphicElementIndexComparator> SortedElements;
 	typedef std::map<GraphicElementKey, SortedElements> NewElementsBuckets;
 	typedef std::list<GraphicElementKey> NewElementsIndexes;
 
+    /// Rodičovia grafických objektov usporiadané podľa príchodu ADD operácie ich budúceho dieťaťa
 	NewElementsBuckets _newElementsBuckets;
+    
+    /// Skupiny grafických objektov usporiadané podľa ich rodičovských indexov, ktoré sa majú pridať zo scény ku danému rodičovi
 	NewElementsIndexes _newElementsIndexes;
+    
+    /// Zoznam grafických objektov, ktoré sa majú aktualizovať na scéne
 	GraphicElementsList _updateElements;
+    
+    /// Zoznam grafických objektov, ktoré sa majú zmazať zo scény
 	GraphicElementsList _deleteElements;
+    
+    //////////////////////////////////////////////////////////////////////////////////////////////////
     
     UpdatesFncCallback _updatesCallback;
 
@@ -68,7 +84,14 @@ private:
 
 	std::string _textType;
     
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /// Funkcia na vytvorenia ADD operácie
     void addNewElement(GraphicElement* element);
+    
+    /// Funkcia na vytvorenie UPDATE operácie
 	void addUpdateElement(GraphicElement* element);
+    
+    /// Funkcia na vytvorenie DELETE operácie
 	void addDeleteElement(GraphicElement* element);
 };

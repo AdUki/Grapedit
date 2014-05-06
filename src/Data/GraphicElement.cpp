@@ -5,6 +5,7 @@
 #include "../Ui/Layout.h"
 #include "../Ui/Item.h"
 #include "../Ui/TextItem.h"
+#include "../Ui/ImageItem.h"
 #include "../Ui/LinearLayout.h"
 
 GraphicElement::ReusableInstancesMap GraphicElement::_reusableInstances;
@@ -37,9 +38,6 @@ GraphicElement::GraphicElement(const std::string& textType, const std::string& g
 //////////////////////////////////////////////////////////////////////////////////////////////////
 GraphicElement::~GraphicElement()
 {
-    // TODO: elementy sa nedaju "vybrat" zo sceny aby tam neostali artefakty, tym padom nemozeme reusovat
-    return;
-    
 	// Reusneme element pred tym ako sa znici objekt
 	if (_graphicalElement != nullptr) {
 		std::string key = _textType + _graphicType;
@@ -109,8 +107,14 @@ DrawablePtr GraphicElement::dequeueReusableElement(const std::string& graphicTyp
 //////////////////////////////////////////////////////////////////////////////////////////////////
 DrawablePtr GraphicElement::createElement(lua::State state, const char* type)
 {
-    lua::CValue item = state["currentActiveStyle"][type];
+    lua::Value item;
+    item = state["currentActiveStyle"][type];
     lua::String objectType = item["object"];
+    
+    // TODO: Pridat do LuaState moznost vratit lua::Value
+//    lua::Value item;
+//    lua::String objectType;
+//    lua::tie(item, objectType) = state["getElementStyle"](type);
     
     if (item["grid"] == true) {
         
@@ -124,6 +128,9 @@ DrawablePtr GraphicElement::createElement(lua::State state, const char* type)
         
         if (strcmp(objectType, "text") == 0)
             return std::make_shared<TextItem>(item);
+        
+        else if (strcmp(objectType, "image") == 0)
+            return std::make_shared<ImageItem>(item, state["getCurrentGrammarPath"]());
     }
     
     Q_ASSERT(false); // Unknown type

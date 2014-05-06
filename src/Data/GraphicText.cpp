@@ -92,7 +92,7 @@ void GraphicText::updateElementsOnScene(const GraphicElementsList& newElements, 
         assert(layout != nullptr);
         
         layout->removeElement(*element);
-//        _scene->removeItem(element->getDrawable().get());
+        _scene->removeItem(element->getDrawable().get());
 		delete element;
 	}
     

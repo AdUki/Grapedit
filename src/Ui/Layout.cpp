@@ -17,14 +17,18 @@
 Layout::Layout(QGraphicsLayout* layout)
 : _layout(layout)
 {
+    assert(layout != nullptr);
+    
     _layout->setContentsMargins(getContentInset().left, getContentInset().top, getContentInset().right, getContentInset().bottom);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-Layout::Layout(const lua::CValue& style, QGraphicsLayout* layout)
+Layout::Layout(const lua::Value& style, QGraphicsLayout* layout)
 : Drawable(style)
 , _layout(layout)
 {
+    assert(layout != nullptr);
+    
     _layout->setContentsMargins(getContentInset().left, getContentInset().top, getContentInset().right, getContentInset().bottom);
 }
 
