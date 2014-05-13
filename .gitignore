@@ -12,6 +12,7 @@
 *.gch
 *.sublime*
 Makefile
+.swp
 
 # Build results
 
@@ -21,6 +22,7 @@ x64/
 build*/
 [Bb]in/
 [Oo]bj/
+docs/
 
 # Using CMake and Qt
 
