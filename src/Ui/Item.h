@@ -40,7 +40,7 @@ public:
     /// Funkcia zmeria veľkosť prvku, ktorá je potrebná na nakreslenie na scénu
     ///
     /// @return Minimálna veľkosť prvku.
-    virtual QSizeF measureSize() const = 0;
+    virtual QSizeF measureSize(const boost::optional<QSize>& maxSize) const = 0;
     
     void draw(QPainter *painter, const QRectF& bounds) override;
     
@@ -66,4 +66,7 @@ private:
     
     /// Farba obsahu
     boost::optional<QColor> _contentColor;
+
+    /// Velkost obsahu
+    boost::optional<QSize> _contentSize;
 };

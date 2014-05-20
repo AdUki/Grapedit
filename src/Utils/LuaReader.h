@@ -29,5 +29,13 @@ namespace lua {
     ///
     /// @return true ak sa podarilo prečítať veľkosť okrajov, false ak nie
     bool readInset(const lua::Value& insetRef, RectInset& inset);
+    
+    /// Funkcia prečíta veľkosť QSize
+    ///
+    /// @param insetRef Inicializovaná referencia na pole "size" uzla AST
+    /// @param inset    Výstupná premenná na veľkosť QSize
+    ///
+    /// @return true ak sa podarilo prečítať veľkosť QSize, false ak nie
+    bool readSize(const lua::Value& sizeRef, QSize& size);
 }
 

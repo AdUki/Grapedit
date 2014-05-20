@@ -1,5 +1,5 @@
 return {
-	name = "Lua grammar",
-	description = "Grammar of Lua 5.2",
+	name = "lua",
+	description = "Lua 5.2 grammar",
 	extensions = "lua"
 }

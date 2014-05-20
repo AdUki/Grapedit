@@ -31,6 +31,8 @@ private:
 	Ui::MainWindowPtr UI;
 
 	GraphicTextPtr _currentGraphicText;
+    
+    lua::State _grammarsState;
 
 	void setupTextEditField();
     

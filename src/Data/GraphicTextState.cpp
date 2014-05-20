@@ -5,7 +5,12 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 GraphicTextState::GraphicTextState()
 {
-    _state.set("send_addItem", [this] (lua::String elementType, lua::String elementText, lua::Pointer parentPointer, lua::Integer elementIndex) -> lua::Pointer
+    _state.set("send_addItem",
+               [this] (lua::String elementType,
+                       lua::String elementText,
+                       lua::Pointer parentPointer,
+                       lua::Integer elementIndex)
+               -> lua::Pointer
     {
         GraphicElement* newElement = new GraphicElement(getTextType(), elementType, elementText, static_cast<GraphicElement*>(parentPointer), elementIndex);
         
@@ -14,7 +19,11 @@ GraphicTextState::GraphicTextState()
         return newElement;
     });
 
-    _state.set("send_addGrid", [this] (lua::String elementType, lua::Pointer parentPointer, lua::Integer elementIndex) -> lua::Pointer
+    _state.set("send_addGrid",
+               [this] (lua::String elementType,
+                       lua::Pointer parentPointer,
+                       lua::Integer elementIndex)
+               -> lua::Pointer
     {
         GraphicElement* newElement = new GraphicElement(getTextType(), elementType, static_cast<GraphicElement*>(parentPointer), elementIndex);
         
@@ -23,19 +32,22 @@ GraphicTextState::GraphicTextState()
         return newElement;
     });
     
-    _state.set("send_updateItem", [this] (lua::Pointer elementPtr, lua::String newElementText)
+    _state.set("send_updateItem",
+               [this] (lua::Pointer elementPtr,
+                       lua::String newElementText)
     {
         GraphicElement* element = static_cast<GraphicElement*>(elementPtr);
         element->setNewText(newElementText);
         addUpdateElement(element);
     });
     
-    _state.set("send_removeItem", [this] (lua::Pointer elementPtr)
-    {
+    _state.set("send_removeItem", [this] (lua::Pointer elementPtr) {
         addDeleteElement(static_cast<GraphicElement*>(elementPtr));
     });
     
-    _state.set("send_commit", [this] () { commit(); } );
+    _state.set("send_commit", [this] () {
+        commit();
+    });
     
 	// Nacitame core
     _state.doFile("scripts/init.lua");
@@ -52,7 +64,7 @@ void GraphicTextState::reparseText(const std::string& text)
 {
 	qDebug() << "Request text reparse...";
 
-    _state["parseText"](lua::String(text.c_str()));
+    _state["parseText"](text.c_str());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +73,7 @@ void GraphicTextState::loadGrammar(const std::string& name)
 	_textType = name;
     
     try {
-        _state["loadGrammarAndStyle"].call(lua::String(name.c_str()));
+        _state["loadGrammarAndStyle"].call(name.c_str());
     }
     catch (lua::RuntimeError ex) {
         QMessageBox msgBox;

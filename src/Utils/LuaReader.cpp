@@ -55,6 +55,8 @@ bool lua::readInset(const Value& insetRef, RectInset& inset) {
         
         if (insetRef["right"].is<Number>())
             inset.right = Number(insetRef["right"]);
+        
+        return true;
     }
     else if (insetRef.is<Number>()) {
         Number insetSize = insetRef;
@@ -62,6 +64,31 @@ bool lua::readInset(const Value& insetRef, RectInset& inset) {
         inset.bottom = insetSize;
         inset.left = insetSize;
         inset.right = insetSize;
+        
+        return true;
+    }
+    
+    return false;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+bool lua::readSize(const lua::Value& sizeRef, QSize& size)
+{
+    if (sizeRef.is<Table>()) {
+        if (sizeRef["width"].is<Number>())
+            size.setWidth(sizeRef["width"]);
+        
+        if (sizeRef["height"].is<Number>())
+            size.setWidth(sizeRef["height"]);
+        
+        return true;
+    }
+    else if (sizeRef.is<Number>()) {
+        
+        // Nastavime ako sirku
+        size.setWidth(sizeRef);
+        
+        return true;
     }
     
     return false;

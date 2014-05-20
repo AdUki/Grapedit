@@ -32,7 +32,7 @@ void ImageItem::setImage(const std::string& imagePath)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-QSizeF ImageItem::measureSize() const
+QSizeF ImageItem::measureSize(const boost::optional<QSize>& maxSize) const
 {
     assert(_image != nullptr);
     

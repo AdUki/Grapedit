@@ -52,6 +52,9 @@ MainWindow::MainWindow() : QMainWindow()
             if (!file.open(QFile::ReadOnly | QFile::Text))
                 return;
             
+            QFileInfo fileInfo(file);
+            _currentGraphicText->setTextType(fileInfo.suffix().toStdString());
+            
             QTextStream in(&file);
             UI->plainTextEdit->setPlainText(in.readAll());
             file.close();

@@ -24,7 +24,7 @@ public:
 
 protected:
 
-	QSizeF measureSize() const override;
+	QSizeF measureSize(const boost::optional<QSize>& maxSize) const override;
 	void draw(QPainter *painter, const QRectF& bounds) override;
 
 private:

@@ -28,7 +28,13 @@ Item::Item(const lua::Value& style)
         QColor color;
         if (lua::readColor(contentStyle["color"], color))
             _contentColor = color;
+        
+        QSize size;
+        if (lua::readSize(contentStyle["size"], size))
+            _contentSize = size;
     }
+    
+    
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -65,9 +71,6 @@ void Item::setGeometry(const QRectF &rect)
 {
 	QPointF position;
 	QSizeF size(rect.size());
-    
-    // Zvacsime size o contentInset
-//    getContentInset().inflateSize(size);
 
 	QGraphicsLayoutItem* parent = parentLayoutItem();
 	if (parent != nullptr) {
@@ -122,7 +125,7 @@ QSizeF Item::sizeHint(Qt::SizeHint which, const QSizeF& constraint) const
 //            return QSize(MAXFLOAT, MAXFLOAT);
             
         default: {
-            QSizeF size = measureSize();
+            QSizeF size = measureSize(_contentSize);
             
             // Zvacsime size o contentInset
             getContentInset().inflateSize(size);

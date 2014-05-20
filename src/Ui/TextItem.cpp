@@ -29,12 +29,21 @@ TextItem::TextItem(const lua::Value& style)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-QSizeF TextItem::measureSize() const 
+QSizeF TextItem::measureSize(const boost::optional<QSize>& maxSize) const
 {
 	QFontMetrics fm(*_font);
 
-	// NOTE: flag Qt::TextSingleLine ignores newline characters.
-	return fm.size(Qt::TextExpandTabs, QString::fromStdString(getText()));
+    if (maxSize.is_initialized()) {
+        QRect bounds = fm.boundingRect(0, 0,
+                                       maxSize->width() > 0 ? maxSize->width() : std::numeric_limits<int>::max(),
+                                       maxSize->height() > 0 ? maxSize->height() : std::numeric_limits<int>::max(),
+                                       Qt::TextExpandTabs | Qt::TextWordWrap, QString::fromStdString(getText()));
+        
+        return QSizeF(std::max(bounds.size().width(), maxSize->width()),
+                      std::max(bounds.size().height(), maxSize->height()));
+    }
+    else
+        return fm.size(Qt::TextExpandTabs | Qt::TextSingleLine, QString::fromStdString(getText()));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
