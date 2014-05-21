@@ -1,14 +1,19 @@
 return {
 
 	[1] = V'csv',
-	csv = V'topRow' * (V'dataRow' * V'newline')^0 * V'dataRow'^0,
+	csv = V'topRow' * V'dataRow'^0 * V'lastDataRow'^-1,
 	
-	topRow = V'row' * V'newline'^-1,
-	dataRow = V'row',
+	topRow  = (V'headerValue' * V'headerSeparator')^0 * V'headerValue' * V'newline',
+	dataRow = (V'dataValue'   * V'dataSeparator')^0   * V'dataValue'   * V'newline',
+	lastDataRow = { 'dataRow', (V'dataValue' * V'dataSeparator')^0 * V'dataValue' },
 
-	row = (V'value' * V'comma')^0 * V'value' * V'comma'^-1,
-	value = (1 - V'comma' - V'newline')^1,
+	headerValue = V'value',
+	dataValue   = V'value',
 
-	comma = { 'keywords', P(',') },
-	newline = { 'keywords', P'\n' },
+	headerSeparator = V'comma',
+	dataSeparator   = V'comma',
+
+	value = (1 - V'comma' - V'newline')^1 + P(0),
+	comma = P(',') + P(';'),
+	newline = P'\n',
 }

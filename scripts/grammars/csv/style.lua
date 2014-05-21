@@ -4,7 +4,7 @@ return {
 		grid = true,
 		object = "vertical",
 		background = {
-			padding = 10,
+			padding = 1,
 		},
 	},
 
@@ -12,8 +12,13 @@ return {
 		grid = true,
 		object = "horizontal",
 		background = {
-			color = { 0.9, 0.9, 1.0 },
-			padding = 10,
+			color = 0.2,
+			padding = {
+				top = 1,
+				bottom = 1,
+				left = 10,
+				right = 1,
+			},
 		},
 	},
 
@@ -22,15 +27,29 @@ return {
 		object = "horizontal",
 		background = {
 			padding = {
-				top = 5,
-				bottom = 5,
+				bottom = 1,
 				left = 10,
-				right = 10,
+				right = 1,
 			},
+			color = 0.5,
 		},
 	},
 
-	value = {
+	headerValue = {
+		item = true,
+		object = "text",
+		text = {
+			size = 14,
+			color = { 1, 0.8, 0.5 },
+			bold = true,
+		},
+		content = {
+			size = 130,
+			color = 0.2,
+		}
+	},
+
+	dataValue = {
 		item = true,
 		object = "text",
 		text = {
@@ -39,17 +58,49 @@ return {
 		},
 		content = {
 			size = 130,
-			color = { 0.0, 1.0, 0.0, 0.2 },
+			color = 1,
 		}
 	},
 
-	keywords = {
+	headerSeparator = {
 		item = true,
 		object = "text",
 		text = {
-			size = 18,
+			size = 14,
+			bold = true,
+			color = { 1, 0.9, 0.6 },
+		},
+		background = {
+			padding = {
+				right = 1,
+			},
+		},
+		content = {
+			color = 0.2,
+		}
+	},
+
+	dataSeparator = {
+		item = true,
+		object = "text",
+		text = {
+			size = 14,
 			bold = true,
 			color = { 1, 0, 0.5 },
 		},
+		background = {
+			padding = {
+				right = 1,
+			},
+		},
+		content = {
+			color = 1,
+		}
 	},
+
+	newline = {
+		item = true,
+		object = "image",
+		image = "return.png",
+	}
 }

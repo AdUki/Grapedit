@@ -61,6 +61,25 @@ MainWindow::MainWindow() : QMainWindow()
         }
     });
     
+    connect(UI->saveFileButton, &QPushButton::clicked, [this]() {
+        QFileDialog dialog(this);
+        dialog.setFileMode(QFileDialog::AnyFile);
+        dialog.setWindowTitle(tr("Save file as"));
+        QString fileName = dialog.getSaveFileName();
+        
+        if (!fileName.isEmpty()) {
+            QFile file(fileName);
+            if (!file.open(QFile::WriteOnly | QFile::Text))
+                return;
+            
+            QTextStream out(&file);
+            out << UI->plainTextEdit->toPlainText();
+
+            file.close();
+        }
+
+    });
+    
 	GraphicTextPtr graphicText = std::make_shared<GraphicText>("lua");
 	setGraphicText(graphicText);
 

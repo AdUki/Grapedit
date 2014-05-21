@@ -37,7 +37,7 @@ QSizeF TextItem::measureSize(const boost::optional<QSize>& maxSize) const
         QRect bounds = fm.boundingRect(0, 0,
                                        maxSize->width() > 0 ? maxSize->width() : std::numeric_limits<int>::max(),
                                        maxSize->height() > 0 ? maxSize->height() : std::numeric_limits<int>::max(),
-                                       Qt::TextExpandTabs | Qt::TextWordWrap, QString::fromStdString(getText()));
+                                       Qt::TextExpandTabs | Qt::TextWrapAnywhere, QString::fromStdString(getText()));
         
         return QSizeF(std::max(bounds.size().width(), maxSize->width()),
                       std::max(bounds.size().height(), maxSize->height()));
@@ -59,5 +59,6 @@ void TextItem::draw(QPainter *painter, const QRectF& bounds)
     
     painter->setPen(_textColor);
 	painter->setFont(*_font);
-	painter->drawText(bounds, QString::fromStdString(getText()));
+    
+	painter->drawText(bounds, Qt::TextWrapAnywhere, QString::fromStdString(getText()));
 }

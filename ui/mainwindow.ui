@@ -52,6 +52,13 @@
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="saveFileButton">
+          <property name="text">
+           <string>Save file</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="reloadGrammarButton">
           <property name="text">
            <string>Reload Grammar</string>
