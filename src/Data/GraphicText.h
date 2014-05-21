@@ -34,6 +34,8 @@ public:
 
     /// Funkcia vratí práve používanú scénu.
 	QGraphicsScene* getScene() { return _scene; }
+    
+    void clear();
 
 signals:
     

@@ -39,6 +39,7 @@ MainWindow::MainWindow() : QMainWindow()
     
     connect(UI->clearButton, &QPushButton::clicked, [this]() {
         UI->plainTextEdit->setPlainText("");
+        _currentGraphicText->clear();
     });
     
     connect(UI->openFileButton, &QPushButton::clicked, [this]() {

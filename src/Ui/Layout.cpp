@@ -183,17 +183,21 @@ void Layout::removeAllChildrenFromScene(QGraphicsScene* scene)
     for (int i = 0; i < _children.size(); ++i) {
         
         if (_children[i].layout != nullptr) {
+            printf("Remove layout %p at index %d from %p\n", _children[i].layout.get(), i, this);
+            
             _children[i].layout->removeAllChildrenFromScene(scene);
             scene->removeItem(_children[i].layout.get());
         }
         else {
+            printf("Remove item %p at index %d from %p\n", _children[i].item.get(), i, this);
+            
             scene->removeItem(_children[i].item.get());
         }
         
         _layout->removeAt(i);
         _children[i].deleteChild();
-        _children.erase(_children.begin() + i);
     }
+    _children.clear();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////

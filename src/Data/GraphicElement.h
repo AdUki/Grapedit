@@ -18,6 +18,8 @@ typedef std::list<GraphicElement*> GraphicElementsList;
 /// Je to minimalisticka trieda, ktora vznikne ako prva pri pridavani prvkov do grafickej sceny. Po vytvoreni sa pointer na this vratime naspat do Lua, aby sme pri update a delete vedeli najst tieto prvky.
 class GraphicElement
 {
+    friend class GraphicText;
+    
 public:
 
 	enum class Type { Item, Grid };

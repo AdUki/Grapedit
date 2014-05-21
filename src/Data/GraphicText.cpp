@@ -43,6 +43,20 @@ void GraphicText::setTextType(const std::string& textType)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
+void GraphicText::clear()
+{
+    _root->removeAllChildrenFromScene(_scene);
+    
+    std::string textType = _state->getTextType();
+    
+	// Nastartujeme novy state, ak mame stary automaticky sa znici
+	_state = std::make_shared<GraphicTextState>();
+    
+    _state->setUpdateCallback(std::bind(&GraphicText::updateElementsOnScene, this, _1, _2, _3));
+    _state->loadGrammar(textType);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 void GraphicText::reloadTextStyle()
 {
     assert(_state != nullptr);
@@ -51,8 +65,9 @@ void GraphicText::reloadTextStyle()
     // TODO: delete oldScene; - memory leak
     
     _root->removeAllChildrenFromScene(_scene);
+    _scene->removeItem(_root.get());
     
-    _scene = new QGraphicsScene();
+    GraphicElement::_reusableInstances.clear();
     
 	QGraphicsWidget* container = new QGraphicsWidget();
 	container->setLayout(_root->getQtLayout());
