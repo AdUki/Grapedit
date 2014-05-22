@@ -60,6 +60,10 @@ struct RectInset
         size.setWidth(size.width() + left + right);
         size.setHeight(size.height() + top + bottom);
     }
+    
+    RectInset operator+(const RectInset& inset) const {
+        return RectInset(left + inset.left, top + inset.top, right + inset.right, bottom + inset.bottom);
+    }
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////

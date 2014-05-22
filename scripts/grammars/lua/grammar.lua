@@ -27,7 +27,6 @@ return {
 	keyword_elseif = 	{ "keyword" , tokenb'elseif' },
 	keyword_end = 		{ "keyword" , tokenb'end' },
 	keyword_false = 	{ "keyword" , tokenb'false' },
-	keyword_for = 		{ "keyword" , tokenb'for' },
 	keyword_function = 	{ "keyword" , tokenb'function' },
 	keyword_goto = 		{ "keyword" , tokenb'goto' },
 	keyword_if = 		{ "keyword" , tokenb'if' },
@@ -38,6 +37,7 @@ return {
 	keyword_then = 		{ "keyword" , tokenb'then' },
 	keyword_true = 		{ "keyword" , tokenb'true' },
 	
+	keyword_for = 		{ "cycle" , tokenb'for' },
 	keyword_repeat = 	{ "cycle" , tokenb'repeat' },
 	keyword_until = 	{ "cycle" , tokenb'until' },
 	keyword_while = 	{ "cycle" , tokenb'while' },
@@ -133,12 +133,11 @@ return {
 
 	-- for Name ‘=’ exp ‘,’ exp [‘,’ exp] do block end | 
 	-- for name_list in exp_list do block end | 
-	for_stat = V'keyword_for' 
-			   * V'Name' * V'=' * V'exp' * V',' * V'exp' * ( V',' * V'exp' )^-1 
-			   * V'keyword_do' * V'block' * V'keyword_end'
-			 + V'keyword_for' 
-			   * V'name_list' * V'keyword_in' * V'exp_list' 
-			   * V'keyword_do' * V'block' * V'keyword_end',
+	for_stat = V'for_head1' * V'keyword_do' * V'block' * V'keyword_end'
+			 + V'for_head2' * V'keyword_do' * V'block' * V'keyword_end',
+
+	for_head1 = { "header", V'keyword_for' * V'Name' * V'=' * V'exp' * V',' * V'exp' * ( V',' * V'exp' )^-1 },
+	for_head2 = { "header", V'keyword_for' * V'name_list' * V'keyword_in' * V'exp_list'},
 
 	-- label_stat ‘::’ Name ‘::’
 	label_stat = V'::' * V'Name' * V'::',

@@ -19,7 +19,8 @@ Layout::Layout(QGraphicsLayout* layout)
 {
     assert(layout != nullptr);
     
-    _layout->setContentsMargins(getContentInset().left, getContentInset().top, getContentInset().right, getContentInset().bottom);
+    RectInset inset = getContentInset();
+    _layout->setContentsMargins(inset.left, inset.top, inset.right, inset.bottom);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -29,7 +30,8 @@ Layout::Layout(const lua::Value& style, QGraphicsLayout* layout)
 {
     assert(layout != nullptr);
     
-    _layout->setContentsMargins(getContentInset().left, getContentInset().top, getContentInset().right, getContentInset().bottom);
+    RectInset inset = getContentInset();
+    _layout->setContentsMargins(inset.left, inset.top, inset.right, inset.bottom);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -183,14 +185,10 @@ void Layout::removeAllChildrenFromScene(QGraphicsScene* scene)
     for (int i = 0; i < _children.size(); ++i) {
         
         if (_children[i].layout != nullptr) {
-            printf("Remove layout %p at index %d from %p\n", _children[i].layout.get(), i, this);
-            
             _children[i].layout->removeAllChildrenFromScene(scene);
             scene->removeItem(_children[i].layout.get());
         }
         else {
-            printf("Remove item %p at index %d from %p\n", _children[i].item.get(), i, this);
-            
             scene->removeItem(_children[i].item.get());
         }
         

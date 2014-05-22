@@ -30,6 +30,9 @@ protected:
 private:
     
     typedef Item super;
+    
+    /// Oreze string tak, ze odstrani koncove znaky novych riadkov a necha 1 medzeru ak tam je
+    static QString trim(const QString& text);
 
     /// Font, ktorý sa použije pri nakreslení prvku
 	QFontPtr _font;

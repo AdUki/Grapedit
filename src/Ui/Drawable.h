@@ -82,7 +82,7 @@ public:
     //////////////////////////////////////////////////////////////////////////////////////////////////
     
     /// Funkcia vráti veľkosť okrajov pre tento prvok.
-    const RectInset& getContentInset() const { return _contentInset; }
+    RectInset getContentInset() const { return _contentInset + _borderInset; }
     
     /// Funkcia vráti rodiča pre tento prvok
     LayoutPtr getParent() const { return _parent.lock(); }
@@ -108,6 +108,9 @@ protected:
     
 private:
     
+    RectInset _borderInset;
+    boost::optional<QColor> _borderColor;
+    
     /// Veľkosť okrajov daného prvku
     RectInset _contentInset;
     
@@ -128,6 +131,8 @@ private:
     
     /// Metóda na nakreslenie pozadia.
     void drawBackground(QPainter *painter, const QRectF& bounds);
+    
+    void drawBorder(QPainter *painter, const QRectF& bounds);
     
     /// Rekurzívna metóda na hľadanie ľavého indexu v originálnom reťazci.
     size_t calculateLeftOffset(size_t elementIndex) const;

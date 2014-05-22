@@ -32,18 +32,21 @@ TextItem::TextItem(const lua::Value& style)
 QSizeF TextItem::measureSize(const boost::optional<QSize>& maxSize) const
 {
 	QFontMetrics fm(*_font);
+    
+    QString text(QString::fromStdString(getText()));
+    text = trim(text);
 
     if (maxSize.is_initialized()) {
         QRect bounds = fm.boundingRect(0, 0,
                                        maxSize->width() > 0 ? maxSize->width() : std::numeric_limits<int>::max(),
                                        maxSize->height() > 0 ? maxSize->height() : std::numeric_limits<int>::max(),
-                                       Qt::TextExpandTabs | Qt::TextWrapAnywhere, QString::fromStdString(getText()));
+                                       Qt::TextExpandTabs | Qt::TextWrapAnywhere, text);
         
         return QSizeF(std::max(bounds.size().width(), maxSize->width()),
                       std::max(bounds.size().height(), maxSize->height()));
     }
     else
-        return fm.size(Qt::TextExpandTabs | Qt::TextSingleLine, QString::fromStdString(getText()));
+        return fm.size(Qt::TextExpandTabs, text);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,5 +63,20 @@ void TextItem::draw(QPainter *painter, const QRectF& bounds)
     painter->setPen(_textColor);
 	painter->setFont(*_font);
     
-	painter->drawText(bounds, Qt::TextWrapAnywhere, QString::fromStdString(getText()));
+    QString text(QString::fromStdString(getText()));
+    text = trim(text);
+    
+	painter->drawText(bounds, Qt::TextWrapAnywhere, text);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+QString TextItem::trim(const QString& text)
+{
+    int n = text.size() - 1;
+    for (; n >= 0; --n) {
+        if (!text.at(n).isSpace()) {
+            return n == text.size() - 1 ? text : text.left(n + 1).append(' ');
+        }
+    }
+    return "";
 }
