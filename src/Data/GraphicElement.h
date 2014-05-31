@@ -110,5 +110,5 @@ private:
 
 	DrawablePtr _graphicalElement;
     
-    static DrawablePtr createElement(lua::State state, const char* type);
+    static DrawablePtr createElement(const lua::State& state, const char* type);
 };

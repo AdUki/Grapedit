@@ -39,7 +39,9 @@ public:
     }
     
     /// Funckia vráti stav interpreta jazyka Lua
-    lua::State getLuaState() { return _state; }
+    const lua::State& getLuaState() {
+        return _state;
+    }
 
 public slots:
 

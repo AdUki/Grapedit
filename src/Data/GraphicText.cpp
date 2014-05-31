@@ -100,6 +100,8 @@ void GraphicText::setText(const std::string& text)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void GraphicText::updateElementsOnScene(const GraphicElementsList& newElements, const GraphicElementsList& updateElements, const GraphicElementsList& deleteElements)
 {
+    _root->getQtLayout()->invalidate();
+    
     qDebug() << "Deleting " << boost::lexical_cast<int>(deleteElements.size()) << " elements.";
     for (GraphicElement* element : deleteElements) {
         

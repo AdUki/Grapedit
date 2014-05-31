@@ -25,7 +25,7 @@ public:
     ///
     /// @param style    Inicializovaná referencia na pole "value" uzla AST
     /// @param basePath Relatívna/Absolútna k priečinku s gramatikou a teda aj obrázku
-	ImageItem(const lua::Value& style, const std::string& basePath);
+	ImageItem(const lua::Value& style, lua::String basePath);
 	
     /// Nastaví obrázok
     ///

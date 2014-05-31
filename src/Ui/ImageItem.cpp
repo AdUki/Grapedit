@@ -14,12 +14,12 @@
 #include "../Utils/LuaReader.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-ImageItem::ImageItem(const lua::Value& style, const std::string& basePath)
+ImageItem::ImageItem(const lua::Value& style, lua::String basePath)
 : Item(style)
 , _image(nullptr)
 {
     lua::String image = style["image"];
-    setImage(basePath + image);
+    setImage(std::string(basePath) + image);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////

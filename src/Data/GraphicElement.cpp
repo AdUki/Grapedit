@@ -105,16 +105,11 @@ DrawablePtr GraphicElement::dequeueReusableElement(const std::string& graphicTyp
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-DrawablePtr GraphicElement::createElement(lua::State state, const char* type)
+DrawablePtr GraphicElement::createElement(const lua::State& state, const char* type)
 {
     lua::Value item;
-    item = state["currentActiveStyle"][type];
-    lua::String objectType = item["object"];
-    
-    // TODO: Pridat do LuaState moznost vratit lua::Value
-//    lua::Value item;
-//    lua::String objectType;
-//    lua::tie(item, objectType) = state["getElementStyle"](type);
+    lua::String objectType;
+    lua::tie(objectType, item) = state["getElementStyle"](type);
     
     if (item["grid"] == true) {
         

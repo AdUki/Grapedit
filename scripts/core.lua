@@ -77,11 +77,10 @@ end
 
 --- Get element style
 -- @param type Element type defined in style file
--- @returns string(required), type(grid, item)
--- @returns string(required), object to be created
--- @returns string(optional), CSS style for Qt object
+-- @returns string(required), object type to be created
+-- @returns string(optional), element with style
 function getElementStyle(type)
 	local style = currentActiveStyle[type]
-	return style.type, style.object, style.style
+	return style.object, style
 end
 
